@@ -78,7 +78,7 @@
   "config": {
     "forge": {
       "packagerConfig": {
-        "name": "Holy Grail",
+        "name": "HolyGrail",
         "executableName": "holy-grail",
         "icon": "assets/icon",
         "extraResource": [
@@ -110,7 +110,7 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "Holy Grail"
+            "name": "HolyGrail"
           }
         },
         {
