@@ -31,15 +31,16 @@ function createWindow () {
     width: 1100,
     height: 700,
     backgroundColor: '#111111',
+    autoHideMenuBar: true,
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
-      preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY
+      preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
     }
   })
 
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY)
-  mainWindow.webContents.openDevTools()
+  //mainWindow.webContents.openDevTools()
 
   mainWindow.on('closed', () => {
     if (process.platform !== 'darwin') {
