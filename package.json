@@ -79,7 +79,7 @@
     "forge": {
       "packagerConfig": {
         "name": "HolyGrail",
-        "executableName": "holy-grail",
+        "executableName": "HolyGrail",
         "icon": "assets/icon",
         "extraResource": [
           "assets"
