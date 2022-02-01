@@ -7,6 +7,11 @@ export const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
   }
 
+  html, body, #root {
+    height: 100vh;
+  }
+
+
   body {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 16px;

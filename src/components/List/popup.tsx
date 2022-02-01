@@ -1,10 +1,19 @@
-import { useState, useRef, MutableRefObject, ReactChild } from 'react';
+import { useState, ReactChild } from 'react';
 import { styled } from '@mui/material/styles';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
+import { Chip, Typography } from '@mui/material';
+import { SilospenItem } from '../../@types/main';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableRow from '@mui/material/TableRow';
+import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
+import { diablo2ioMapping } from '../../../electron/diablo2ioMapping';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -19,65 +28,59 @@ type PopupProps = {
   itemName: string,
   itemType: string,
   children: ReactChild,
+  saveFiles: string[],
 }
 
-const iframeStyle = `
-<style>
-  * {
-    color: #ddd;
-    font-family: sans-serif;
-  }
-</style>
-`
-
-const writeToIframe = (frameRef: MutableRefObject<HTMLIFrameElement | null>, html: string) => {
-  if (frameRef.current) {
-    frameRef.current.contentDocument?.open();
-    frameRef.current.contentDocument?.write(html.replace('<html>', '<html>' + iframeStyle));
-    frameRef.current.contentDocument?.close();
-  }
-}
-
-export default function Popup({ itemType, itemName, children }: PopupProps) {
+export default function Popup({ itemType, itemName, saveFiles, children }: PopupProps) {
   const [open, setOpen] = useState(false);
-  const frameRef = useRef<HTMLIFrameElement>(null);
+  const [drop, setDrop] = useState<ReactChild | null>(null);
+
+  const diablo2ioUrl = diablo2ioMapping[itemName] || 'https://diablo2.io/';
+  const saveFilesUniq = Array.from(new Set(saveFiles));
 
   const handleClickOpen = () => {
-    window.Main.on('silospenResponse', (html: string) => {
-      writeToIframe(frameRef, html);
+    window.Main.on('silospenResponse', (drops: SilospenItem[]) => {
+      setDrop(
+        <TableContainer>
+          <Table aria-label="simple table">
+            <TableBody>
+              {drops
+                .sort((dropA, dropB) => (parseInt(dropA.chance) - parseInt(dropB.chance)))
+                .map(({name, area, chance}: SilospenItem) => 
+                  <TableRow key={name} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                    <TableCell component="th" scope="row">{name}</TableCell>
+                    <TableCell>{area}</TableCell>
+                    <TableCell>1:{chance}</TableCell>
+                  </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      );
     });
     window.Main.getSilospen(itemType, itemName);
     setOpen(true);
-    setTimeout(() => {
-      writeToIframe(frameRef, '<html><body>Loading...</body></html>');
-    }, 100);
   };
 
   const handleClose = () => {
-    writeToIframe(frameRef, '<html><body></body></html>');
+    setDrop(null);
     setOpen(false);
   };
 
   return (
     <>
-      <div onClick={handleClickOpen}>
+      <div onClick={handleClickOpen} style={{ position: 'relative' }}>
         {children}
+        {open && !drop && <div><HourglassEmptyIcon fontSize="small" style={{ position: 'absolute', top: 15, right: 20 }} /></div>}
       </div>
       <BootstrapDialog
         onClose={handleClose}
-        open={open}
+        open={open && !!drop}
+        maxWidth="md"
+        fullWidth
       >
         <DialogTitle sx={{ m: 0, p: 2 }}>
-          <div>Silospen.com drop calculator</div>
-          <a
-            href="#"
-            onClick={() => { window.Main.openUrl('https://dropcalc.silospen.com/') }}
-            style={{
-              fontSize: '10pt',
-            }}
-          >
-            https://dropcalc.silospen.com/
-          </a>
+          <Typography variant="h4">{itemName}</Typography>
           <IconButton
               aria-label="close"
               onClick={handleClose}
@@ -90,9 +93,44 @@ export default function Popup({ itemType, itemName, children }: PopupProps) {
             >
               <CloseIcon />
             </IconButton>
+            {saveFiles.length ?
+              <small style={{ fontSize: '11pt', fontWeight: 'normal' }}>
+                {saveFilesUniq.map(saveFile => <Chip label={saveFile} />)}
+              </small>
+            : null}
         </DialogTitle>
         <DialogContent dividers>
-          <iframe frameBorder="0" style={{ width: 500, height: 400 }} ref={frameRef} />
+          <h4 style={{ marginBottom: 20 }}>
+            Item info on Diablo2.io
+            <Typography variant="subtitle2">
+              <a
+                href="#"
+                onClick={() => { window.Main.openUrl(diablo2ioUrl) }}
+                style={{
+                  fontSize: '10pt',
+                }}
+              >
+                {diablo2ioUrl}
+              </a>
+            </Typography>
+          </h4>
+          <h4>
+            Silospen.com drop calculator
+            <Typography variant="subtitle2">
+              <a
+                href="#"
+                onClick={() => { window.Main.openUrl('https://dropcalc.silospen.com/') }}
+                style={{
+                  fontSize: '10pt',
+                }}
+              >
+                https://dropcalc.silospen.com/
+              </a>
+            </Typography>
+          </h4>
+          <div style={{ margin: 20 }}>
+            {drop}
+          </div>
         </DialogContent>
       </BootstrapDialog>
     </>  

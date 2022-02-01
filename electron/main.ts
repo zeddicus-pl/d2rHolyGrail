@@ -5,7 +5,7 @@ import { readFileSync } from 'fs';
 import { basename, extname, join } from 'path';
 import { IpcMainEvent } from 'electron/renderer';
 import { readdirSync } from 'original-fs';
-import { ItemsInSaves } from '../src/@types/main';
+import { FileReaderResponse, SilospenItem } from '../src/@types/main';
 // @ts-ignore
 import fetch from 'node-fetch';
 import https from 'https';
@@ -39,7 +39,7 @@ function createWindow () {
   })
 
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY)
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 
   mainWindow.on('closed', () => {
     if (process.platform !== 'darwin') {
@@ -97,26 +97,34 @@ const openAndParseSaves = (event: IpcMainEvent) => {
 };
 
 const parseSaves = async (path: string) => {
-  const results: ItemsInSaves = {};
+  const results: FileReaderResponse = {
+    items: {},
+    stats: {},
+  };
   const files = readdirSync(path).filter(file => extname(file).toLowerCase() === '.d2s');
   const promises = files.map((file) => {
     const saveName = basename(file).replace(".d2s", "");
     return parseSave(saveName, readFileSync(join(path, file), null))
       .then((result) => {
         result.forEach((item) => {
-          if (results[item.unique_name]) {
-            if (results[item.unique_name].saveName) {
-              results[item.unique_name].saveName.push(saveName);
+          if (results.items[item.unique_name]) {
+            if (results.items[item.unique_name].saveName) {
+              results.items[item.unique_name].saveName.push(saveName);
             } else {
-              results[item.unique_name].saveName = [saveName];
+              results.items[item.unique_name].saveName = [saveName];
             }
           } else {
-            results[item.unique_name] = {
+            results.items[item.unique_name] = {
               item,
               saveName: [ saveName ],
             }
           }
+          results.stats[saveName] = result.length;
         });
+      })
+      .catch((e) => {
+        console.log("ERROR", e);
+        results.stats[saveName] = null;
       });
   });
   return Promise.all(promises).then(() => results);
@@ -124,34 +132,34 @@ const parseSaves = async (path: string) => {
 
 const parseSave = async (saveName: string, content: Buffer): Promise<d2s.types.IItem[]>  => {
   const items: d2s.types.IItem[] = [];
-  try {
-    await d2s.read(content, constants).then((response) => {
-      response.items.forEach((item) => {
-        if (item.unique_name) {
-          items.push(item);
-        }
-      });
-    }).catch((e) => {
-      console.log('CATCH', saveName, e);
+  await d2s.read(content, constants).then((response) => {
+    response.items.forEach((item) => {
+      if (item.unique_name) {
+        items.push(item);
+      }
     });
-    console.log('OK', saveName)
-  } catch (e) {
-    console.log('ERROR', saveName, e);
-  }
+  })
   return items;
 };
 
 const fetchSilospen = (event: IpcMainEvent, type: string, itemName: string) => {
   const name = silospenMapping[itemName.trim()] || 'null';
-  const url = 'https://dropcalc.silospen.com/dropcalc.php?type=item&monsterId=undefined&difficulty=HELL&monsterType=BOSS&players=1&party=1&magicFind=0&itemQuality='+type+'&decMode=false&version=D2R_V1_0&itemId=' + encodeURIComponent(name);
+  const url = 'https://dropcalc.silospen.com/dropcalc.php?type=item&monsterId=undefined&difficulty=none&monsterType=BOSS&players=1&party=1&magicFind=0&itemQuality='+type+'&decMode=false&version=D2R_V1_0&itemId=' + encodeURIComponent(name);
   console.log(url);
   fetch(url, {
     agent: httpsAgent
   })
     .then((response: any) => response.text())
-    .then((text: any) =>
-      event.reply('silospenResponse', '<html><body><table cellspacing="0" cellpadding="5" border="1" style="border-color: #999">' + text + '</table></body></html>')
-    )
+    .then((text: any) => {
+      const lines: SilospenItem = text
+        .split('</td></tr><tr><td>')
+        .map((line: string) => line.replace('<tr><td>', '').replace('</td></tr>', ''))
+        .map((line: string) => {
+          const [name, area, chance] = line.split('</td><td>');
+          return { name, area, chance: chance.split(':')[1]};
+        });
+      event.reply('silospenResponse', lines)
+    })
     .catch((err: any) =>
       event.reply('silospenResponse', err.message)
     );

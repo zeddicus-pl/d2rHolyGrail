@@ -3,7 +3,7 @@ import DoneIcon from '@mui/icons-material/Done';
 import { grey } from '@mui/material/colors';
 
 import { IUniqueArmors, IUniqueWeapons, IUniqueOther, ISetItems } from 'd2-holy-grail/client/src/common/definitions/union/IHolyGrailData';
-import { ItemsInSaves } from '../../@types/main';
+import { ItemsInSaves, SaveFileStats } from '../../@types/main';
 
 import { title } from '.';
 import Popup from './popup';
@@ -14,12 +14,13 @@ type TabPanelProps = {
   value: number,
   items?: IUniqueArmors | IUniqueWeapons | IUniqueOther,
   sets?: ISetItems,
+  stats?: SaveFileStats,
   player: ItemsInSaves
 };
 
 
 export function TabPanel(props: TabPanelProps) {
-  const { value, index, items, sets, player } = props;
+  const { value, index, items, sets, player, stats } = props;
 
   return (
     <div
@@ -45,7 +46,12 @@ export function TabPanel(props: TabPanelProps) {
                       >
                         {Object.keys((items as any)[type][dif]).map(
                           (itemName) => (
-                            <Popup itemName={itemName} itemType="UNIQUE" key={itemName}>
+                            <Popup
+                              itemName={itemName}
+                              itemType="UNIQUE"
+                              key={itemName}
+                              saveFiles={player[itemName] ? player[itemName].saveName : []}
+                            >
                               <ListItem disablePadding style={{color: player[itemName] ? grey[400] : grey[700]}}>
                                 <ListItemButton>
                                   {player[itemName] && (
@@ -80,7 +86,12 @@ export function TabPanel(props: TabPanelProps) {
                 >
                   {Object.keys((sets as any)[set]).map(
                     (itemName) => (
-                      <Popup itemName={itemName} itemType="SET" key={itemName}>
+                      <Popup
+                        itemName={itemName}
+                        itemType="SET"
+                        key={itemName}
+                        saveFiles={player[itemName] ? player[itemName].saveName : []}
+                      >
                         <ListItem disablePadding key={itemName} style={{color: player[itemName] ? grey[400] : grey[700]}}>
                           <ListItemButton>
                             {player[itemName] && (
@@ -100,8 +111,8 @@ export function TabPanel(props: TabPanelProps) {
         }
         </Box>
       )}
-      {value === index && !sets && !items && (
-        <Statistics items={player} />
+      {value === index && !sets && !items && stats && (
+        <Statistics items={player} stats={stats} />
       )}
     </div>
   );
