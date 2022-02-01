@@ -5,10 +5,10 @@ import { Container, Image } from './styles'
 import logo from '../../../assets/logo.svg';
 import twitchIcon from '../../../assets/twitch-icon.svg';
 import 'animate.css';
-import { ItemsInSaves } from '../../@types/main';
+import { FileReaderResponse } from '../../@types/main';
 
 type GreetingsProps = {
-  onItemsLoaded: (items: ItemsInSaves ) => void;
+  onItemsLoaded: (fileReaderResponse: FileReaderResponse ) => void;
 };
 
 /* eslint-disable no-unused-vars */
@@ -27,14 +27,14 @@ export function Greetings({ onItemsLoaded }: GreetingsProps) {
     window.Main.on('openFolderWorking', () => {
       setUiState(UiState.Reading);
     });
-    window.Main.on('openFolder', (items: ItemsInSaves) => {
-      if (items === null) {
+    window.Main.on('openFolder', (fileReaderResponse: FileReaderResponse) => {
+      if (fileReaderResponse === null) {
         setUiState(UiState.Ready);
         return;  
       }
       setTimeout(() => {
         setUiState(UiState.Done);
-        onItemsLoaded(items);
+        onItemsLoaded(fileReaderResponse);
       }, 500);
     });
   }, [])

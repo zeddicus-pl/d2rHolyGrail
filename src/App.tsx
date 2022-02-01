@@ -6,19 +6,20 @@ import { List } from './components/List'
 import { useState } from 'react';
 import { ThemeProvider } from '@mui/system';
 import { createTheme } from '@mui/material';
-import { ItemsInSaves } from './@types/main';
+import { FileReaderResponse } from './@types/main';
 
 export function App() {
-  const [items, setItems] = useState<ItemsInSaves | null>(null);
+  const [fileReaderResponse, setFileReaderResponse] = useState<FileReaderResponse | null>(null);
+
   return (
     <>
       <GlobalStyle />
       <ThemeProvider theme={createTheme({palette: { mode: 'dark' }})}>
         <>
-          <Greetings onItemsLoaded={(items) => {
-            setItems(items);
+          <Greetings onItemsLoaded={(fileReaderResponse) => {
+            setFileReaderResponse(fileReaderResponse);
           }} />
-          <List items={items} />
+          <List fileReaderResponse={fileReaderResponse} />
         </>
       </ThemeProvider>
     </>
