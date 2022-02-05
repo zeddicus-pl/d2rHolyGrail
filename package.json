@@ -1,7 +1,7 @@
 {
   "name": "d2rholygrail",
   "author": "Kamil Tunkiewicz <kamil.tunkiewicz(at)gmail.com>",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "Scan your Diablo 2 Ressurected saves to check your Holy Grail progress",
   "main": "./.webpack/main/index.js",
   "scripts": {
@@ -12,7 +12,7 @@
     "lint": "eslint . --ext js,ts"
   },
   "keywords": [],
-  "license": "MIT",
+  "license": "ISC",
   "dependencies": {
     "@dschu012/d2s": "^2.0.4",
     "@emotion/react": "^11.7.1",

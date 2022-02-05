@@ -333,7 +333,7 @@ export const silospenMapping: {[itemName: string]: string} = {
   'The Salamander': 'The Salamander',
   'The Scalper': 'The Scalper',
   'The Spirit Shroud': 'The Spirit Shroud',
-  'The Stone of Jordan': 'The Stone of Jordan',
+  'Stone of Jordan': 'The Stone of Jordan',
   'The Tannr Gorerod': 'The Tannr Gorerod',
   'The Vile Husk': 'The Vile Husk',
   'The Ward': 'The Ward',
