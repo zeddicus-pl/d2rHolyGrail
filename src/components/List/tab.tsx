@@ -7,7 +7,7 @@ import { ItemsInSaves, SaveFileStats } from '../../@types/main';
 
 import { title } from '.';
 import Popup from './popup';
-import { Statistics } from '../Stats';
+import { Statistics, simplifyItemName } from '../Stats';
 
 type TabPanelProps = {
   index: number,
@@ -45,8 +45,9 @@ export function TabPanel(props: TabPanelProps) {
                         aria-label="contacts"
                       >
                         {Object.keys((items as any)[type][dif]).map(
-                          (itemName) => (
-                            <Popup
+                          (itemFullName) => {
+                            const itemName = simplifyItemName(itemFullName);
+                            return <Popup
                               itemName={itemName}
                               itemType="UNIQUE"
                               key={itemName}
@@ -59,11 +60,11 @@ export function TabPanel(props: TabPanelProps) {
                                       <DoneIcon />
                                     </ListItemIcon>
                                   )}
-                                  <ListItemText inset={!player[itemName]} primary={itemName} />
+                                  <ListItemText inset={!player[itemName]} primary={itemFullName} />
                                 </ListItemButton>
                               </ListItem>
                             </Popup>
-                          ))}
+                          })}
                       </List>
                     </Grid>
                   )}
@@ -85,8 +86,9 @@ export function TabPanel(props: TabPanelProps) {
                   aria-label="contacts"
                 >
                   {Object.keys((sets as any)[set]).map(
-                    (itemName) => (
-                      <Popup
+                    (itemFullName) => {
+                      const itemName = simplifyItemName(itemFullName);
+                      return <Popup
                         itemName={itemName}
                         itemType="SET"
                         key={itemName}
@@ -99,11 +101,11 @@ export function TabPanel(props: TabPanelProps) {
                                 <DoneIcon />
                               </ListItemIcon>
                             )}
-                            <ListItemText inset={!player[itemName]} primary={itemName} />
+                            <ListItemText inset={!player[itemName]} primary={itemFullName} />
                           </ListItemButton>
                         </ListItem>
                       </Popup>
-                    ))}
+                    })}
                 </List>
               </Grid>
             )}

@@ -40,7 +40,7 @@ function createWindow () {
   })
 
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY)
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 
   mainWindow.on('closed', () => {
     if (process.platform !== 'darwin') {
@@ -107,15 +107,21 @@ const parseSaves = async (path: string) => {
     const saveName = basename(file).replace(".d2s", "");
     return parseSave(saveName, readFileSync(join(path, file), null))
       .then((result) => {
+        if (!result.length) {
+          results.stats[saveName] = 0;
+        }
         result.forEach((item) => {
-          if (results.items[item.unique_name]) {
-            if (results.items[item.unique_name].saveName) {
-              results.items[item.unique_name].saveName.push(saveName);
+          const name = item.unique_name || item.set_name || item.rare_name || item.rare_name2 || '';
+          if (name === '') return;
+          const itemName = name.toLowerCase().replace(/[^a-z0-9]/gi, '').toLowerCase();
+          if (results.items[itemName]) {
+            if (results.items[itemName].saveName) {
+              results.items[itemName].saveName.push(saveName);
             } else {
-              results.items[item.unique_name].saveName = [saveName];
+              results.items[itemName].saveName = [saveName];
             }
           } else {
-            results.items[item.unique_name] = {
+            results.items[itemName] = {
               item,
               saveName: [ saveName ],
             }
@@ -134,8 +140,13 @@ const parseSaves = async (path: string) => {
 const parseSave = async (saveName: string, content: Buffer): Promise<d2s.types.IItem[]>  => {
   const items: d2s.types.IItem[] = [];
   await d2s.read(content, constants).then((response) => {
-    response.items.forEach((item) => {
-      if (item.unique_name) {
+    const itemList = [
+      ...response.items,
+      ...response.merc_items,
+      ...response.corpse_items,
+    ]
+    itemList.forEach((item) => {
+      if (item.unique_name || item.set_name || item.rare_name || item.rare_name2) {
         items.push(item);
       }
     });
