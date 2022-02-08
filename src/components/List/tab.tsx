@@ -49,6 +49,7 @@ export function TabPanel(props: TabPanelProps) {
                             const itemName = simplifyItemName(itemFullName);
                             return <Popup
                               itemName={itemName}
+                              fullItemName={itemFullName}
                               itemType="UNIQUE"
                               key={itemName}
                               saveFiles={player[itemName] ? player[itemName].saveName : []}
@@ -90,6 +91,7 @@ export function TabPanel(props: TabPanelProps) {
                       const itemName = simplifyItemName(itemFullName);
                       return <Popup
                         itemName={itemName}
+                        fullItemName={itemFullName}
                         itemType="SET"
                         key={itemName}
                         saveFiles={player[itemName] ? player[itemName].saveName : []}
