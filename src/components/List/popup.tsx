@@ -26,12 +26,13 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 
 type PopupProps = {
   itemName: string,
+  fullItemName: string,
   itemType: string,
   children: ReactChild,
   saveFiles: string[],
 }
 
-export default function Popup({ itemType, itemName, saveFiles, children }: PopupProps) {
+export default function Popup({ itemType, itemName, fullItemName, saveFiles, children }: PopupProps) {
   const [open, setOpen] = useState(false);
   const [drop, setDrop] = useState<ReactChild | null>(null);
 
@@ -80,7 +81,7 @@ export default function Popup({ itemType, itemName, saveFiles, children }: Popup
         fullWidth
       >
         <DialogTitle sx={{ m: 0, p: 2 }}>
-          <Typography variant="h4">{itemName}</Typography>
+          <Typography variant="h4">{fullItemName}</Typography>
           <IconButton
               aria-label="close"
               onClick={handleClose}
