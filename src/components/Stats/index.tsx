@@ -20,12 +20,14 @@ type StatsProps = {
   stats: SaveFileStats,
 }
 
+export const simplifyItemName = (name: string): string => name.replace(/[^a-z0-9]/gi, '').toLowerCase();
+
 const flattenObject = (object: any, flat: any) => {
   Object.keys(object).forEach((key: any) => {
     if (typeof object[key] === 'object' && Object.keys(object[key]).length > 0) {
       flattenObject(object[key], flat);
     } else {
-      flat[key] = {};
+      flat[simplifyItemName(key)] = {};
     }
   });
 }
@@ -40,6 +42,19 @@ const countItems = (object: any, items: ItemsInSaves): { exists: number, owned: 
     }
   });
   return { exists, owned };
+}
+
+const checkItemsAllValid = (
+  items: ItemsInSaves,
+  template: IHolyGrailData
+): void => {
+  const flat: {[name: string]: any} = {};
+  flattenObject(template, flat);
+  Object.keys(items).forEach(itemName => {
+    if (!flat[itemName]) {
+      console.error("Item " + itemName + " does not exist in the template!!");
+    }
+  });
 }
 
 const computeStats = (
@@ -58,6 +73,7 @@ const computeStats = (
 }
 
 export function Statistics({ items, stats }: StatsProps) {
+  useMemo(() => checkItemsAllValid(items, holyGrailSeedData), [items]);
   const armorStats = useMemo(() => computeStats(items, holyGrailSeedData.uniques.armor), [items]);
   const weaponsStats = useMemo(() => computeStats(items, holyGrailSeedData.uniques.weapons), [items]);
   const otherStats = useMemo(() => computeStats(items, holyGrailSeedData.uniques.other), [items]);
@@ -121,30 +137,28 @@ export function Statistics({ items, stats }: StatsProps) {
                 <Typography>Save files summary</Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <Typography>
-                  <TableContainer>
-                    <Table>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>Filename</TableCell>
-                          <TableCell>Unique items</TableCell>
+                <TableContainer>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Filename</TableCell>
+                        <TableCell>Unique items</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {Object.keys(stats).map(filename => (
+                        <TableRow key={filename}>
+                          <TableCell>{filename}</TableCell>
+                          <TableCell>{
+                            stats[filename] === null
+                              ? <span style={{color: 'red'}}>Error</span>
+                              : stats[filename
+                          ]}</TableCell>
                         </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {Object.keys(stats).map(filename => (
-                          <TableRow>
-                            <TableCell>{filename}</TableCell>
-                            <TableCell>{
-                              stats[filename] === null
-                                ? <span style={{color: 'red'}}>Error</span>
-                                : stats[filename
-                            ]}</TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                </Typography>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
               </AccordionDetails>
             </Accordion>
           </Grid>

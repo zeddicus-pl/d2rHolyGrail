@@ -10,7 +10,6 @@ import { FileReaderResponse } from './@types/main';
 
 export function App() {
   const [fileReaderResponse, setFileReaderResponse] = useState<FileReaderResponse | null>(null);
-
   return (
     <>
       <GlobalStyle />
