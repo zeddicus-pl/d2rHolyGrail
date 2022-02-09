@@ -90,7 +90,7 @@ export function Statistics({ items, stats }: StatsProps) {
 
   return (
     <>
-      <Grid container spacing={2} style={{ height: '100%', alignItems: 'center', justifyContent: 'center' }}>
+      <Grid container spacing={2} style={{ marginTop: 50, alignItems: 'center', justifyContent: 'center'}}>
         <Grid item md={6}>
           <TableContainer>
             <Table>
@@ -130,7 +130,7 @@ export function Statistics({ items, stats }: StatsProps) {
             </ProgressProvider>
           </div>
         </Grid>
-        <Grid container style={{ marginTop: 25, alignItems: 'center', justifyContent: 'center' }}>
+        <Grid container style={{ marginTop: 50, alignItems: 'center', justifyContent: 'center' }}>
           <Grid item xs={4}>
             <Accordion>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>

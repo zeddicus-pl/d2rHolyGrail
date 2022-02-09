@@ -1,9 +1,15 @@
 import { useState } from 'react';
-import { Box, Tabs, Tab } from '@mui/material';
-import { Container } from './styles'
+import { Box, Tabs, Tab, IconButton } from '@mui/material';
+import FolderIcon from '@mui/icons-material/Folder';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import { Container, Image, Logo, ButtonPanel } from './styles';
 import { TabPanel } from './tab';
 import { FileReaderResponse } from '../../@types/main';
+
 import { holyGrailSeedData } from '../../../electron/holyGrailSeedData';
+
+import logo from '../../../assets/logo.svg';
+import twitchIcon from '../../../assets/twitch-icon.svg';
 
 /* eslint-disable no-unused-vars */
 enum TabState {
@@ -11,7 +17,8 @@ enum TabState {
   UniqueArmor,
   UniqueWeapons,
   UniqueOther,
-  Sets
+  Sets,
+  None
 }
 /* eslint-enable no-unused-vars */
 
@@ -36,13 +43,55 @@ export function List({ fileReaderResponse }: ListProps) {
   return (
     <Container>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs value={tab} onChange={(_, value) => { setTab(value); }} aria-label="basic tabs example">
-          <Tab label="Statistics" />
-          <Tab label="Unique armor" />
-          <Tab label="Unique weapons" />
-          <Tab label="Unique others" />
-          <Tab label="Sets" />
-        </Tabs>
+        <ButtonPanel>
+          <IconButton
+            size="large"
+            onClick={() => window.Main.openFolder()}
+            title="Change folder to read from"
+          >
+            <FolderIcon />
+          </IconButton>
+          <IconButton
+            size="large"
+            onClick={() => {
+              setTab(TabState.None);
+              setTimeout(() => {
+                window.Main.readFilesUponStart();
+                setTab(TabState.Statistics);  
+              }, 1);
+            }}
+            title="Refresh"
+          >
+            <RefreshIcon />
+          </IconButton>
+        </ButtonPanel>
+        <Logo>
+          <Image
+            src={logo}
+            alt="Holy Grail logo"
+          />
+          <h1>Holy Grail</h1>
+          <h6>
+            by&nbsp;
+            <a href="#" onClick={() => window.Main.openUrl('https://www.twitch.tv/nadinwins')}>
+              NadinWins<img src={twitchIcon} alt="Twitch" />
+            </a>
+          </h6>
+        </Logo>
+        {tab !== TabState.None ?
+          <Tabs
+            value={tab}
+            onChange={(_, value) => { setTab(value); }}
+            variant="scrollable"
+            scrollButtons="auto"
+          >
+            <Tab label="Statistics" />
+            <Tab label="Unique armor" />
+            <Tab label="Unique weapons" />
+            <Tab label="Unique others" />
+            <Tab label="Sets" />
+          </Tabs> 
+        : null}
       </Box>
       <TabPanel value={tab} index={TabState.Statistics} player={items} stats={stats} />
       <TabPanel value={tab} index={TabState.UniqueArmor} items={holyGrailSeedData.uniques.armor} player={items} />
