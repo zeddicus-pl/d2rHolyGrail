@@ -4,4 +4,4 @@ packages
 .webpack
 out
 .DS_Store
-
+yarn-error.log

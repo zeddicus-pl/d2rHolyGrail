@@ -1,14 +1,15 @@
 import { app, BrowserWindow, ipcMain, dialog, shell } from 'electron';
 import * as d2s from '@dschu012/d2s';
 import { constants } from '@dschu012/d2s/lib/data/versions/96_constant_data';
-import { readFileSync } from 'fs';
+import { readFileSync, existsSync } from 'fs';
 import { basename, extname, join } from 'path';
 import { IpcMainEvent } from 'electron/renderer';
 import { readdirSync } from 'original-fs';
-import { FileReaderResponse, SilospenItem } from '../src/@types/main';
+import { FileReaderResponse, Settings, SilospenItem } from '../src/@types/main';
 // @ts-ignore
 import fetch from 'node-fetch';
 import https from 'https';
+import storage from 'electron-json-storage';
 import { silospenMapping } from './silospenMapping';
 
 const httpsAgent = new https.Agent({
@@ -20,6 +21,8 @@ let mainWindow: BrowserWindow | null
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string
 
+storage.setDataPath(app.getPath('userData'));
+
 const assetsPath =
   process.env.NODE_ENV === 'production'
     ? process.resourcesPath
@@ -30,6 +33,8 @@ function createWindow () {
     icon: join(assetsPath, 'assets', 'icon.png'),
     width: 1100,
     height: 700,
+    minWidth: 540,
+    minHeight: 300,
     backgroundColor: '#111111',
     autoHideMenuBar: true,
     webPreferences: {
@@ -40,17 +45,20 @@ function createWindow () {
   })
 
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY)
-  // mainWindow.webContents.openDevTools()
+  if (process.env.ELECTRON_ENV === 'development') {
+    mainWindow.webContents.openDevTools()
+  }
 
   mainWindow.on('closed', () => {
-    if (process.platform !== 'darwin') {
-      app.quit()
-    }
+    app.quit()
   })
 }
 
 async function registerListeners () {
-  ipcMain.on('openFolderRequest', (event, arg) => {
+  ipcMain.on('readFilesUponStart', (event) => {
+    readFilesUponStart(event);
+  });
+  ipcMain.on('openFolderRequest', (event) => {
     openAndParseSaves(event);
   });
   ipcMain.on('openUrl', (_, url) => {
@@ -78,6 +86,24 @@ app.on('activate', () => {
   }
 })
 
+const getSettings = (): Settings => {
+  return (storage.getSync('settings') as Settings);
+}
+
+const getSetting = (key: keyof Settings): string | null => {
+  const settings = getSettings();
+  return settings[key] ? settings[key] : null;
+}
+
+const saveSetting = (key: keyof Settings, value: string) => {
+  const settings = getSettings();
+  settings[key] = value;
+  storage.set('settings', settings, (error) => {
+    if (error) console.log(error);
+  });
+
+}
+
 const openAndParseSaves = (event: IpcMainEvent) => {
   return dialog.showOpenDialog({
     title: "Select Diablo 2 / Diablo 2 Ressurected save folder",
@@ -86,9 +112,7 @@ const openAndParseSaves = (event: IpcMainEvent) => {
   }).then((result) => {
     if (result.filePaths[0]) {
       event.reply('openFolderWorking', null);
-      parseSaves(result.filePaths[0]).then((results) => {
-        event.reply('openFolder', results);
-      });
+      parseSaves(event, result.filePaths[0]);
     } else {
       event.reply('openFolder', null);
     }
@@ -97,7 +121,7 @@ const openAndParseSaves = (event: IpcMainEvent) => {
   });
 };
 
-const parseSaves = async (path: string) => {
+const parseSaves = async (event: IpcMainEvent, path: string) => {
   const results: FileReaderResponse = {
     items: {},
     stats: {},
@@ -111,7 +135,20 @@ const parseSaves = async (path: string) => {
           results.stats[saveName] = 0;
         }
         result.forEach((item) => {
-          const name = item.unique_name || item.set_name || item.rare_name || item.rare_name2 || '';
+          let name = item.unique_name || item.set_name || item.rare_name || item.rare_name2 || '';
+          if (name.indexOf('Rainbow Facet') !== -1) {
+            let type = '';
+            let skill = '';
+            item.magic_attributes.forEach((attr) => {
+              if (attr.name === 'item_skillondeath') { type = 'death' }
+              if (attr.name === 'item_skillonlevelup') { type = 'levelup' }
+              if (attr.name === 'passive_cold_mastery') { skill = 'cold' }
+              if (attr.name === 'passive_pois_mastery') { skill = 'poison' }
+              if (attr.name === 'passive_fire_mastery') { skill = 'fire' }
+              if (attr.name === 'passive_ltng_mastery') { skill = 'lightning' }
+            })
+            name = name + skill + type;
+          }
           if (name === '') return;
           const itemName = name.toLowerCase().replace(/[^a-z0-9]/gi, '').toLowerCase();
           if (results.items[itemName]) {
@@ -134,7 +171,12 @@ const parseSaves = async (path: string) => {
         results.stats[saveName] = null;
       });
   });
-  return Promise.all(promises).then(() => results);
+  return Promise.all(promises).then(() => {
+    if (path && path !== '') {
+      saveSetting('saveDir', path);
+    }
+    event.reply('openFolder', results);
+  });
 }
 
 const parseSave = async (saveName: string, content: Buffer): Promise<d2s.types.IItem[]>  => {
@@ -153,6 +195,17 @@ const parseSave = async (saveName: string, content: Buffer): Promise<d2s.types.I
   })
   return items;
 };
+
+async function readFilesUponStart (event: IpcMainEvent) {
+  const saveDir = getSetting('saveDir');
+  if (saveDir && existsSync(saveDir)) {
+    console.log('reading from ' + saveDir);
+    parseSaves(event, saveDir);
+  } else {
+    console.log('no dir selected');
+    event.reply('noDirectorySelected', null);
+  }
+}
 
 const fetchSilospen = (event: IpcMainEvent, type: string, itemName: string) => {
   const name = silospenMapping[itemName.trim()] || 'null';

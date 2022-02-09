@@ -1,6 +1,9 @@
 import { contextBridge, ipcRenderer } from 'electron'
 
 export const api = {
+  readFilesUponStart: () => {
+    ipcRenderer.send('readFilesUponStart')
+  },
   openFolder: () => {
     ipcRenderer.send('openFolderRequest')
   },

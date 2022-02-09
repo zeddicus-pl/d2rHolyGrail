@@ -21,3 +21,7 @@ export type SilospenItem = {
   area: string,
   chance: string,
 }
+
+export type Settings = {
+  saveDir: string,
+}
