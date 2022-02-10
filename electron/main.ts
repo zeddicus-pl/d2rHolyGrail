@@ -2,21 +2,28 @@ import { app, BrowserWindow, ipcMain, dialog, shell } from 'electron';
 import * as d2s from '@dschu012/d2s';
 import { constants } from '@dschu012/d2s/lib/data/versions/96_constant_data';
 import { readFileSync, existsSync } from 'fs';
-import { basename, extname, join } from 'path';
+import { basename, extname, join, resolve, sep } from 'path';
 import { IpcMainEvent } from 'electron/renderer';
 import { readdirSync } from 'original-fs';
-import { FileReaderResponse, Settings, SilospenItem } from '../src/@types/main';
+import { FileReaderResponse, ItemsInSaves, Settings, SilospenItem, ItemInSave } from '../src/@types/main';
 // @ts-ignore
 import fetch from 'node-fetch';
 import https from 'https';
 import storage from 'electron-json-storage';
 import { silospenMapping } from './silospenMapping';
+import chokidar, { FSWatcher } from 'chokidar';
 
 const httpsAgent = new https.Agent({
   rejectUnauthorized: false,
 });
 
 let mainWindow: BrowserWindow | null
+let fileWatcher: FSWatcher | null = null;
+let watchPath: string | null = null;
+let filesChanged: boolean = false;
+let readingFiles: boolean = false;
+let eventToReply: IpcMainEvent | null;
+let history: ItemsInSaves;
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string
@@ -50,8 +57,15 @@ function createWindow () {
   }
 
   mainWindow.on('closed', () => {
-    app.quit()
+    closeApp();
   })
+}
+
+async function closeApp () {
+  if (fileWatcher) {
+    await fileWatcher.close();
+  }
+  app.quit();
 }
 
 async function registerListeners () {
@@ -76,7 +90,7 @@ app.on('ready', createWindow)
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
-    app.quit()
+    closeApp();
   }
 })
 
@@ -101,7 +115,23 @@ const saveSetting = (key: keyof Settings, value: string) => {
   storage.set('settings', settings, (error) => {
     if (error) console.log(error);
   });
+}
 
+const getHistory = (): ItemsInSaves => {
+  history = (storage.getSync('history') as ItemsInSaves);
+  return history;
+}
+
+const saveHistory = (items: ItemsInSaves) => {
+  history = items;
+  storage.set('history', items, (error) => {
+    if (error) console.log(error);
+  });
+}
+
+const updateHistory = (itemName: string, item: ItemInSave) => {
+  history[itemName] = item;
+  saveHistory(history);
 }
 
 const openAndParseSaves = (event: IpcMainEvent) => {
@@ -111,8 +141,9 @@ const openAndParseSaves = (event: IpcMainEvent) => {
     properties: ['openDirectory'],
   }).then((result) => {
     if (result.filePaths[0]) {
+      const path = result.filePaths[0];
       event.reply('openFolderWorking', null);
-      parseSaves(event, result.filePaths[0]);
+      parseSaves(event, path);
     } else {
       event.reply('openFolder', null);
     }
@@ -121,12 +152,56 @@ const openAndParseSaves = (event: IpcMainEvent) => {
   });
 };
 
+const tickReader = async () => {
+  if (eventToReply && watchPath && filesChanged && !readingFiles) {
+    console.log('re-reading files!');
+    readingFiles = true;
+    filesChanged = false;
+    await parseSaves(eventToReply, watchPath);
+    readingFiles = false;
+  }
+}
+setInterval(tickReader, 200);
+
+const prepareChokidarGlobe = (filename: string): string => {
+  if (filename.length < 2) {
+    return filename;
+  }
+  const resolved = resolve(filename);
+  return resolved.substring(0, 1) + resolved.substring(1).split(sep).join('/') + '/*.d2s';
+}
+
 const parseSaves = async (event: IpcMainEvent, path: string) => {
   const results: FileReaderResponse = {
     items: {},
     stats: {},
   };
   const files = readdirSync(path).filter(file => extname(file).toLowerCase() === '.d2s');
+
+  if (!eventToReply) {
+    eventToReply = event;
+  }
+
+  if (files.length) {
+    // if no file watcher is active
+    if (!fileWatcher) {
+      watchPath = path;
+      fileWatcher = chokidar.watch(prepareChokidarGlobe(watchPath), {
+        followSymlinks: false,
+        ignoreInitial: true,
+        depth: 0,
+        ignored: /((^|[/\\])\.\.|(^.*\.[^d][^2][^s]))/,
+      }).on('all', () => {
+        filesChanged = true;
+      });
+    }
+    // if file watcher is enabled, and directory changed
+    if (fileWatcher && watchPath && watchPath !== path) {
+      fileWatcher.unwatch(prepareChokidarGlobe(watchPath)).add(prepareChokidarGlobe(path));
+      watchPath = path;
+    }
+  }
+
   const promises = files.map((file) => {
     const saveName = basename(file).replace(".d2s", "");
     return parseSave(saveName, readFileSync(join(path, file), null))
@@ -199,10 +274,8 @@ const parseSave = async (saveName: string, content: Buffer): Promise<d2s.types.I
 async function readFilesUponStart (event: IpcMainEvent) {
   const saveDir = getSetting('saveDir');
   if (saveDir && existsSync(saveDir)) {
-    console.log('reading from ' + saveDir);
     parseSaves(event, saveDir);
   } else {
-    console.log('no dir selected');
     event.reply('noDirectorySelected', null);
   }
 }

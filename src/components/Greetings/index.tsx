@@ -42,6 +42,11 @@ export function Greetings({ onItemsLoaded }: GreetingsProps) {
         }
         return;  
       }
+      if (uiState !== UiState.Reading) {
+        setUiState(UiState.Done);
+        onItemsLoaded(fileReaderResponse);
+        return;
+      }
       setTimeout(() => {
         setUiState(UiState.Done);
         onItemsLoaded(fileReaderResponse);

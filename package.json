@@ -23,6 +23,7 @@
     "@types/electron-json-storage": "^4.5.0",
     "@types/node-fetch": "^3.0.3",
     "animate.css": "^4.1.1",
+    "chokidar": "^3.5.3",
     "css-loader": "^6.5.1",
     "d2-holy-grail": "https://github.com/Nasicus/d2-holy-grail.git",
     "electron-json-storage": "^4.5.0",

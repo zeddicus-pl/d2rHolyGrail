@@ -4,11 +4,15 @@ export type SaveFileStats = {
   [filename: string]: number | null,
 }
 
+export type ItemInSave = {
+  item: d2s.types.IItem,
+  saveName: string[],
+  firstFoundDate: Date,
+  firstFoundBy: string,
+}
+
 export type ItemsInSaves = {
-  [itemName: string]: {
-    item: d2s.types.IItem,
-    saveName: string[],
-  }
+  [itemName: string]: ItemInSave,
 }
 
 export type FileReaderResponse = {
