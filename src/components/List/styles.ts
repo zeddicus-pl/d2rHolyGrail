@@ -24,6 +24,7 @@ export const Logo = styled.div`
     align-self: flex-end;
     margin-bottom: 6px;
     font-family: 'Gwendolyn', cursive;
+    font-size: 16px;
   }
 `
 
