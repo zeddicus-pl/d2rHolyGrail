@@ -12,6 +12,16 @@ import https from 'https';
 import storage from 'electron-json-storage';
 import { silospenMapping } from './silospenMapping';
 import chokidar, { FSWatcher } from 'chokidar';
+import WindowStateKeeper from "electron-window-state";
+import express from "express";
+import http from "http";
+import request from "request";
+import { Server, Socket } from "socket.io";
+
+// these constants are set by the build stage
+declare const STREAM_WEBPACK_ENTRY: string;
+declare const MAIN_WINDOW_WEBPACK_ENTRY: string
+declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string
 
 const httpsAgent = new https.Agent({
   rejectUnauthorized: false,
@@ -24,9 +34,10 @@ let filesChanged: boolean = false;
 let readingFiles: boolean = false;
 let eventToReply: IpcMainEvent | null;
 let history: ItemsInSaves;
+let currentData: FileReaderResponse;
 
-declare const MAIN_WINDOW_WEBPACK_ENTRY: string
-declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string
+const streamListeners: Map<string, Socket> = new Map();
+
 
 storage.setDataPath(app.getPath('userData'));
 
@@ -36,10 +47,16 @@ const assetsPath =
     : app.getAppPath()
 
 function createWindow () {
+  const mainWindowState = WindowStateKeeper({
+    defaultWidth: 1100,
+    defaultHeight: 700,
+  });
   mainWindow = new BrowserWindow({
     icon: join(assetsPath, 'assets', 'icon.png'),
-    width: 1100,
-    height: 700,
+    x: mainWindowState.x,
+    y: mainWindowState.y,
+    width: mainWindowState.width,
+    height: mainWindowState.height,
     minWidth: 540,
     minHeight: 300,
     backgroundColor: '#111111',
@@ -50,6 +67,7 @@ function createWindow () {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
     }
   })
+  mainWindowState.manage(mainWindow);
 
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY)
   if (process.env.ELECTRON_ENV === 'development') {
@@ -59,6 +77,38 @@ function createWindow () {
   mainWindow.on('closed', () => {
     closeApp();
   })
+
+  const streamApp = express();
+  const server = http.createServer(streamApp);
+  const io = new Server(server, {
+    serveClient: false,
+  });
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  streamApp.get("/", (req: any, res: any) => {
+    console.log(STREAM_WEBPACK_ENTRY);
+    if (STREAM_WEBPACK_ENTRY.startsWith("http")) {
+      request(STREAM_WEBPACK_ENTRY).pipe(res);
+    } else {
+      res.sendFile(STREAM_WEBPACK_ENTRY.replace('file://', ''));
+    }
+  });
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  streamApp.get("/stream/index.js", (req: any, res: any) => {
+    res.sendFile(resolve(join(__dirname, "..", "renderer", "stream", "index.js")));
+  });
+
+  io.on("connection", (socket: Socket) => {
+    console.log('client connected')
+    addStreamListener(socket);
+    socket.on("disconnect", () => {
+      console.log('client disconnected')
+      removeStreamListener(socket);
+    });
+  });
+
+  server.listen(3666);
 }
 
 async function closeApp () {
@@ -66,6 +116,29 @@ async function closeApp () {
     await fileWatcher.close();
   }
   app.quit();
+}
+
+const addStreamListener = (socket: Socket): void => {
+  streamListeners.set(socket.id, socket);
+  socket.emit("updatedSettings", getSettings());
+  socket.emit("openFolder", currentData);
+}
+
+const removeStreamListener = (socket: Socket): void => {
+  streamListeners.delete(socket.id);
+}
+
+const updateSettingsToListeners = () => {
+  const settings = getSettings();
+  streamListeners.forEach((socket) => {
+    socket.emit("updatedSettings", settings);
+  })
+}
+
+const updateDataToListeners = () => {
+  streamListeners.forEach((socket) => {
+    socket.emit("openFolder", currentData);
+  })
 }
 
 async function registerListeners () {
@@ -126,7 +199,8 @@ const saveSetting = (key: keyof Settings, value: string) => {
     if (error) console.log(error);
     if (eventToReply) {
       eventToReply.reply('updatedSettings', settings);
-    }  
+    }
+    updateSettingsToListeners();
   });
 }
 
@@ -264,6 +338,8 @@ const parseSaves = async (event: IpcMainEvent, path: string) => {
       saveSetting('saveDir', path);
     }
     event.reply('openFolder', results);
+    currentData = results;
+    updateDataToListeners();
   });
 }
 
