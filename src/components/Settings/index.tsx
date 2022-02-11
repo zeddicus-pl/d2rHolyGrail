@@ -1,10 +1,8 @@
 import { forwardRef, useState, ReactElement, Ref } from 'react';
-import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import ListItemText from '@mui/material/ListItemText';
 import ListItem from '@mui/material/ListItem';
 import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
@@ -15,6 +13,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import { TransitionProps } from '@mui/material/transitions';
 import { useTranslation } from 'react-i18next';
 import { Settings } from '../../@types/main';
+import { Grid } from '@mui/material';
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -85,6 +84,11 @@ export default function SettingsPanel({ appSettings }: SettingsPanelProps) {
           </ListItem>
           */}
         </List>
+        <Grid m={{ t: 2 }} p={3}>
+          <h3>{t('HTTP feed preview')}</h3>
+          <p><a href="http://localhost:3666/" target="_blank">http://localhost:3666/</a></p>
+          <iframe src="http://localhost:3666/" style={{ width: 300, height: 300, background: '#000', border: 0 }} />
+        </Grid>
       </Dialog>
     </>
   );

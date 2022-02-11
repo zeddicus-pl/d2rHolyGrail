@@ -45,15 +45,7 @@ const countItems = (object: any, items: ItemsInSaves): { exists: number, owned: 
   return { exists, owned };
 }
 
-const checkItemsAllValid = (
-  items: ItemsInSaves,
-  template: IHolyGrailData
-): void => {
-  const flat: {[name: string]: any} = {};
-  flattenObject(template, flat);
-}
-
-const computeStats = (
+export const computeStats = (
   items: ItemsInSaves,
   template: IUniqueArmors | IUniqueWeapons | IUniqueOther | ISetItems | IHolyGrailData
 ): Stats => {
@@ -69,7 +61,6 @@ const computeStats = (
 }
 
 export function Statistics({ items, stats }: StatsProps) {
-  useMemo(() => checkItemsAllValid(items, holyGrailSeedData), [items]);
   const armorStats = useMemo(() => computeStats(items, holyGrailSeedData.uniques.armor), [items]);
   const weaponsStats = useMemo(() => computeStats(items, holyGrailSeedData.uniques.weapons), [items]);
   const otherStats = useMemo(() => computeStats(items, holyGrailSeedData.uniques.other), [items]);

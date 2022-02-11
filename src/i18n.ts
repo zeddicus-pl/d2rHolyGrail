@@ -7,7 +7,7 @@ i18n
   .use(initReactI18next)
   .init({
     resources: { pl: { translation: pl } },
-    lng: window.Main.getSetting("lang"),
+    lng: window.Main ? window.Main.getSetting("lang") : "en",
     fallbackLng: "en",
     interpolation: {
       escapeValue: false,
