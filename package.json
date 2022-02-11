@@ -6,6 +6,7 @@
   "main": "./.webpack/main/index.js",
   "scripts": {
     "start": "ELECTRON_ENV=development electron-forge start",
+    "start-win": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "release": "electron-forge publish",
