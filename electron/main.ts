@@ -1,7 +1,7 @@
 import { app, BrowserWindow, ipcMain, dialog, shell } from 'electron';
 import * as d2s from '@dschu012/d2s';
 import { constants } from '@dschu012/d2s/lib/data/versions/96_constant_data';
-import { readFileSync, existsSync } from 'fs';
+import { existsSync, promises } from 'fs';
 import { basename, extname, join, resolve, sep } from 'path';
 import { IpcMainEvent } from 'electron/renderer';
 import { readdirSync } from 'original-fs';
@@ -17,6 +17,8 @@ import express from "express";
 import http from "http";
 import request from "request";
 import { Server, Socket } from "socket.io";
+
+const { readFile } = promises;
 
 // these constants are set by the build stage
 declare const STREAM_WEBPACK_ENTRY: string;
@@ -35,9 +37,12 @@ let readingFiles: boolean = false;
 let eventToReply: IpcMainEvent | null;
 let history: ItemsInSaves;
 let currentData: FileReaderResponse;
+let currentSettings: Settings = {
+  lang: 'en',
+  saveDir: '',
+}
 
 const streamListeners: Map<string, Socket> = new Map();
-
 
 storage.setDataPath(app.getPath('userData'));
 
@@ -47,6 +52,7 @@ const assetsPath =
     : app.getAppPath()
 
 function createWindow () {
+  getSettings();
   const mainWindowState = WindowStateKeeper({
     defaultWidth: 1100,
     defaultHeight: 700,
@@ -120,7 +126,7 @@ async function closeApp () {
 
 const addStreamListener = (socket: Socket): void => {
   streamListeners.set(socket.id, socket);
-  socket.emit("updatedSettings", getSettings());
+  socket.emit("updatedSettings", currentSettings);
   socket.emit("openFolder", currentData);
 }
 
@@ -129,9 +135,8 @@ const removeStreamListener = (socket: Socket): void => {
 }
 
 const updateSettingsToListeners = () => {
-  const settings = getSettings();
   streamListeners.forEach((socket) => {
-    socket.emit("updatedSettings", settings);
+    socket.emit("updatedSettings", currentSettings);
   })
 }
 
@@ -188,17 +193,15 @@ const getSettings = (): Settings => {
 }
 
 const getSetting = (key: keyof Settings): string | null => {
-  const settings = getSettings();
-  return settings[key] ? settings[key] : null;
+  return currentSettings[key] ? currentSettings[key] : null;
 }
 
 const saveSetting = (key: keyof Settings, value: string) => {
-  const settings = getSettings();
-  settings[key] = value;
-  storage.set('settings', settings, (error) => {
+  currentSettings[key] = value;
+  storage.set('settings', currentSettings, (error) => {
     if (error) console.log(error);
     if (eventToReply) {
-      eventToReply.reply('updatedSettings', settings);
+      eventToReply.reply('updatedSettings', currentSettings);
     }
     updateSettingsToListeners();
   });
@@ -291,7 +294,8 @@ const parseSaves = async (event: IpcMainEvent, path: string) => {
 
   const promises = files.map((file) => {
     const saveName = basename(file).replace(".d2s", "");
-    return parseSave(saveName, readFileSync(join(path, file), null))
+    return readFile(join(path, file))
+      .then((buffer) => parseSave(saveName, buffer))
       .then((result) => {
         if (!result.length) {
           results.stats[saveName] = 0;
@@ -331,7 +335,7 @@ const parseSaves = async (event: IpcMainEvent, path: string) => {
       .catch((e) => {
         console.log("ERROR", e);
         results.stats[saveName] = null;
-      });
+      })
   });
   return Promise.all(promises).then(() => {
     if (path && path !== '') {

@@ -11,5 +11,6 @@ module.exports = {
       regenerator: true,
       helpers: false,
     }]
-  ]
+  ],
+  "sourceType": "unambiguous",
 }
