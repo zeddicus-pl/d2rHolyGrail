@@ -15,6 +15,12 @@ export type ItemsInSaves = {
   [itemName: string]: ItemInSave,
 }
 
+export type SavesHistory = {
+  [saveName: string]: {
+    items: ItemsInSaves,
+  },
+}
+
 export type FileReaderResponse = {
   items: ItemsInSaves,
   stats: SaveFileStats,

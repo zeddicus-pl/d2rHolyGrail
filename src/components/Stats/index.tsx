@@ -14,6 +14,7 @@ import 'react-circular-progressbar/dist/styles.css';
 import { Win } from './win';
 import { ProgressProvider } from './animation';
 import { holyGrailSeedData } from '../../../electron/holyGrailSeedData';
+import { useTranslation } from 'react-i18next';
 
 type StatsProps = {
   items: ItemsInSaves,
@@ -79,6 +80,7 @@ export function Statistics({ items, stats }: StatsProps) {
   const otherStats = useMemo(() => computeStats(items, holyGrailSeedData.uniques.other), [items]);
   const setsStats = useMemo(() => computeStats(items, holyGrailSeedData.sets), [items]);
   const totalStats = useMemo(() => computeStats(items, holyGrailSeedData), [items]);
+  const { t } = useTranslation();
 
   const [ saveFileStats, setSaveFileStats ] = useState<SaveFileStats>({})
   useEffect(() => {
@@ -97,25 +99,25 @@ export function Statistics({ items, stats }: StatsProps) {
               <TableHead>
                 <TableRow>
                   <TableCell></TableCell>
-                  <TableCell align="center">Exists</TableCell>
-                  <TableCell align="center">Owned</TableCell>
-                  <TableCell align="center">Remaining</TableCell>
-                  <TableCell align="center">% Completed</TableCell>
+                  <TableCell align="center">{t('Exists')}</TableCell>
+                  <TableCell align="center">{t('Owned')}</TableCell>
+                  <TableCell align="center">{t('Remaining')}</TableCell>
+                  <TableCell align="center">{t('% Completed')}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                <StatisticsLine title="Unique Armor" stats={armorStats} />
-                <StatisticsLine title="Unique Weapons" stats={weaponsStats} />
-                <StatisticsLine title="Unique Other" stats={otherStats} />
-                <StatisticsLine title="Sets" stats={setsStats} />
-                <StatisticsLine bold title="Total" stats={totalStats} />
+                <StatisticsLine title={t("Unique armor")} stats={armorStats} />
+                <StatisticsLine title={t("Unique weapons")} stats={weaponsStats} />
+                <StatisticsLine title={t("Unique other")} stats={otherStats} />
+                <StatisticsLine title={t("Sets")} stats={setsStats} />
+                <StatisticsLine bold title={t("Total")} stats={totalStats} />
               </TableBody>
             </Table>
           </TableContainer>
         </Grid>
         <Grid item md={4}>
           <div style={{ width: 250, height: 300, textAlign: 'center', margin: 'auto' }}>
-            <Typography variant="h5" gutterBottom>Progress:</Typography>
+            <Typography variant="h5" gutterBottom>{t("Progress:")}</Typography>
             <ProgressProvider valueStart={0} valueEnd={totalStats.owned}>
               { (value: number) => <CircularProgressbar
                 value={value}
@@ -134,15 +136,15 @@ export function Statistics({ items, stats }: StatsProps) {
           <Grid item xs={4}>
             <Accordion>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography>Save files summary</Typography>
+                <Typography>{t("Save files summary")}</Typography>
               </AccordionSummary>
               <AccordionDetails>
                 <TableContainer>
                   <Table>
                     <TableHead>
                       <TableRow>
-                        <TableCell>Filename</TableCell>
-                        <TableCell>Unique items</TableCell>
+                        <TableCell>{t("Filename")}</TableCell>
+                        <TableCell>{t("Unique items")}</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -151,9 +153,9 @@ export function Statistics({ items, stats }: StatsProps) {
                           <TableCell>{filename}</TableCell>
                           <TableCell>{
                             stats[filename] === null
-                              ? <span style={{color: 'red'}}>Error</span>
-                              : stats[filename
-                          ]}</TableCell>
+                              ? <span style={{color: 'red'}}>{t("Error")}</span>
+                              : stats[filename]
+                          }</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>

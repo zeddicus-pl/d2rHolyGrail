@@ -1,6 +1,7 @@
 import { Box, Typography, Grid, List, ListItem, ListItemIcon, ListItemText, ListItemButton } from '@mui/material';
 import DoneIcon from '@mui/icons-material/Done';
 import { grey } from '@mui/material/colors';
+import { useTranslation } from 'react-i18next';
 
 import { IUniqueArmors, IUniqueWeapons, IUniqueOther, ISetItems } from 'd2-holy-grail/client/src/common/definitions/union/IHolyGrailData';
 import { ItemsInSaves, SaveFileStats } from '../../@types/main';
@@ -21,6 +22,7 @@ type TabPanelProps = {
 
 export function TabPanel(props: TabPanelProps) {
   const { value, index, items, sets, player, stats } = props;
+  const { t } = useTranslation();
 
   return (
     <div
@@ -31,15 +33,15 @@ export function TabPanel(props: TabPanelProps) {
       style={{ height: '100%' }}
     >
       {value === index && items && (
-        <Box sx={{ p: 3 }}>
+        <Box sx={{ p: 3, pt: 0 }}>
           {Object.keys(items).map((type) => {
             return <div key={type}>
-              <Typography variant="h6" gutterBottom component="div">{title(type)}</Typography>
+              <Typography variant="h6" gutterBottom mt={2} component="div">{t(title(type))}</Typography>
               {
                   <Grid container spacing={2}>
                   {Object.keys((items as any)[type]).map((dif) =>
                     <Grid item md={4} key={dif}>
-                      <Typography variant="subtitle1" gutterBottom component="div">{title(dif)}</Typography>
+                      <Typography variant="subtitle1" gutterBottom component="div">{t(title(dif))}</Typography>
                       <List
                         sx={{ width: '100%', bgcolor: 'background.paper' }}
                         aria-label="contacts"
@@ -49,7 +51,7 @@ export function TabPanel(props: TabPanelProps) {
                             const itemName = simplifyItemName(itemFullName);
                             return <Popup
                               itemName={itemName}
-                              fullItemName={itemFullName}
+                              fullItemName={t(itemFullName)}
                               itemType="UNIQUE"
                               key={itemName}
                               saveFiles={player[itemName] ? player[itemName].saveName : []}
@@ -61,7 +63,7 @@ export function TabPanel(props: TabPanelProps) {
                                       <DoneIcon />
                                     </ListItemIcon>
                                   )}
-                                  <ListItemText inset={!player[itemName]} primary={itemFullName} />
+                                  <ListItemText inset={!player[itemName]} primary={t(itemFullName)} />
                                 </ListItemButton>
                               </ListItem>
                             </Popup>
@@ -76,12 +78,12 @@ export function TabPanel(props: TabPanelProps) {
         </Box>
       )}
       {value === index && sets && (
-        <Box sx={{ p: 3 }}>
+        <Box sx={{ p: 3, pt: 0 }}>
         {
             <Grid container spacing={2}>
             {Object.keys((sets as any)).map((set) =>
               <Grid item md={4} key={set}>
-                <Typography variant="h6" gutterBottom component="div">{title(set)}</Typography>
+                <Typography variant="h6" gutterBottom mt={2} component="div">{t(title(set))}</Typography>
                 <List
                   sx={{ width: '100%', bgcolor: 'background.paper' }}
                   aria-label="contacts"
@@ -91,7 +93,7 @@ export function TabPanel(props: TabPanelProps) {
                       const itemName = simplifyItemName(itemFullName);
                       return <Popup
                         itemName={itemName}
-                        fullItemName={itemFullName}
+                        fullItemName={t(itemFullName)}
                         itemType="SET"
                         key={itemName}
                         saveFiles={player[itemName] ? player[itemName].saveName : []}
@@ -103,7 +105,7 @@ export function TabPanel(props: TabPanelProps) {
                                 <DoneIcon />
                               </ListItemIcon>
                             )}
-                            <ListItemText inset={!player[itemName]} primary={itemFullName} />
+                            <ListItemText inset={!player[itemName]} primary={t(itemFullName)} />
                           </ListItemButton>
                         </ListItem>
                       </Popup>

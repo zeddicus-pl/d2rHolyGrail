@@ -1,10 +1,16 @@
-import { useState } from 'react';
-import { Box, Tabs, Tab, IconButton } from '@mui/material';
-import FolderIcon from '@mui/icons-material/Folder';
-import RefreshIcon from '@mui/icons-material/Refresh';
+import { useState, MouseEvent } from 'react';
+import { Box, Tabs, Tab } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import { Container, Image, Logo, ButtonPanel } from './styles';
 import { TabPanel } from './tab';
+import Settings from '../Settings'
+import { useTranslation } from 'react-i18next';
 import { FileReaderResponse } from '../../@types/main';
+
+import flagGB from 'circle-flags/flags/gb.svg';
+import flagPL from 'circle-flags/flags/pl.svg';
 
 import { holyGrailSeedData } from '../../../electron/holyGrailSeedData';
 
@@ -31,11 +37,30 @@ type ListProps = {
 }
 
 export function List({ fileReaderResponse }: ListProps) {
-
   const [tab, setTab] = useState(TabState.Statistics);
+  const {t, i18n} = useTranslation();
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = (lang: string) => {
+    i18n.changeLanguage(lang);
+    setAnchorEl(null);
+  };
 
   if (fileReaderResponse === null) {
     return null;
+  }
+
+  let flag;
+  switch (i18n.language) {
+    case 'pl':
+      flag = flagPL;
+      break;
+    default:
+      flag = flagGB;
   }
 
   const { items, stats } = fileReaderResponse;
@@ -44,35 +69,37 @@ export function List({ fileReaderResponse }: ListProps) {
     <Container>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <ButtonPanel>
-          <IconButton
-            size="large"
-            onClick={() => window.Main.openFolder()}
-            title="Change folder to read from"
-          >
-            <FolderIcon />
+          <IconButton onClick={handleClick}>
+            <img style={{ height: '1em' }} src={flag} />
           </IconButton>
-          <IconButton
-            size="large"
-            onClick={() => {
-              setTab(TabState.None);
-              setTimeout(() => {
-                window.Main.readFilesUponStart();
-                setTab(TabState.Statistics);  
-              }, 1);
-            }}
-            title="Refresh"
-          >
-            <RefreshIcon />
-          </IconButton>
+          <Settings />
         </ButtonPanel>
+        <Menu
+          anchorEl={anchorEl}
+          open={open}
+          onClose={() => { setAnchorEl(null); }}
+        >
+          <MenuItem onClick={() => { handleClose('en') }}>
+            <IconButton disableRipple disableFocusRipple >
+              <img style={{ height: '1em' }} src={flagGB} />
+            </IconButton>
+            {t('English')}
+          </MenuItem>
+          <MenuItem onClick={() => { handleClose('pl') }}>
+            <IconButton disableRipple disableFocusRipple>
+              <img style={{ height: '1em' }} src={flagPL} />
+            </IconButton>
+            {t('Polski')}
+          </MenuItem>
+        </Menu>
         <Logo>
           <Image
             src={logo}
-            alt="Holy Grail logo"
+            alt=""
           />
-          <h1>Holy Grail</h1>
+          <h1>{t('Holy Grail')}</h1>
           <h6>
-            by&nbsp;
+            {t('by')}&nbsp;
             <a href="#" onClick={() => window.Main.openUrl('https://www.twitch.tv/nadinwins')}>
               NadinWins<img src={twitchIcon} alt="Twitch" />
             </a>
@@ -85,11 +112,11 @@ export function List({ fileReaderResponse }: ListProps) {
             variant="scrollable"
             scrollButtons="auto"
           >
-            <Tab label="Statistics" />
-            <Tab label="Unique armor" />
-            <Tab label="Unique weapons" />
-            <Tab label="Unique others" />
-            <Tab label="Sets" />
+            <Tab label={t("Statistics")} />
+            <Tab label={t("Unique armor")} />
+            <Tab label={t("Unique weapons")} />
+            <Tab label={t("Unique others")} />
+            <Tab label={t("Sets")} />
           </Tabs> 
         : null}
       </Box>
