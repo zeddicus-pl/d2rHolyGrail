@@ -84,6 +84,10 @@ async function registerListeners () {
   ipcMain.on('getSetting', (event, key) => {
     event.returnValue = getSetting(key);
   });
+  ipcMain.on('getSettings', (event) => {
+    eventToReply = event;
+    event.returnValue = getSettings();
+  });
   ipcMain.on('saveSetting', (event, key, value) => {
     saveSetting(key, value);
   });
@@ -120,6 +124,9 @@ const saveSetting = (key: keyof Settings, value: string) => {
   settings[key] = value;
   storage.set('settings', settings, (error) => {
     if (error) console.log(error);
+    if (eventToReply) {
+      eventToReply.reply('updatedSettings', settings);
+    }  
   });
 }
 

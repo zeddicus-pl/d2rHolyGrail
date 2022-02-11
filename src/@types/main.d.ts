@@ -34,4 +34,5 @@ export type SilospenItem = {
 
 export type Settings = {
   saveDir: string,
+  lang: string,
 }
