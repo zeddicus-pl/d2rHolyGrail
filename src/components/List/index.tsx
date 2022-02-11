@@ -5,9 +5,9 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { Container, Image, Logo, ButtonPanel } from './styles';
 import { TabPanel } from './tab';
-import Settings from '../Settings'
+import SettingsPanel from '../Settings'
 import { useTranslation } from 'react-i18next';
-import { FileReaderResponse } from '../../@types/main';
+import { FileReaderResponse, Settings } from '../../@types/main';
 
 import flagGB from 'circle-flags/flags/gb.svg';
 import flagPL from 'circle-flags/flags/pl.svg';
@@ -34,9 +34,10 @@ export const title = (str: string): string => {
 
 type ListProps = {
   fileReaderResponse: FileReaderResponse | null,
+  appSettings: Settings,
 }
 
-export function List({ fileReaderResponse }: ListProps) {
+export function List({ fileReaderResponse, appSettings }: ListProps) {
   const [tab, setTab] = useState(TabState.Statistics);
   const {t, i18n} = useTranslation();
 
@@ -47,6 +48,7 @@ export function List({ fileReaderResponse }: ListProps) {
   };
   const handleClose = (lang: string) => {
     i18n.changeLanguage(lang);
+    window.Main.saveSetting('lang', lang);
     setAnchorEl(null);
   };
 
@@ -72,7 +74,7 @@ export function List({ fileReaderResponse }: ListProps) {
           <IconButton onClick={handleClick}>
             <img style={{ height: '1em' }} src={flag} />
           </IconButton>
-          <Settings />
+          <SettingsPanel appSettings={appSettings} />
         </ButtonPanel>
         <Menu
           anchorEl={anchorEl}
@@ -115,7 +117,7 @@ export function List({ fileReaderResponse }: ListProps) {
             <Tab label={t("Statistics")} />
             <Tab label={t("Unique armor")} />
             <Tab label={t("Unique weapons")} />
-            <Tab label={t("Unique others")} />
+            <Tab label={t("Unique other")} />
             <Tab label={t("Sets")} />
           </Tabs> 
         : null}

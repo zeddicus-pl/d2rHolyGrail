@@ -1,4 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron'
+import { Settings } from '../src/@types/main'
 
 export const api = {
   readFilesUponStart: () => {
@@ -13,10 +14,13 @@ export const api = {
   getSilospen: (type: string, itemName: string) => {
     ipcRenderer.send('silospenRequest', type, itemName);
   },
-  getSetting: (key: string): string => {
+  getSettings: (): Settings => {
+    return ipcRenderer.sendSync('getSettings');
+  },
+  getSetting: (key: keyof Settings): string => {
     return ipcRenderer.sendSync('getSetting', key);
   },
-  saveSetting: (key: string, value: string) => {
+  saveSetting: (key: keyof Settings, value: string) => {
     ipcRenderer.send('saveSetting', key, value);
   },
   on: (channel: string, callback: Function) => {

@@ -14,6 +14,7 @@ import Slide from '@mui/material/Slide';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { TransitionProps } from '@mui/material/transitions';
 import { useTranslation } from 'react-i18next';
+import { Settings } from '../../@types/main';
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -24,7 +25,11 @@ const Transition = forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function Settings() {
+type SettingsPanelProps = {
+  appSettings: Settings,
+}
+
+export default function SettingsPanel({ appSettings }: SettingsPanelProps) {
   const [open, setOpen] = useState(false);
   const { t } = useTranslation();
 
@@ -49,6 +54,9 @@ export default function Settings() {
       >
         <AppBar sx={{ position: 'relative' }}>
           <Toolbar>
+            <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+              {t('Settings')}
+            </Typography>
             <IconButton
               edge="start"
               color="inherit"
@@ -57,28 +65,25 @@ export default function Settings() {
             >
               <CloseIcon />
             </IconButton>
-            <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-              {t('Settings')}
-            </Typography>
-            <Button autoFocus color="inherit" onClick={handleClose}>
-              {t('save')}
-            </Button>
           </Toolbar>
         </AppBar>
         <List>
           <ListItem button>
             <ListItemText
-              primary="Phone ringtone"
-              secondary="Titania"
+              primary={t("Saved games folder")}
+              secondary={appSettings.saveDir || ''}
+              onClick={() => { window.Main.openFolder() }}
             />
           </ListItem>
+          {/*
           <Divider />
           <ListItem button>
             <ListItemText
-              primary="Default notification ringtone"
-              secondary="Tethys"
+              primary="Test"
+              secondary="Test"
             />
           </ListItem>
+          */}
         </List>
       </Dialog>
     </>

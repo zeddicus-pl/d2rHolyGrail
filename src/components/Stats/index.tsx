@@ -51,11 +51,6 @@ const checkItemsAllValid = (
 ): void => {
   const flat: {[name: string]: any} = {};
   flattenObject(template, flat);
-  Object.keys(items).forEach(itemName => {
-    if (!flat[itemName]) {
-      console.error("Item " + itemName + " does not exist in the template!!");
-    }
-  });
 }
 
 const computeStats = (

@@ -3,10 +3,10 @@ import { GlobalStyle } from './styles/GlobalStyle'
 import { Greetings } from './components/Greetings'
 import { List } from './components/List'
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ThemeProvider } from '@mui/system';
 import { createTheme } from '@mui/material';
-import { FileReaderResponse } from './@types/main';
+import { FileReaderResponse, Settings } from './@types/main';
 
 /* eslint-disable no-unused-vars */
 export enum UiState {
@@ -18,6 +18,18 @@ export enum UiState {
 
 export function App() {
   const [fileReaderResponse, setFileReaderResponse] = useState<FileReaderResponse | null>(null);
+
+  const [appSettings, setAppSettings] = useState<Settings>({
+    saveDir: '',
+    lang: '',
+  });
+
+  useEffect(() => {
+    window.Main.on('updatedSettings', (settings: Settings) => {
+      setAppSettings(settings);
+    });
+  }, [])
+
   return (
     <>
       <GlobalStyle />
@@ -30,6 +42,7 @@ export function App() {
           />
           <List
             fileReaderResponse={fileReaderResponse}
+            appSettings={appSettings}
           />
         </>
       </ThemeProvider>
