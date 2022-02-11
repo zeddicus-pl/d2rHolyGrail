@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Button } from '../Button'
 import { Container, Image } from './styles'
 
 import logo from '../../../assets/logo.svg';
 import twitchIcon from '../../../assets/twitch-icon.svg';
 import 'animate.css';
 import { FileReaderResponse } from '../../@types/main';
-import { Typography } from '@mui/material';
+import { Typography, Button } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 type GreetingsProps = {
   onItemsLoaded: (fileReaderResponse: FileReaderResponse ) => void;
@@ -24,6 +24,7 @@ enum UiState {
 
 export function Greetings({ onItemsLoaded }: GreetingsProps) {
   const [uiState, setUiState] = useState(UiState.AutoRead);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (uiState === UiState.AutoRead) {
@@ -55,8 +56,10 @@ export function Greetings({ onItemsLoaded }: GreetingsProps) {
   }, [])
 
   const handleClick = async () => {
-    setUiState(UiState.FileDialog);
-    window.Main.openFolder();
+    if (uiState === UiState.Ready) {
+      setUiState(UiState.FileDialog);
+      window.Main.openFolder();
+    }
   }
 
   if (uiState === UiState.Done) {
@@ -65,29 +68,31 @@ export function Greetings({ onItemsLoaded }: GreetingsProps) {
 
   return (
     <Container className="animate__animated animate__fadeIn">
-      <h1>Holy Grail</h1>
+      <h1>{t('Holy Grail')}</h1>
       <h6>
-        by&nbsp;
+        {t('by')}&nbsp;
         <a href="#" onClick={() => window.Main.openUrl('https://www.twitch.tv/nadinwins')}>
           NadinWins<img src={twitchIcon} alt="Twitch" />
         </a>
       </h6>
       <Image
         src={logo}
-        alt="Holy Grail logo"
+        alt=""
         className="animate__animated animate__tada"
       />
       { uiState !== UiState.AutoRead
         ? <Button
+          variant="contained"
           onClick={handleClick}
-          disabled={uiState !== UiState.Ready}
+          disableFocusRipple={uiState !== UiState.Ready}
+          disableRipple={uiState !== UiState.Ready}
         >
-          { uiState === UiState.Ready && "Select folder to read saves from" }
-          { uiState === UiState.FileDialog && "Waiting for folder..." }
-          { uiState === UiState.Reading && "Reading files..." }
+          { uiState === UiState.Ready && t("Select folder to read saves from") }
+          { uiState === UiState.FileDialog && t("Waiting for folder...") }
+          { uiState === UiState.Reading && t("Reading files...") }
         </Button>
         : <Typography variant="body2">
-          Loading...
+          {t('Loading...')}
         </Typography>
       }
     </Container>

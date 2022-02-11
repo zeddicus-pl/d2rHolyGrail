@@ -81,6 +81,12 @@ async function registerListeners () {
   ipcMain.on('silospenRequest', (event, type, itemName) => {
     fetchSilospen(event, type, itemName);
   });
+  ipcMain.on('getSetting', (event, key) => {
+    event.returnValue = getSetting(key);
+  });
+  ipcMain.on('saveSetting', (event, key, value) => {
+    saveSetting(key, value);
+  });
 }
 
 app.on('ready', createWindow)

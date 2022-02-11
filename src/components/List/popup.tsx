@@ -14,6 +14,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import { diablo2ioMapping } from '../../../electron/diablo2ioMapping';
+import { useTranslation } from 'react-i18next';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -33,6 +34,7 @@ type PopupProps = {
 }
 
 export default function Popup({ itemType, itemName, fullItemName, saveFiles, children }: PopupProps) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [drop, setDrop] = useState<ReactChild | null>(null);
 
@@ -81,7 +83,7 @@ export default function Popup({ itemType, itemName, fullItemName, saveFiles, chi
         fullWidth
       >
         <DialogTitle sx={{ m: 0, p: 2 }}>
-          <Typography variant="h4">{fullItemName}</Typography>
+          <Typography variant="h4">{t(fullItemName)}</Typography>
           <IconButton
               aria-label="close"
               onClick={handleClose}
@@ -96,13 +98,13 @@ export default function Popup({ itemType, itemName, fullItemName, saveFiles, chi
             </IconButton>
             {saveFiles.length ?
               <small style={{ fontSize: '11pt', fontWeight: 'normal' }}>
-                {saveFilesUniq.map(saveFile => <Chip label={saveFile} />)}
+                {saveFilesUniq.map(saveFile => <Chip key={saveFile} label={saveFile} />)}
               </small>
             : null}
         </DialogTitle>
         <DialogContent dividers>
           <h4 style={{ marginBottom: 20 }}>
-            Item info on Diablo2.io
+            {t('Item info on Diablo2.io')}
             <Typography variant="subtitle2">
               <a
                 href="#"
@@ -116,7 +118,7 @@ export default function Popup({ itemType, itemName, fullItemName, saveFiles, chi
             </Typography>
           </h4>
           <h4>
-            Silospen.com drop calculator
+            {t('Silospen.com drop calculator')}
             <Typography variant="subtitle2">
               <a
                 href="#"
