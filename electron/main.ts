@@ -52,7 +52,7 @@ const assetsPath =
     : app.getAppPath()
 
 function createWindow () {
-  getSettings();
+  currentSettings = getSettings();
   const mainWindowState = WindowStateKeeper({
     defaultWidth: 1100,
     defaultHeight: 700,
