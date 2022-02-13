@@ -15,5 +15,15 @@ body {
   
   h1 {
     font-family: 'Gwendolyn', cursive;
+    padding-top: 200px;
+    background-image: url(https://holygrail.link/assets/img/logo.svg);
+    background-position: center top;
+    background-size: 300px;
+    background-repeat: no-repeat;
+    font-size: 60px;
+  }
+  
+  a {
+    display: none;
   }
 }
