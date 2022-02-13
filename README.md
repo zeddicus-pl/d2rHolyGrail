@@ -1,6 +1,10 @@
-## Electron + TypeScript + React
+# Holy Grail
+Application for automatic tracking of Holy Grail challenge progress in Diablo 2 Resurrected (for offline characters)
+Made with Electron, React and Typescript.
 
-Boilerplate for a project using Electron, React and Typescript.
+Check [https://holygrail.link](https://holygrail.link) for more info.
+
+# Info for developers
 
 ## Installation
 
@@ -32,4 +36,4 @@ Pull requests are always welcome 😃.
 
 ## License
 
-[MIT](https://choosealicense.com/licenses/mit/)
+[ISC](https://choosealicense.com/licenses/isc/)
