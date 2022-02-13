@@ -3,5 +3,5 @@ plugins:
 - jekyll-remote-theme
 
 title: Holy Grail
-description: Application for automatic tracking of Holy Grail challenge progress in Diablo 2 Ressurected (for offline characters)
+description: Application for automatic tracking of Holy Grail challenge progress in Diablo 2 Resurrected (for offline characters)
 theme: jekyll-theme-cayman
