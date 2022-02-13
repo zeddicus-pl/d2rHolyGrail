@@ -4,5 +4,4 @@ plugins:
 
 title: Diablo 2 Holy Grail
 description: Diablo 2 Holy Grail app, for offline games
-show_downloads: true
 theme: jekyll-theme-cayman
