@@ -9,9 +9,9 @@
 
 ## Streamers using the app
 
-<iframe src="https://player.twitch.tv/?1295838464" style="width: 500px; height: 300px; border: 0px"></iframe>
+(look in the upper right corner, and watch out, **high volume!**)
 
-(look out, *high volume!!*)
+<iframe src="https://player.twitch.tv/?1295838464&parent=holygrail.link" style="margin:auto; width: 500px; height: 300px; border: 0px"></iframe>
 
 ## Screenshots
 
