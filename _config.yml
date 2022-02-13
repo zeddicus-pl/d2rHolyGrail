@@ -2,6 +2,6 @@ remote_theme: pages-themes/cayman@v0.2.0
 plugins:
 - jekyll-remote-theme
 
-title: Holy Grail app
+title: Holy Grail
 description: Application for automatic tracking of Holy Grail challenge progress in Diablo 2 Ressurected (for offline characters)
 theme: jekyll-theme-cayman
