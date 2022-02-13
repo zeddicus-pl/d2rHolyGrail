@@ -7,6 +7,14 @@
 
 [MacOS](https://github.com/zeddicus-pl/d2rHolyGrail/releases/latest/download/HolyGrail-macos.zip)
 
+## Streamers using the app
+
+<iframe
+    src="https://www.twitch.tv/videos/1295838464"
+    width="500"
+    allowfullscreen="<allowfullscreen>">
+</iframe>
+(look out, *high volume!!*)
 
 ## Screenshots
 
