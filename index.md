@@ -47,7 +47,7 @@ This app is still in testing phase, so please report any issues. It will never t
 
 The app uses ISC licence.
 
-GitHub repo: (https://github.com/zeddicus-pl/d2rHolyGrail)[https://github.com/zeddicus-pl/d2rHolyGrail]
+GitHub repo: [https://github.com/zeddicus-pl/d2rHolyGrail](https://github.com/zeddicus-pl/d2rHolyGrail)
 
 Libraries and applications I use, or get data from:
 - D2S file parsing library: [https://github.com/dschu012/d2s](https://github.com/dschu012/d2s)
