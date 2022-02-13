@@ -5,3 +5,4 @@ plugins:
 title: Holy Grail
 description: Application for automatic tracking of Holy Grail challenge progress in Diablo 2 Resurrected (for offline characters)
 theme: jekyll-theme-cayman
+google_analytics: G-9CFV7QE9V2
