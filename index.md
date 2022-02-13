@@ -1,37 +1,39 @@
-## Welcome to GitHub Pages
+# Holy Grail
+## Application for tracking Holy Grail challenge progress in Diablo 2 Ressurected
 
-You can use the [editor on GitHub](https://github.com/zeddicus-pl/d2rHolyGrail/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+> **What's Holy Grail challenge?**
+> The Holy Grail challenge requires player to collect every single of the 506 unique and set items in the game.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+### Download
 
-### Markdown
+[Windows 64-bit](https://github.com/zeddicus-pl/d2rHolyGrail/releases/latest/download/HolyGrail-win32-x64.zip)
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+[MacOS](https://github.com/zeddicus-pl/d2rHolyGrail/releases/latest/download/HolyGrail-macos.zip)
 
-```markdown
-Syntax highlighted code block
 
-# Header 1
-## Header 2
-### Header 3
+### Screenshots
 
-- Bulleted
-- List
+<img width="1150" alt="Screenshot 2022-02-13 at 21 01 12" src="https://user-images.githubusercontent.com/79473394/153772561-4afe7080-f7f5-41be-8a1c-3eca99b21fa7.png">
 
-1. Numbered
-2. List
+<img width="1148" alt="Screenshot 2022-02-13 at 21 02 14" src="https://user-images.githubusercontent.com/79473394/153772725-bf082174-87d4-4a41-936f-0ac6c41f868b.png">
 
-**Bold** and _Italic_ and `Code` text
+<img width="1132" alt="Screenshot 2022-02-13 at 21 04 27" src="https://user-images.githubusercontent.com/79473394/153772677-8929f703-da6d-4b20-b16f-426a5661cb02.png">
 
-[Link](url) and ![Image](src)
-```
+### How to use
 
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
+- Download and unpack anywhere
+- Run the application
+- Upon start the app will ask you to show where your saved games location is.
 
-### Jekyll Themes
+Diablo 2 Ressurected store the saves in your home folder, in "Saved Games" folder.
+Point the application to read saves from there, and it will remember this location (can be changed in settings).
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/zeddicus-pl/d2rHolyGrail/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+The app will show you your Holy Grail stats, and **will continue watching for file changes**, so if you run it in the background and play the game, the stats will update automatically.
 
-### Support or Contact
+The saves files are saved to disk each time you identify an item (and when do some other actions) and each 5 minutes as well - that's when the Holy Grail app will notice the change and update the stats.
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+In practice this works very smooth, allowing you to see new items nearly real-time.
+
+The app also has a HTTP feed to use in OBS (with Browser component) which can be used if you stream your Diablo 2 Ressurected gameplay.
+
+**INFO:** this app is still in testing phase, so please report any issues. It will never try to modify save files, so this is safe to use. Also, the app may ask your windows firewall about network access, because it has that HTTP feed functionality. I'll make it configurable in future so it can be turned on/off.
