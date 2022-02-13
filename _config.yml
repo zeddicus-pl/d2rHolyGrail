@@ -5,3 +5,15 @@ plugins:
 
 title: Diablo 2 Holy Grail
 description: [A short description of your site's purpose]
+
+# add this plugin to gems
+gems:           ['jekyll-multiple-languages']
+# if you want to use pagination, you should add jekyll-paginate into gems
+# and make sure it is in front of jekyll-multiple-languages
+# gems:           ['jekyll-paginate', 'jekyll-multiple-languages']
+
+# The all languages used
+languages:          ['en', 'pl']
+
+# If not config, the first item of languages will be used as the default.
+language_default:   'en'
