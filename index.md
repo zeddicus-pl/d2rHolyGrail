@@ -9,6 +9,8 @@
 
 ## Streamers using the app
 
+I created this application for my favourite streamer [NadinWins](https://www.twitch.tv/nadinwins) and I made it Open Source, so other players, and other streamers, can use and modify it freely.
+
 (look in the upper right corner, and watch out, **high volume!**)
 
 <iframe src="https://player.twitch.tv/?1295838464&parent=holygrail.link" style="margin:auto; width: 500px; height: 300px; border: 0px"></iframe>
