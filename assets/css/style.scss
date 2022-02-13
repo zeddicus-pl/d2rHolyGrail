@@ -2,3 +2,18 @@
 ---
 
 @import 'jekyll-theme-cayman';
+@import url('https://fonts.googleapis.com/css2?family=Gwendolyn&display=swap');
+
+body {
+  color: #e1e1e6;
+  background: #111;
+}
+
+.page-header {
+  background-color: #991521;
+  background-image: linear-gradient(120deg, #000000, #991521);
+  
+  h1 {
+    font-family: 'Gwendolyn', cursive;
+  }
+}
