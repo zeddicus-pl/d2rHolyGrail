@@ -1,17 +1,14 @@
-# Holy Grail
-## Application for tracking Holy Grail challenge progress in Diablo 2 Ressurected
-
 > **What's Holy Grail challenge?**
 > The Holy Grail challenge requires player to collect every single of the 506 unique and set items in the game.
 
-### Download
+## Download
 
 [Windows 64-bit](https://github.com/zeddicus-pl/d2rHolyGrail/releases/latest/download/HolyGrail-win32-x64.zip)
 
 [MacOS](https://github.com/zeddicus-pl/d2rHolyGrail/releases/latest/download/HolyGrail-macos.zip)
 
 
-### Screenshots
+## Screenshots
 
 <img width="1150" alt="Screenshot 2022-02-13 at 21 01 12" src="https://user-images.githubusercontent.com/79473394/153772561-4afe7080-f7f5-41be-8a1c-3eca99b21fa7.png">
 
@@ -19,7 +16,7 @@
 
 <img width="1132" alt="Screenshot 2022-02-13 at 21 04 27" src="https://user-images.githubusercontent.com/79473394/153772677-8929f703-da6d-4b20-b16f-426a5661cb02.png">
 
-### How to use
+## How to use
 
 - Download and unpack anywhere
 - Run the application
@@ -36,4 +33,5 @@ In practice this works very smooth, allowing you to see new items nearly real-ti
 
 The app also has a HTTP feed to use in OBS (with Browser component) which can be used if you stream your Diablo 2 Ressurected gameplay.
 
-**INFO:** this app is still in testing phase, so please report any issues. It will never try to modify save files, so this is safe to use. Also, the app may ask your windows firewall about network access, because it has that HTTP feed functionality. I'll make it configurable in future so it can be turned on/off.
+### INFO:
+this app is still in testing phase, so please report any issues. It will never try to modify save files, so this is safe to use. Also, the app may ask your windows firewall about network access, because it has that HTTP feed functionality. I'll make it configurable in future so it can be turned on/off.
