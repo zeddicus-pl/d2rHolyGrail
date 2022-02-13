@@ -29,7 +29,7 @@ I created this application for my favourite streamer [NadinWins](https://www.twi
 - Run the application
 - Upon start the app will ask you to show where your saved games location is.
 
-Diablo 2 Ressurected store the saves in your home folder, in "Saved Games" folder.
+Diablo 2 Resurrected store the saves in your home folder, in "Saved Games" folder.
 Point the application to read saves from there, and it will remember this location (can be changed in settings).
 
 The app will show you your Holy Grail stats, and **will continue watching for file changes**, so if you run it in the background and play the game, the stats will update automatically.
@@ -38,7 +38,7 @@ The saves files are saved to disk each time you identify an item (and when do so
 
 In practice this works very smooth, allowing you to see new items nearly real-time.
 
-The app also has a HTTP feed to use in OBS (with Browser component) which can be used if you stream your Diablo 2 Ressurected gameplay.
+The app also has a HTTP feed to use in OBS (with Browser component) which can be used if you stream your Diablo 2 Resurrected gameplay.
 
 ### INFO:
 This app is still in testing phase, so please report any issues. It will never try to modify save files, so this is safe to use. Also, the app may ask your windows firewall about network access, because it has that HTTP feed functionality. I'll make it configurable in future so it can be turned on/off.
