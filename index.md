@@ -47,10 +47,10 @@ This app is still in testing phase, so please report any issues. It will never t
 
 The app uses ISC licence.
 
-GitHub repo: https://github.com/zeddicus-pl/d2rHolyGrail
+GitHub repo: (https://github.com/zeddicus-pl/d2rHolyGrail)[https://github.com/zeddicus-pl/d2rHolyGrail]
 
 Libraries and applications I use, or get data from:
-- D2S file parsing library: https://github.com/dschu012/d2s
-- Item list and UI inspiration: https://d2-holy-grail.herokuapp.com/ / https://github.com/Nasicus/d2-holy-grail
+- D2S file parsing library: (https://github.com/dschu012/d2s)[https://github.com/dschu012/d2s]
+- Item list and UI inspiration: (https://d2-holy-grail.herokuapp.com)[https://d2-holy-grail.herokuapp.com] / (https://github.com/Nasicus/d2-holy-grail)[https://github.com/Nasicus/d2-holy-grail]
 
 The app was developed together with NadinWins stream community. Big thanks to everyone involved in testing and creation of Polish translation of all the items.
