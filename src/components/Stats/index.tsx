@@ -130,7 +130,7 @@ export function Statistics({ items, stats }: StatsProps) {
                     <TableHead>
                       <TableRow>
                         <TableCell>{t("Filename")}</TableCell>
-                        <TableCell>{t("Unique items")}</TableCell>
+                        <TableCell>{t("Items read")}</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>

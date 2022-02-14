@@ -413,7 +413,7 @@ export const diablo2ioMapping: {[itemName: string]: string} = {
   steelgoad: "https://diablo2.io/uniques/steelgoad-t935.html",
   steelrend: "https://diablo2.io/uniques/steelrend-t936.html",
   stonecrusher: "https://diablo2.io/uniques/stone-crusher-t937.html",
-  stoneofjordan: "https://diablo2.io/uniques/stone-of-jordan-t938.html",
+  thestoneofjordan: "https://diablo2.io/uniques/stone-of-jordan-t938.html",
   stoneraven: "https://diablo2.io/uniques/stoneraven-t939.html",
   stormchaser: "https://diablo2.io/uniques/stormchaser-t940.html",
   stormeye: "https://diablo2.io/uniques/stormeye-t941.html",

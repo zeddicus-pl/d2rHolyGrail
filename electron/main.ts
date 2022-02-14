@@ -1,5 +1,6 @@
 import { app, BrowserWindow, ipcMain, dialog, shell } from 'electron';
 import * as d2s from '@dschu012/d2s';
+import * as d2stash from '@dschu012/d2s/lib/d2/stash';
 import { constants } from '@dschu012/d2s/lib/data/versions/96_constant_data';
 import { existsSync, promises } from 'fs';
 import { basename, extname, join, resolve, sep } from 'path';
@@ -226,8 +227,8 @@ const updateHistory = (itemName: string, item: ItemInSave) => {
 
 const openAndParseSaves = (event: IpcMainEvent) => {
   return dialog.showOpenDialog({
-    title: "Select Diablo 2 / Diablo 2 Ressurected save folder",
-    message: "Select Diablo 2 / Diablo 2 Ressurected save folder",
+    title: "Select Diablo 2 / Diablo 2 Resurrected save folder",
+    message: "Select Diablo 2 / Diablo 2 Resurrected save folder",
     properties: ['openDirectory'],
   }).then((result) => {
     if (result.filePaths[0]) {
@@ -258,7 +259,7 @@ const prepareChokidarGlobe = (filename: string): string => {
     return filename;
   }
   const resolved = resolve(filename);
-  return resolved.substring(0, 1) + resolved.substring(1).split(sep).join('/') + '/*.d2s';
+  return resolved.substring(0, 1) + resolved.substring(1).split(sep).join('/') + '/*.{d2s,sss}';
 }
 
 const parseSaves = async (event: IpcMainEvent, path: string) => {
@@ -266,7 +267,7 @@ const parseSaves = async (event: IpcMainEvent, path: string) => {
     items: {},
     stats: {},
   };
-  const files = readdirSync(path).filter(file => extname(file).toLowerCase() === '.d2s');
+  const files = readdirSync(path).filter(file => ['.d2s', '.sss'].indexOf(extname(file).toLowerCase()) !== -1);
 
   if (!eventToReply) {
     eventToReply = event;
@@ -293,9 +294,9 @@ const parseSaves = async (event: IpcMainEvent, path: string) => {
   }
 
   const promises = files.map((file) => {
-    const saveName = basename(file).replace(".d2s", "");
+    const saveName = basename(file).replace(".d2s", "").replace(".sss", "");
     return readFile(join(path, file))
-      .then((buffer) => parseSave(saveName, buffer))
+      .then((buffer) => parseSave(saveName, buffer, extname(file).toLowerCase()))
       .then((result) => {
         if (!result.length) {
           results.stats[saveName] = 0;
@@ -347,20 +348,39 @@ const parseSaves = async (event: IpcMainEvent, path: string) => {
   });
 }
 
-const parseSave = async (saveName: string, content: Buffer): Promise<d2s.types.IItem[]>  => {
+const parseSave = async (saveName: string, content: Buffer, extension: string): Promise<d2s.types.IItem[]>  => {
   const items: d2s.types.IItem[] = [];
-  await d2s.read(content, constants).then((response) => {
-    const itemList = [
-      ...response.items,
-      ...response.merc_items,
-      ...response.corpse_items,
-    ]
+
+  const parseItems = (itemList: d2s.types.IItem[]) => {
     itemList.forEach((item) => {
       if (item.unique_name || item.set_name || item.rare_name || item.rare_name2) {
         items.push(item);
       }
     });
-  })
+  }
+
+  const parseD2S = (response: d2s.types.ID2S) => {
+    const itemList = [
+      ...response.items,
+      ...response.merc_items,
+      ...response.corpse_items,
+    ]
+    parseItems(itemList);
+  };
+
+  const parseStash = (response: d2s.types.IStash) => {
+    response.pages.forEach(page => {
+      parseItems(page.items);
+    });
+  }
+
+  switch (extension) {
+    case '.sss':
+      await d2stash.read(content, constants, 0x60).then(parseStash);
+      break;
+    default:
+      await d2s.read(content, constants).then(parseD2S);
+  }
   return items;
 };
 

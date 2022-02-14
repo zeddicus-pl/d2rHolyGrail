@@ -2,7 +2,7 @@
   "name": "d2rholygrail",
   "author": "Kamil Tunkiewicz <kamil.tunkiewicz(at)gmail.com>",
   "version": "1.4.0",
-  "description": "Scan your Diablo 2 Ressurected saves to check your Holy Grail progress",
+  "description": "Scan your Diablo 2 Resurrected saves to check your Holy Grail progress",
   "main": "./.webpack/main/index.js",
   "scripts": {
     "start": "ELECTRON_ENV=development electron-forge start",
