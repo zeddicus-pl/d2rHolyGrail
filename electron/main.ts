@@ -321,7 +321,7 @@ const parseSaves = async (event: IpcMainEvent, path: string) => {
             name = name + skill + type;
           }
           if (name === '') return;
-          const itemName = name.toLowerCase().replace(/[^a-z0-9]/gi, '').toLowerCase();
+          const itemName = name.toLowerCase().replace(/[^a-z0-9]/gi, '');
           if (results.items[itemName]) {
             if (results.items[itemName].saveName) {
               results.items[itemName].saveName.push(saveName);

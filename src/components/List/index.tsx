@@ -8,6 +8,7 @@ import { TabPanel } from './tab';
 import SettingsPanel from '../Settings'
 import { useTranslation } from 'react-i18next';
 import { FileReaderResponse, Settings } from '../../@types/main';
+import { Search } from '../Search';
 
 import flagGB from 'circle-flags/flags/gb.svg';
 import flagPL from 'circle-flags/flags/pl.svg';
@@ -39,6 +40,7 @@ type ListProps = {
 
 export function List({ fileReaderResponse, appSettings }: ListProps) {
   const [tab, setTab] = useState(TabState.Statistics);
+  const [search, setSearch] = useState<string>('');
   const {t, i18n} = useTranslation();
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -71,6 +73,11 @@ export function List({ fileReaderResponse, appSettings }: ListProps) {
     <Container>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <ButtonPanel>
+          <Search
+            onSearch={(text: string) => {
+              setSearch(text);
+            }}
+          />
           <IconButton onClick={handleClick}>
             <img style={{ height: '1em' }} src={flag} />
           </IconButton>
@@ -107,7 +114,7 @@ export function List({ fileReaderResponse, appSettings }: ListProps) {
             </a>
           </h6>
         </Logo>
-        {tab !== TabState.None ?
+        {tab !== TabState.None && !search.length ?
           <Tabs
             value={tab}
             onChange={(_, value) => { setTab(value); }}
@@ -122,11 +129,41 @@ export function List({ fileReaderResponse, appSettings }: ListProps) {
           </Tabs> 
         : null}
       </Box>
-      <TabPanel value={tab} index={TabState.Statistics} player={items} stats={stats} />
-      <TabPanel value={tab} index={TabState.UniqueArmor} items={holyGrailSeedData.uniques.armor} player={items} />
-      <TabPanel value={tab} index={TabState.UniqueWeapons} items={holyGrailSeedData.uniques.weapons} player={items} />
-      <TabPanel value={tab} index={TabState.UniqueOther} items={holyGrailSeedData.uniques.other} player={items} />
-      <TabPanel value={tab} index={TabState.Sets} sets={holyGrailSeedData.sets} player={items} />
+      <TabPanel
+        value={search.length ? TabState.None : tab}
+        index={TabState.Statistics}
+        player={items}
+        stats={stats}
+        search=""
+      />
+      <TabPanel
+        value={search.length ? TabState.UniqueArmor : tab}
+        index={TabState.UniqueArmor}
+        items={holyGrailSeedData.uniques.armor}
+        player={items}
+        search={search}
+      />
+      <TabPanel
+        value={search.length ? TabState.UniqueWeapons : tab}
+        index={TabState.UniqueWeapons}
+        items={holyGrailSeedData.uniques.weapons}
+        player={items}
+        search={search}
+      />
+      <TabPanel
+        value={search.length ? TabState.UniqueOther : tab}
+        index={TabState.UniqueOther}
+        items={holyGrailSeedData.uniques.other}
+        player={items}
+        search={search}
+      />
+      <TabPanel
+        value={search.length ? TabState.Sets : tab}
+        index={TabState.Sets}
+        sets={holyGrailSeedData.sets}
+        player={items}
+        search={search}
+      />
     </Container>
   );
 }

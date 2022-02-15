@@ -10,6 +10,8 @@ export const holyGrailSeedData: IHolyGrailData = {
       jewelry: {
         ...original.uniques.other.jewelry,
         rings: {
+          Nagelring: {},
+          "Manald Heal": {},
           "The Stone of Jordan": {},
           "Dwarf Star": {},
           "Raven Frost": {},
