@@ -7,6 +7,7 @@ export const Container = styled.div`
 export const Logo = styled.div`
   display: flex;
   padding-bottom: 10px;
+  min-width: 500px;
 
   a {
     img {
