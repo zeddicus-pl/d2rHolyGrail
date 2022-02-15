@@ -85,6 +85,11 @@ function createWindow () {
     closeApp();
   })
 
+  mainWindow.webContents.on('new-window', function (event, url) {
+    event.preventDefault()
+    shell.openExternal(url)
+  })
+
   const streamApp = express();
   const server = http.createServer(streamApp);
   const io = new Server(server, {
@@ -93,7 +98,6 @@ function createWindow () {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   streamApp.get("/", (req: any, res: any) => {
-    console.log(STREAM_WEBPACK_ENTRY);
     if (STREAM_WEBPACK_ENTRY.startsWith("http")) {
       request(STREAM_WEBPACK_ENTRY).pipe(res);
     } else {
@@ -259,7 +263,7 @@ const prepareChokidarGlobe = (filename: string): string => {
     return filename;
   }
   const resolved = resolve(filename);
-  return resolved.substring(0, 1) + resolved.substring(1).split(sep).join('/') + '/*.{d2s,sss}';
+  return resolved.substring(0, 1) + resolved.substring(1).split(sep).join('/') + '/*.{d2s,sss,d2x}';
 }
 
 const parseSaves = async (event: IpcMainEvent, path: string) => {
@@ -267,7 +271,7 @@ const parseSaves = async (event: IpcMainEvent, path: string) => {
     items: {},
     stats: {},
   };
-  const files = readdirSync(path).filter(file => ['.d2s', '.sss'].indexOf(extname(file).toLowerCase()) !== -1);
+  const files = readdirSync(path).filter(file => ['.d2s', '.sss', '.d2x'].indexOf(extname(file).toLowerCase()) !== -1);
 
   if (!eventToReply) {
     eventToReply = event;
@@ -294,7 +298,7 @@ const parseSaves = async (event: IpcMainEvent, path: string) => {
   }
 
   const promises = files.map((file) => {
-    const saveName = basename(file).replace(".d2s", "").replace(".sss", "");
+    const saveName = basename(file).replace(".d2s", "").replace(".sss", "").replace(".d2x", "");
     return readFile(join(path, file))
       .then((buffer) => parseSave(saveName, buffer, extname(file).toLowerCase()))
       .then((result) => {
@@ -356,6 +360,9 @@ const parseSave = async (saveName: string, content: Buffer, extension: string): 
       if (item.unique_name || item.set_name || item.rare_name || item.rare_name2) {
         items.push(item);
       }
+      if (item.socketed_items && item.socketed_items.length) {
+        parseItems(item.socketed_items);
+      }
     });
   }
 
@@ -376,7 +383,8 @@ const parseSave = async (saveName: string, content: Buffer, extension: string): 
 
   switch (extension) {
     case '.sss':
-      await d2stash.read(content, constants, 0x60).then(parseStash);
+    case '.d2x':
+        await d2stash.read(content, constants, 0x60).then(parseStash);
       break;
     default:
       await d2s.read(content, constants).then(parseD2S);
@@ -406,6 +414,9 @@ const fetchSilospen = (event: IpcMainEvent, type: string, itemName: string) => {
         .split('</td></tr><tr><td>')
         .map((line: string) => line.replace('<tr><td>', '').replace('</td></tr>', ''))
         .map((line: string) => {
+          if (line.indexOf('No Results!') !== -1) {
+            return { name: "No Results!", area: "", chance: 0 };
+          }
           const [name, area, chance] = line.split('</td><td>');
           return { name, area, chance: chance.split(':')[1]};
         });
