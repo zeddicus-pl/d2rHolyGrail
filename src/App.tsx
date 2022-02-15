@@ -3,7 +3,7 @@ import { GlobalStyle } from './styles/GlobalStyle'
 import { Greetings } from './components/Greetings'
 import { List } from './components/List'
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, MouseEventHandler } from 'react';
 import { ThemeProvider } from '@mui/system';
 import { createTheme } from '@mui/material';
 import { FileReaderResponse, Settings } from './@types/main';
@@ -28,6 +28,16 @@ export function App() {
     window.Main.on('updatedSettings', (settings: Settings) => {
       setAppSettings(settings);
     });
+
+    const auxclickHandler: MouseEventHandler<HTMLAnchorElement> = (event) => {
+      const target = event.currentTarget
+      if ( target && target.localName === 'a') {
+          event.preventDefault();
+          window.Main.openUrl(target.href);
+      }
+    }
+    // @ts-ignore
+    document.addEventListener('auxclick', auxclickHandler, false);
   }, [])
 
   return (
