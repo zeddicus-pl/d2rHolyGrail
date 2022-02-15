@@ -85,11 +85,6 @@ function createWindow () {
     closeApp();
   })
 
-  mainWindow.webContents.on('new-window', function (event, url) {
-    event.preventDefault()
-    shell.openExternal(url)
-  })
-
   const streamApp = express();
   const server = http.createServer(streamApp);
   const io = new Server(server, {
@@ -285,7 +280,6 @@ const parseSaves = async (event: IpcMainEvent, path: string) => {
         followSymlinks: false,
         ignoreInitial: true,
         depth: 0,
-        ignored: /((^|[/\\])\.\.|(^.*\.[^d][^2][^s]))/,
       }).on('all', () => {
         filesChanged = true;
       });
