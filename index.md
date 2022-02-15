@@ -26,11 +26,11 @@ Beta versions: 1.4 and below
 
 ## Screenshots
 
-<img width="1150" alt="Screenshot 2022-02-13 at 21 01 12" src="https://user-images.githubusercontent.com/79473394/153772561-4afe7080-f7f5-41be-8a1c-3eca99b21fa7.png">
+<img width="1195" alt="Screenshot 2022-02-15 at 18 07 47" src="https://user-images.githubusercontent.com/79473394/154112597-e2f2753b-83ba-41ae-93f6-844c04c38d07.png">
 
-<img width="1148" alt="Screenshot 2022-02-13 at 21 02 14" src="https://user-images.githubusercontent.com/79473394/153772725-bf082174-87d4-4a41-936f-0ac6c41f868b.png">
+<img width="1194" alt="Screenshot 2022-02-15 at 18 08 01" src="https://user-images.githubusercontent.com/79473394/154112605-729bab3b-edcf-4f70-8981-1ffe88587fb0.png">
 
-<img width="1132" alt="Screenshot 2022-02-13 at 21 04 27" src="https://user-images.githubusercontent.com/79473394/153772677-8929f703-da6d-4b20-b16f-426a5661cb02.png">
+<img width="1193" alt="Screenshot 2022-02-15 at 18 07 33" src="https://user-images.githubusercontent.com/79473394/154112617-68eca365-f0ee-4243-a5ac-cb7c3cbb4acb.png">
 
 ## How to use
 
