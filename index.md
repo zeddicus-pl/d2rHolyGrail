@@ -17,7 +17,7 @@ I created this application for my favourite streamer [NadinWins](https://www.twi
 
 ## Changelog
 
-### v1.5
+### v1.5.1
 - Added Plugy support
 - Added search functionality
 - Few minor bugfix and PL translation fixes
