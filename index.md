@@ -15,6 +15,17 @@ I created this application for my favourite streamer [NadinWins](https://www.twi
 
 <iframe src="https://clips.twitch.tv/embed?clip=DreamyPlacidScallionPeoplesChamp-QfdXJQ9MKHuO9owj&parent=holygrail.link" style="margin:auto; width: 640px; height: 480px; border: 0px; max-width: 100%"></iframe>
 
+## Changelog
+
+### v1.5
+- Added Plugy support
+- Added search functionality
+- Few minor bugfix and PL translation fixes
+
+--
+
+Beta versions: 1.4 and below
+
 ## Screenshots
 
 <img width="1150" alt="Screenshot 2022-02-13 at 21 01 12" src="https://user-images.githubusercontent.com/79473394/153772561-4afe7080-f7f5-41be-8a1c-3eca99b21fa7.png">
@@ -32,6 +43,8 @@ I created this application for my favourite streamer [NadinWins](https://www.twi
 Diablo 2 Resurrected store the saves in your home folder, in "Saved Games" folder.
 Point the application to read saves from there, and it will remember this location (can be changed in settings).
 
+The Holy Grail app will work with D2R saves, as well as classic D2 LoD saves, it also supports reading Plugy stash files (if placed in the same folder as game saves, not in subfolder)
+
 The app will show you your Holy Grail stats, and **will continue watching for file changes**, so if you run it in the background and play the game, the stats will update automatically.
 
 The saves files are saved to disk each time you identify an item (and when do some other actions) and each 5 minutes as well - that's when the Holy Grail app will notice the change and update the stats.
@@ -46,6 +59,8 @@ This app is still in testing phase, so please report any issues. It will never t
 ### Licence and credits
 
 The app uses ISC licence.
+
+If you want to contribute your code changes, or would like to create another translation (you'll have to translate all item names etc.) then feel free to PR it on GitHub. If you are not a programmer, and would like to translate the app - contact us [on Discord](https://discord.com/channels/837488572838838292/939605281288122418)
 
 GitHub repo: [https://github.com/zeddicus-pl/d2rHolyGrail](https://github.com/zeddicus-pl/d2rHolyGrail)
 
