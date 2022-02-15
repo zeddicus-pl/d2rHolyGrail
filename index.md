@@ -22,8 +22,6 @@ I created this application for my favourite streamer [NadinWins](https://www.twi
 - Added search functionality
 - Few minor bugfix and PL translation fixes
 
---
-
 Beta versions: 1.4 and below
 
 ## Screenshots
