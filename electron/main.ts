@@ -6,7 +6,7 @@ import { existsSync, promises } from 'fs';
 import { basename, extname, join, resolve, sep } from 'path';
 import { IpcMainEvent } from 'electron/renderer';
 import { readdirSync } from 'original-fs';
-import { FileReaderResponse, ItemsInSaves, Settings, SilospenItem, ItemInSave } from '../src/@types/main';
+import { FileReaderResponse, Settings, SilospenItem } from '../src/@types/main';
 // @ts-ignore
 import fetch from 'node-fetch';
 import https from 'https';
@@ -36,7 +36,6 @@ let watchPath: string | null = null;
 let filesChanged: boolean = false;
 let readingFiles: boolean = false;
 let eventToReply: IpcMainEvent | null;
-let history: ItemsInSaves;
 let currentData: FileReaderResponse;
 let currentSettings: Settings = {
   lang: 'en',
@@ -205,23 +204,6 @@ const saveSetting = (key: keyof Settings, value: string) => {
     }
     updateSettingsToListeners();
   });
-}
-
-const getHistory = (): ItemsInSaves => {
-  history = (storage.getSync('history') as ItemsInSaves);
-  return history;
-}
-
-const saveHistory = (items: ItemsInSaves) => {
-  history = items;
-  storage.set('history', items, (error) => {
-    if (error) console.log(error);
-  });
-}
-
-const updateHistory = (itemName: string, item: ItemInSave) => {
-  history[itemName] = item;
-  saveHistory(history);
 }
 
 const openAndParseSaves = (event: IpcMainEvent) => {

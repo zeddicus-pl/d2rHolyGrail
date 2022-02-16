@@ -19,6 +19,7 @@ import { useTranslation } from 'react-i18next';
 type StatsProps = {
   items: ItemsInSaves,
   stats: SaveFileStats,
+  noFileSummary?: boolean,
 }
 
 export const simplifyItemName = (name: string): string => name.replace(/[^a-z0-9]/gi, '').toLowerCase();
@@ -60,7 +61,7 @@ export const computeStats = (
   }
 }
 
-export function Statistics({ items, stats }: StatsProps) {
+export function Statistics({ items, stats, noFileSummary }: StatsProps) {
   const armorStats = useMemo(() => computeStats(items, holyGrailSeedData.uniques.armor), [items]);
   const weaponsStats = useMemo(() => computeStats(items, holyGrailSeedData.uniques.weapons), [items]);
   const otherStats = useMemo(() => computeStats(items, holyGrailSeedData.uniques.other), [items]);
@@ -118,42 +119,46 @@ export function Statistics({ items, stats }: StatsProps) {
             </ProgressProvider>
           </div>
         </Grid>
-        <Grid container style={{ marginTop: 50, alignItems: 'center', justifyContent: 'center' }}>
-          <Grid item xs={4}>
-            <Accordion>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography>{t("Save files summary")}</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <TableContainer>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>{t("Filename")}</TableCell>
-                        <TableCell>{t("Items read")}</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {Object.keys(stats).map(filename => (
-                        <TableRow key={filename}>
-                          <TableCell>{filename}</TableCell>
-                          <TableCell>{
-                            stats[filename] === null
-                              ? <span style={{color: 'red'}}>{t("Error")}</span>
-                              : stats[filename]
-                          }</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </AccordionDetails>
-            </Accordion>
-          </Grid>
-        </Grid>
-        <>
-          { totalStats.exists === totalStats.owned && <Win/> }
-        </>
+        {!noFileSummary &&
+          <>
+            <Grid container style={{ marginTop: 50, alignItems: 'center', justifyContent: 'center' }}>
+              <Grid item xs={4}>
+                <Accordion>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography>{t("Save files summary")}</Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <TableContainer>
+                      <Table>
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>{t("Filename")}</TableCell>
+                            <TableCell>{t("Items read")}</TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {Object.keys(stats).map(filename => (
+                            <TableRow key={filename}>
+                              <TableCell>{filename}</TableCell>
+                              <TableCell>{
+                                stats[filename] === null
+                                  ? <span style={{color: 'red'}}>{t("Error")}</span>
+                                  : stats[filename]
+                              }</TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </AccordionDetails>
+                </Accordion>
+              </Grid>
+            </Grid>
+            <>
+              { totalStats.exists === totalStats.owned && <Win/> }
+            </>
+          </>
+        }
       </Grid>
     </>
   );

@@ -4,6 +4,18 @@ export const Container = styled.div`
   padding: 15px;
 `
 
+export const FullScreenContainer = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: auto;
+  z-index: 999999;
+  padding: 15px;
+  background: #111111;
+`
+
 export const Logo = styled.div`
   display: flex;
   padding-bottom: 10px;

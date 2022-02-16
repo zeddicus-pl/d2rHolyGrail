@@ -7,8 +7,6 @@ export type SaveFileStats = {
 export type ItemInSave = {
   item: d2s.types.IItem,
   saveName: string[],
-  firstFoundDate: Date,
-  firstFoundBy: string,
 }
 
 export type ItemsInSaves = {

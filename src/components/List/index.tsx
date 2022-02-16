@@ -17,9 +17,10 @@ import { holyGrailSeedData } from '../../../electron/holyGrailSeedData';
 
 import logo from '../../../assets/logo.svg';
 import twitchIcon from '../../../assets/twitch-icon.svg';
+import { Summary } from './summary';
 
 /* eslint-disable no-unused-vars */
-enum TabState {
+export enum TabState {
   Statistics,
   UniqueArmor,
   UniqueWeapons,
@@ -78,6 +79,7 @@ export function List({ fileReaderResponse, appSettings }: ListProps) {
               setSearch(text);
             }}
           />
+          <Summary fileReaderResponse={fileReaderResponse} />
           <IconButton onClick={handleClick}>
             <img style={{ height: '1em' }} src={flag} />
           </IconButton>

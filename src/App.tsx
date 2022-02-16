@@ -30,12 +30,9 @@ export function App() {
     });
 
     const auxclickHandler: MouseEventHandler<HTMLAnchorElement> = (event) => {
-      const target = event.currentTarget
-      if ( target && target.localName === 'a') {
-          event.preventDefault();
-          window.Main.openUrl(target.href);
-      }
+      event.preventDefault();
     }
+
     // @ts-ignore
     document.addEventListener('auxclick', auxclickHandler, false);
   }, [])
