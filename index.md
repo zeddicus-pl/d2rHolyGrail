@@ -17,12 +17,19 @@ I created this application for my favourite streamer [NadinWins](https://www.twi
 
 ## Changelog
 
+### v1.6.0
+- Added manual selection mode
+- Added choosing between softcore and hardcode game modes
+- Added sharing functionality
+
 ### v1.5.1
 - Added Plugy support
 - Added search functionality
 - Few minor bugfix and PL translation fixes
 
 Beta versions: 1.4 and below
+
+Older versions can be found on [the releases page on GitHub](https://github.com/zeddicus-pl/d2rHolyGrail/releases)
 
 ## Screenshots
 
