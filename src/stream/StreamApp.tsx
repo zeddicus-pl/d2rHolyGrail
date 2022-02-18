@@ -10,6 +10,7 @@ import { ProgressProvider } from '../components/Stats/animation';
 import { ThemeProvider } from '@mui/system';
 import { GlobalStyle } from '../styles/GlobalStyle';
 import { Header, Container } from './styles';
+import { Win } from '../components/Stats/win';
 
 export default function StreamApp() {
   const [data, setData] = useState<FileReaderResponse | null>(null);
@@ -53,6 +54,9 @@ export default function StreamApp() {
             </CircularProgressbarWithChildren>}
           </ProgressProvider>
         </Grid>
+        <>
+          { totalStats.exists === totalStats.owned && <Win /> }
+        </>
       </Container>
     </ThemeProvider>
   </>;

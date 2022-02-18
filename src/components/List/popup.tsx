@@ -50,7 +50,7 @@ export default function Popup({ itemType, itemName, fullItemName, saveFiles, chi
               {drops
                 .sort((dropA, dropB) => (parseInt(dropA.chance) - parseInt(dropB.chance)))
                 .map(({name, area, chance}: SilospenItem) => 
-                  <TableRow key={name} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                  <TableRow key={name+area+chance} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                     <TableCell component="th" scope="row">{name}</TableCell>
                     <TableCell>{area}</TableCell>
                     <TableCell>1:{chance}</TableCell>

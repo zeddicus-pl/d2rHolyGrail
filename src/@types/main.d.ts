@@ -5,7 +5,7 @@ export type SaveFileStats = {
 }
 
 export type ItemInSave = {
-  item: d2s.types.IItem,
+  item: d2s.types.IItem | null,
   saveName: string[],
 }
 
@@ -30,7 +30,17 @@ export type SilospenItem = {
   chance: string,
 }
 
+/* eslint-disable no-unused-vars */
+export enum GameMode {
+  Both = 'both',
+  Softcore = 'softcore',
+  Hardcore = 'hardcore',
+  Manual = 'manual',
+}
+/* eslint-enable no-unused-vars */
+
 export type Settings = {
   saveDir: string,
   lang: string,
+  gameMode: GameMode,
 }

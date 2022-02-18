@@ -20,6 +20,7 @@ type StatsProps = {
   items: ItemsInSaves,
   stats: SaveFileStats,
   noFileSummary?: boolean,
+  noCelebration?: boolean,
 }
 
 export const simplifyItemName = (name: string): string => name.replace(/[^a-z0-9]/gi, '').toLowerCase();
@@ -53,15 +54,16 @@ export const computeStats = (
   const flat = {};
   flattenObject(template, flat);
   const { exists, owned } = countItems(flat, items);
+  const percent = (owned / exists) * 100;
   return {
     exists,
     owned,
     remaining: exists - owned,
-    percent: Math.round((owned / exists) * 100),
+    percent: percent > 99.5 && percent < 100 ? 99 : Math.round((owned / exists) * 100),
   }
 }
 
-export function Statistics({ items, stats, noFileSummary }: StatsProps) {
+export function Statistics({ items, stats, noFileSummary, noCelebration }: StatsProps) {
   const armorStats = useMemo(() => computeStats(items, holyGrailSeedData.uniques.armor), [items]);
   const weaponsStats = useMemo(() => computeStats(items, holyGrailSeedData.uniques.weapons), [items]);
   const otherStats = useMemo(() => computeStats(items, holyGrailSeedData.uniques.other), [items]);
@@ -105,7 +107,7 @@ export function Statistics({ items, stats, noFileSummary }: StatsProps) {
         <Grid item md={4}>
           <div style={{ width: 250, height: 300, textAlign: 'center', margin: 'auto' }}>
             <Typography variant="h5" gutterBottom>{t("Progress:")}</Typography>
-            <ProgressProvider valueStart={0} valueEnd={totalStats.owned}>
+            {!noFileSummary && <ProgressProvider valueStart={0} valueEnd={totalStats.owned}>
               { (value: number) => <CircularProgressbar
                 value={value}
                 maxValue={totalStats.exists}
@@ -116,7 +118,17 @@ export function Statistics({ items, stats, noFileSummary }: StatsProps) {
                   trailColor: '#333',
                 })}
               />}
-            </ProgressProvider>
+            </ProgressProvider>}
+            {noFileSummary && <CircularProgressbar
+                value={totalStats.owned}
+                maxValue={totalStats.exists}
+                text={`${totalStats.percent}%`}
+                styles={buildStyles({
+                  pathColor: '#6E55AE',
+                  textColor: '#ddd',
+                  trailColor: '#333',
+                })}
+              />}
           </div>
         </Grid>
         {!noFileSummary &&
@@ -154,11 +166,9 @@ export function Statistics({ items, stats, noFileSummary }: StatsProps) {
                 </Accordion>
               </Grid>
             </Grid>
-            <>
-              { totalStats.exists === totalStats.owned && <Win/> }
-            </>
           </>
         }
+        {!noCelebration && totalStats.exists === totalStats.owned && <Win/>}
       </Grid>
     </>
   );

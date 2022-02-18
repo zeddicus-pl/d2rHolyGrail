@@ -1,25 +1,26 @@
 import { MouseEventHandler, useState } from 'react';
-import { Box, Button, Typography, Dialog, DialogTitle } from '@mui/material';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
+import { Box, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, IconButton } from '@mui/material';
 import ShareIcon from '@mui/icons-material/Share';
-import { FullScreenContainer, Container, Image, Logo, ButtonPanel } from './styles';
+import { Container, Image, Logo } from './styles';
 import { TabPanel } from './tab';
 import { useTranslation } from 'react-i18next';
-import { FileReaderResponse } from '../../@types/main';
+import { FileReaderResponse, GameMode } from '../../@types/main.d';
+import { toast } from 'material-react-toastify';
+import html2canvas from 'html2canvas';
+import CloseIcon from '@mui/icons-material/Close';
 
 import { holyGrailSeedData } from '../../../electron/holyGrailSeedData';
 
 import logo from '../../../assets/logo.svg';
 import twitchIcon from '../../../assets/twitch-icon.svg';
 import { TabState } from '.';
-import html2canvas from 'html2canvas';
 
 type ListProps = {
   fileReaderResponse: FileReaderResponse | null,
+  gameMode: GameMode,
 }
 
-export function Summary({ fileReaderResponse }: ListProps) {
+export function Summary({ fileReaderResponse, gameMode }: ListProps) {
   const { t } = useTranslation();
 
   if (fileReaderResponse === null) {
@@ -28,24 +29,73 @@ export function Summary({ fileReaderResponse }: ListProps) {
 
   const [ open, setOpen ] = useState(false);
   const [ working, setWorking ] = useState(false);
-  const [ copying, setCopying ] = useState(false);
-  const [ saving, setSaving ] = useState(false);
+  const [ rendering, setRendering ] = useState(false);
+  const [ mode, setMode ] = useState('');
   const { items, stats } = fileReaderResponse;
 
   const copyToClip: MouseEventHandler<HTMLButtonElement> = () => {
-    const summary = document.querySelector("#summary") as HTMLElement;
-    if (summary) {
-      html2canvas(summary, { backgroundColor: "#111111" }).then(canvas => {
-        canvas.toBlob(function(blob) { 
-          const item = new ClipboardItem({ "image/png": blob });
-          navigator.clipboard.write([item]); 
-        });
-      });
-    }
+    setMode('copy');
+    setWorking(true);
+    setTimeout(() => {
+      const copyToClipboard = (summary: HTMLElement) => {
+        return html2canvas(summary, { backgroundColor: "#111111" })
+          .then(canvas => {
+            return new Promise<void>((resolve) => {
+              canvas.toBlob((blob) => {
+                if (blob) {
+                  // eslint-disable-next-line no-undef
+                  const item = new ClipboardItem({ "image/png": blob });
+                  navigator.clipboard.write([item]);
+                }
+                resolve();
+              });
+            });
+          });
+      }
+      const copyWhenSummaryRendered = () => {
+        const summary = document.querySelector("#summary") as HTMLElement;
+        if (summary) {
+          copyToClipboard(summary).then(() => {
+            setWorking(false);
+            setRendering(false);
+            toast.success(t('Copied image to clipboard!'), {
+              position: "top-center",
+              autoClose: 2000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: false,
+            });
+          })
+        }
+      }
+      setRendering(true);
+      copyWhenSummaryRendered();
+    }, 500);
   }
 
-  const saveToDisk = () => {
-
+  const saveToDisk: MouseEventHandler<HTMLButtonElement> = () => {
+    setMode('file');
+    setWorking(true);
+    setTimeout(() => {
+      const saveAsFile = (summary: HTMLElement) => {
+        return html2canvas(summary, { backgroundColor: "#111111" }).then(canvas => {
+          const data = canvas.toDataURL("image/png");
+          window.Main.saveImage(data);
+        });
+      }
+      const copyWhenSummaryRendered = () => {
+        const summary = document.querySelector("#summary") as HTMLElement;
+        if (summary) {
+          saveAsFile(summary).then(() => {
+            setWorking(false);
+            setRendering(false);
+          })
+        }
+      }
+      setRendering(true);
+      copyWhenSummaryRendered();
+    }, 500);
   }
 
   return (
@@ -56,80 +106,95 @@ export function Summary({ fileReaderResponse }: ListProps) {
       {open &&
         <>
           <Dialog onClose={() => setOpen(false)} open>
-            <DialogTitle>{t('Holy Grail summary image')}</DialogTitle>
-            <Typography>{t("You can copy to clipboard, or save to disk, an image showing your progress with the list of all items in the challenge. The list will look similar to what you can see in this application.")}</Typography>
-            <Button onClick={copyToClip}>
-              {t(copying ? "Working..." : "Copy to clipboard")}
-            </Button>
-            <Button onClick={}>
-              {t("Save to disk")}
-            </Button>
+            <DialogTitle>
+              {t('Share your progress')}
+              <IconButton
+                onClick={() => setOpen(false)}
+                sx={{
+                  position: 'absolute',
+                  right: 8,
+                  top: 8
+                }}
+              >
+                <CloseIcon />
+              </IconButton>
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                {t("You can copy to clipboard, or save to disk, an image showing your progress with the list of all items in the challenge. The list will look similar to what you can see in this application.")}
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={copyToClip} disabled={working}>
+                {t(working && mode === 'copy' ? "Generating image..." : "Copy to clipboard")}
+              </Button>
+              <Button onClick={saveToDisk} disabled={working}>
+                {t(working && mode === 'file' ? "Generating image..." : "Save as file")}
+              </Button>
+            </DialogActions>
           </Dialog>
-          {working && <div>Loading ...</div>}
-          {(copying || saving) &&
-            <FullScreenContainer>
-              <div style={{ position: 'absolute', opacity: 0}}>
-                <Container id="summary" style={{ width: 1100, margin: 'auto' }}>
-                  <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                    <ButtonPanel>
-                      <IconButton onClick={() => setOpen(false)}>
-                        <CloseIcon />
-                      </IconButton>
-
-                    </ButtonPanel>
-                    <Logo>
-                      <Image
-                        src={logo}
-                        alt=""
-                      />
-                      <h1>{t('Holy Grail')}</h1>
-                      <h6>
-                        {t('by')}&nbsp;
-                        <a href="#" onClick={() => window.Main.openUrl('https://www.twitch.tv/nadinwins')}>
-                          NadinWins<img src={twitchIcon} alt="Twitch" />
-                        </a>
-                      </h6>
-                    </Logo>
-                  </Box>
-                  <TabPanel
-                    value={TabState.Statistics}
-                    index={TabState.Statistics}
-                    player={items}
-                    stats={stats}
-                    search=""
-                    noFileSummary
-                  />
-                  <TabPanel
-                    value={TabState.UniqueArmor}
-                    index={TabState.UniqueArmor}
-                    items={holyGrailSeedData.uniques.armor}
-                    player={items}
-                    search=" "
-                  />
-                  <TabPanel
-                    value={TabState.UniqueWeapons}
-                    index={TabState.UniqueWeapons}
-                    items={holyGrailSeedData.uniques.weapons}
-                    player={items}
-                    search=" "
-                  />
-                  <TabPanel
-                    value={TabState.UniqueOther}
-                    index={TabState.UniqueOther}
-                    items={holyGrailSeedData.uniques.other}
-                    player={items}
-                    search=" "
-                  />
-                  <TabPanel
-                    value={TabState.Sets}
-                    index={TabState.Sets}
-                    sets={holyGrailSeedData.sets}
-                    player={items}
-                    search=" "
-                  />
-                </Container>
-              </div>
-            </FullScreenContainer>
+          {(rendering) &&
+            <div style={{ position: 'absolute', opacity: 0 }}>
+              <Container id="summary" style={{ width: 800, margin: 'auto' }}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <Logo>
+                    <Image
+                      src={logo}
+                      alt=""
+                    />
+                    <h1>{t('Holy Grail')}</h1>
+                    <h6>
+                      {t('by')}&nbsp;
+                      <a href="#" onClick={() => window.Main.openUrl('https://www.twitch.tv/nadinwins')}>
+                        NadinWins<img src={twitchIcon} alt="Twitch" />
+                      </a>
+                    </h6>
+                  </Logo>
+                </Box>
+                <TabPanel
+                  value={TabState.Statistics}
+                  index={TabState.Statistics}
+                  player={items}
+                  stats={stats}
+                  search=""
+                  noFileSummary
+                  noCelebration
+                  gameMode={gameMode}
+                />
+                <TabPanel
+                  value={TabState.UniqueArmor}
+                  index={TabState.UniqueArmor}
+                  items={holyGrailSeedData.uniques.armor}
+                  player={items}
+                  search=" "
+                  gameMode={gameMode}
+                />
+                <TabPanel
+                  value={TabState.UniqueWeapons}
+                  index={TabState.UniqueWeapons}
+                  items={holyGrailSeedData.uniques.weapons}
+                  player={items}
+                  search=" "
+                  gameMode={gameMode}
+                />
+                <TabPanel
+                  value={TabState.UniqueOther}
+                  index={TabState.UniqueOther}
+                  items={holyGrailSeedData.uniques.other}
+                  player={items}
+                  search=" "
+                  gameMode={gameMode}
+                />
+                <TabPanel
+                  value={TabState.Sets}
+                  index={TabState.Sets}
+                  sets={holyGrailSeedData.sets}
+                  player={items}
+                  search=" "
+                  gameMode={gameMode}
+                />
+              </Container>
+            </div>
           }
         </>
       }

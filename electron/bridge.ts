@@ -17,11 +17,20 @@ export const api = {
   getSettings: (): Settings => {
     return ipcRenderer.sendSync('getSettings');
   },
-  getSetting: (key: keyof Settings): string => {
+  getSetting: <K extends keyof Settings>(key: K): Settings[K] => {
     return ipcRenderer.sendSync('getSetting', key);
   },
-  saveSetting: (key: keyof Settings, value: string) => {
+  saveSetting: <K extends keyof Settings>(key: K, value: Settings[K]) => {
     ipcRenderer.send('saveSetting', key, value);
+  },
+  saveImage: (data: string) => {
+    ipcRenderer.send('saveImage', data);
+  },
+  loadManualItems: () => {
+    ipcRenderer.send('loadManualItems');
+  },
+  saveManualItem: (itemName: string, isFound: boolean) => {
+    ipcRenderer.send('saveManualItem', itemName, isFound);
   },
   on: (channel: string, callback: Function) => {
     ipcRenderer.removeAllListeners(channel);

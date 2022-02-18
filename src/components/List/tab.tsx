@@ -1,14 +1,15 @@
-import { Box, Typography, Grid, List, ListItem, ListItemIcon, ListItemText, ListItemButton } from '@mui/material';
+import { Box, Typography, Grid, List, ListItem, ListItemIcon, ListItemText, ListItemButton, Checkbox } from '@mui/material';
 import DoneIcon from '@mui/icons-material/Done';
 import { grey } from '@mui/material/colors';
 import { useTranslation } from 'react-i18next';
 
 import { IUniqueArmors, IUniqueWeapons, IUniqueOther, ISetItems } from 'd2-holy-grail/client/src/common/definitions/union/IHolyGrailData';
-import { ItemsInSaves, SaveFileStats } from '../../@types/main';
+import { GameMode, ItemsInSaves, SaveFileStats } from '../../@types/main.d';
 
 import { title } from '.';
 import Popup from './popup';
 import { simplifyItemName, Statistics } from '../Stats';
+import { ChangeEvent, MouseEvent } from 'react';
 
 type TabPanelProps = {
   index: number,
@@ -19,10 +20,12 @@ type TabPanelProps = {
   player: ItemsInSaves,
   search: string,
   noFileSummary?: boolean,
+  noCelebration?: boolean,
+  gameMode: GameMode
 };
 
 export function TabPanel(props: TabPanelProps) {
-  const { value, index, items, sets, player, stats, search, noFileSummary } = props;
+  const { value, index, items, sets, player, stats, search, noFileSummary, noCelebration, gameMode } = props;
   const { t } = useTranslation();
 
   let itemList = items || sets;
@@ -50,6 +53,10 @@ export function TabPanel(props: TabPanelProps) {
       // @ts-ignore
       itemList = filterWithSearch(itemList, searchStr);
     }
+  }
+
+  const handleStatusChange = (event: ChangeEvent<HTMLInputElement>, itemName: string) => {
+    window.Main.saveManualItem(itemName, event.target.checked);
   }
 
   return (
@@ -86,12 +93,24 @@ export function TabPanel(props: TabPanelProps) {
                             >
                               <ListItem disablePadding style={{color: player[itemName] ? grey[400] : grey[700]}}>
                                 <ListItemButton>
-                                  {player[itemName] && (
+                                  {gameMode !== GameMode.Manual && player[itemName] && (
                                     <ListItemIcon>
                                       <DoneIcon />
                                     </ListItemIcon>
                                   )}
-                                  <ListItemText inset={!player[itemName]} primary={t(itemFullName)} />
+                                  {gameMode === GameMode.Manual && (
+                                    <ListItemIcon>
+                                      <Checkbox
+                                        edge="start"
+                                        checked={!!player[itemName]}
+                                        tabIndex={-1}
+                                        disableRipple
+                                        onChange={(e) => handleStatusChange(e, itemName)}
+                                        onClick={(e: MouseEvent<HTMLButtonElement>) => { e.stopPropagation() }}
+                                      />
+                                    </ListItemIcon>
+                                  )}
+                                  <ListItemText inset={gameMode !== GameMode.Manual && !player[itemName]} primary={t(itemFullName)} />
                                 </ListItemButton>
                               </ListItem>
                             </Popup>
@@ -128,12 +147,24 @@ export function TabPanel(props: TabPanelProps) {
                       >
                         <ListItem disablePadding key={itemName} style={{color: player[itemName] ? grey[400] : grey[700]}}>
                           <ListItemButton>
-                            {player[itemName] && (
+                            {gameMode !== GameMode.Manual && player[itemName] && (
                               <ListItemIcon>
                                 <DoneIcon />
                               </ListItemIcon>
                             )}
-                            <ListItemText inset={!player[itemName]} primary={t(itemFullName)} />
+                            {gameMode === GameMode.Manual && (
+                              <ListItemIcon>
+                                <Checkbox
+                                  edge="start"
+                                  checked={!!player[itemName]}
+                                  tabIndex={-1}
+                                  disableRipple
+                                  onChange={(e) => handleStatusChange(e, itemName)}
+                                  onClick={(e: MouseEvent<HTMLButtonElement>) => { e.stopPropagation() }}
+                                />
+                              </ListItemIcon>
+                            )}
+                            <ListItemText inset={gameMode !== GameMode.Manual && !player[itemName]} primary={t(itemFullName)} />
                           </ListItemButton>
                         </ListItem>
                       </Popup>
@@ -146,7 +177,7 @@ export function TabPanel(props: TabPanelProps) {
         </Box>
       )}
       {value === index && !sets && !items && stats && (
-        <Statistics items={player} stats={stats} noFileSummary={noFileSummary} />
+        <Statistics items={player} stats={stats} noFileSummary={noFileSummary || gameMode === GameMode.Manual} noCelebration={noCelebration} />
       )}
     </div>
   );

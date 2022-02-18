@@ -22,13 +22,24 @@ export const GlobalStyle = createGlobalStyle`
     text-decoration: none;
   }
   
+  th {
+    white-space: nowrap;
+  }
 
-  #summary {background: #111 }
+  #summary { background: #111 }
+
   #summary .MuiTableCell-body {
       padding: 5px;
   }
   div#summary .MuiGrid-container {
       margin-top: 0 !important;
+  }
+
+  div#summary .MuiGrid-container>.MuiGrid-grid-md-6 {
+    flex-grow: 1;
+    padding-left: 15px;
+    padding-right: 15px;
+    max-width: 100%;
   }
 
   div#summary #simple-tabpanel-1 *,
@@ -68,6 +79,7 @@ export const GlobalStyle = createGlobalStyle`
   div#summary #simple-tabpanel-3 .MuiListItemText-primary,
   div#summary #simple-tabpanel-4 .MuiListItemText-primary {
       padding-left: 28px;
+      padding-right: 20px;
       padding-bottom: 3px;
   }
 
@@ -77,5 +89,23 @@ export const GlobalStyle = createGlobalStyle`
   div#summary #simple-tabpanel-4 .MuiSvgIcon-root {
       position: absolute;
       top: -1px;
+  }
+
+  div#summary #simple-tabpanel-1 .MuiCheckbox-root .MuiSvgIcon-root,
+  div#summary #simple-tabpanel-2 .MuiCheckbox-root .MuiSvgIcon-root,
+  div#summary #simple-tabpanel-3 .MuiCheckbox-root .MuiSvgIcon-root,
+  div#summary #simple-tabpanel-4 .MuiCheckbox-root .MuiSvgIcon-root {
+    position: absolute !important;
+    top: 0px !important;
+    left: 0px !important;
+  }
+
+  div#summary #simple-tabpanel-1 .MuiCheckbox-root,
+  div#summary #simple-tabpanel-2 .MuiCheckbox-root,
+  div#summary #simple-tabpanel-3 .MuiCheckbox-root,
+  div#summary #simple-tabpanel-4 .MuiCheckbox-root {
+    position: absolute !important;
+    top: 0px !important;
+    left: 0px !important;
   }
 `

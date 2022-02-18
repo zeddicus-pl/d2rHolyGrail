@@ -1,12 +1,12 @@
-import { app, BrowserWindow, ipcMain, dialog, shell } from 'electron';
+import { app, BrowserWindow, ipcMain, dialog, shell, session } from 'electron';
 import * as d2s from '@dschu012/d2s';
 import * as d2stash from '@dschu012/d2s/lib/d2/stash';
 import { constants } from '@dschu012/d2s/lib/data/versions/96_constant_data';
-import { existsSync, promises } from 'fs';
+import { existsSync, promises, writeFile } from 'fs';
 import { basename, extname, join, resolve, sep } from 'path';
 import { IpcMainEvent } from 'electron/renderer';
 import { readdirSync } from 'original-fs';
-import { FileReaderResponse, Settings, SilospenItem } from '../src/@types/main';
+import { FileReaderResponse, GameMode, Settings, SilospenItem } from '../src/@types/main';
 // @ts-ignore
 import fetch from 'node-fetch';
 import https from 'https';
@@ -26,6 +26,14 @@ declare const STREAM_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string
 
+const CSP_HEADER =
+  "default-src 'self' 'unsafe-inline' data: ws:; " +
+  "script-src 'self' 'unsafe-eval' 'unsafe-inline' data:; " +
+  "style-src 'unsafe-inline'; " +
+  "style-src-elem 'unsafe-inline' fonts.googleapis.com; " +
+  "font-src fonts.gstatic.com; " +
+  "frame-src http://localhost:3666";
+
 const httpsAgent = new https.Agent({
   rejectUnauthorized: false,
 });
@@ -40,6 +48,7 @@ let currentData: FileReaderResponse;
 let currentSettings: Settings = {
   lang: 'en',
   saveDir: '',
+  gameMode: GameMode.Both,
 }
 
 const streamListeners: Map<string, Socket> = new Map();
@@ -52,11 +61,23 @@ const assetsPath =
     : app.getAppPath()
 
 function createWindow () {
+  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+    // eslint-disable-next-line node/no-callback-literal
+    callback({
+      responseHeaders: {
+        ...details.responseHeaders,
+        'Content-Security-Policy': [ CSP_HEADER ]
+      }
+    })
+  })
+
   currentSettings = getSettings();
+
   const mainWindowState = WindowStateKeeper({
     defaultWidth: 1100,
     defaultHeight: 700,
   });
+
   mainWindow = new BrowserWindow({
     icon: join(assetsPath, 'assets', 'icon.png'),
     x: mainWindowState.x,
@@ -93,8 +114,13 @@ function createWindow () {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   streamApp.get("/", (req: any, res: any) => {
     if (STREAM_WEBPACK_ENTRY.startsWith("http")) {
-      request(STREAM_WEBPACK_ENTRY).pipe(res);
+      request(STREAM_WEBPACK_ENTRY)
+        .on("response", remoteRes => {
+            remoteRes.headers["content-security-policy"] = CSP_HEADER;
+        })
+        .pipe(res);
     } else {
+      res.setHeader('content-security-policy', CSP_HEADER);
       res.sendFile(STREAM_WEBPACK_ENTRY.replace('file://', ''));
     }
   });
@@ -168,6 +194,21 @@ async function registerListeners () {
   ipcMain.on('saveSetting', (event, key, value) => {
     saveSetting(key, value);
   });
+  ipcMain.on('saveImage', (event, data: string) => {
+    saveImage(data);
+  });
+  ipcMain.on('loadManualItems', (event) => {
+    eventToReply = event;
+    loadManualItems();
+    event.reply('openFolder', currentData);
+    updateDataToListeners();
+  });
+  ipcMain.on('saveManualItem', (event, itemId, isFound) => {
+    eventToReply = event;
+    saveManualItem(itemId, isFound);
+    event.reply('openFolder', currentData);
+    updateDataToListeners();
+  });
 }
 
 app.on('ready', createWindow)
@@ -191,11 +232,11 @@ const getSettings = (): Settings => {
   return (storage.getSync('settings') as Settings);
 }
 
-const getSetting = (key: keyof Settings): string | null => {
+const getSetting = <K extends keyof Settings>(key: K): Settings[K] | null => {
   return currentSettings[key] ? currentSettings[key] : null;
 }
 
-const saveSetting = (key: keyof Settings, value: string) => {
+const saveSetting = <K extends keyof Settings>(key: K, value: Settings[K]) => {
   currentSettings[key] = value;
   storage.set('settings', currentSettings, (error) => {
     if (error) console.log(error);
@@ -203,6 +244,33 @@ const saveSetting = (key: keyof Settings, value: string) => {
       eventToReply.reply('updatedSettings', currentSettings);
     }
     updateSettingsToListeners();
+  });
+}
+
+const loadManualItems = () => {
+  const data = (storage.getSync('manualItems') as FileReaderResponse);
+  if (!data.items) {
+    storage.set('manualItems', {items: {}, stats: {}}, (err) => {
+      if (err) {
+        console.log(err);
+      }
+    });
+    currentData = {items: {}, stats: {}}
+  } else {
+    currentData = data;
+  }
+}
+
+const saveManualItem = (itemId: string, isFound: boolean) => {
+  if (isFound) {
+    currentData.items[itemId] = { item: null, saveName: [] }
+  } else if (currentData.items[itemId]) {
+    delete(currentData.items[itemId]);
+  }
+  storage.set('manualItems', currentData, (err) => {
+    if (err) {
+      console.log(err);
+    }
   });
 }
 
@@ -225,7 +293,7 @@ const openAndParseSaves = (event: IpcMainEvent) => {
 };
 
 const tickReader = async () => {
-  if (eventToReply && watchPath && filesChanged && !readingFiles) {
+  if (eventToReply && watchPath && filesChanged && !readingFiles && currentSettings.gameMode !== GameMode.Manual) {
     console.log('re-reading files!');
     readingFiles = true;
     filesChanged = false;
@@ -278,9 +346,6 @@ const parseSaves = async (event: IpcMainEvent, path: string) => {
     return readFile(join(path, file))
       .then((buffer) => parseSave(saveName, buffer, extname(file).toLowerCase()))
       .then((result) => {
-        if (!result.length) {
-          results.stats[saveName] = 0;
-        }
         result.forEach((item) => {
           let name = item.unique_name || item.set_name || item.rare_name || item.rare_name2 || '';
           if (name.indexOf('Rainbow Facet') !== -1) {
@@ -330,7 +395,7 @@ const parseSaves = async (event: IpcMainEvent, path: string) => {
 
 const parseSave = async (saveName: string, content: Buffer, extension: string): Promise<d2s.types.IItem[]>  => {
   const items: d2s.types.IItem[] = [];
-
+  
   const parseItems = (itemList: d2s.types.IItem[]) => {
     itemList.forEach((item) => {
       if (item.unique_name || item.set_name || item.rare_name || item.rare_name2) {
@@ -343,6 +408,12 @@ const parseSave = async (saveName: string, content: Buffer, extension: string): 
   }
 
   const parseD2S = (response: d2s.types.ID2S) => {
+    if (currentSettings.gameMode === GameMode.Softcore && response.header.status.hardcore) {
+      return [];
+    }
+    if (currentSettings.gameMode === GameMode.Hardcore && !response.header.status.hardcore) {
+      return [];
+    }
     const itemList = [
       ...response.items,
       ...response.merc_items,
@@ -401,4 +472,26 @@ const fetchSilospen = (event: IpcMainEvent, type: string, itemName: string) => {
     .catch((err: any) =>
       event.reply('silospenResponse', err.message)
     );
+}
+
+const saveImage = async (data: string) => {
+  return dialog.showSaveDialog({
+    defaultPath: 'HolyGrail.png',
+    properties: ['createDirectory'],
+  }).then((result) => {
+    if (result.filePath) {
+      const regExMatches = data.match('data:(image/.*);base64,(.*)');
+      if (regExMatches && regExMatches[2]) {
+        const buffer = Buffer.from(regExMatches[2], 'base64')
+        const filePath = extname(result.filePath).length ? result.filePath : result.filePath + '.png'
+        writeFile(filePath, buffer, (err) => {
+          if (err) {
+            console.log('Failed saving the file: ' + JSON.stringify(err, null, 4));
+          }
+        });
+      }
+    }
+  }).catch((e) => {
+    console.log(e);
+  });
 }

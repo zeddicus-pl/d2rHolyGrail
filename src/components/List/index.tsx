@@ -1,8 +1,5 @@
-import { useState, MouseEvent } from 'react';
+import { useState } from 'react';
 import { Box, Tabs, Tab } from '@mui/material';
-import IconButton from '@mui/material/IconButton';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
 import { Container, Image, Logo, ButtonPanel } from './styles';
 import { TabPanel } from './tab';
 import SettingsPanel from '../Settings'
@@ -10,14 +7,12 @@ import { useTranslation } from 'react-i18next';
 import { FileReaderResponse, Settings } from '../../@types/main';
 import { Search } from '../Search';
 
-import flagGB from 'circle-flags/flags/gb.svg';
-import flagPL from 'circle-flags/flags/pl.svg';
-
 import { holyGrailSeedData } from '../../../electron/holyGrailSeedData';
 
 import logo from '../../../assets/logo.svg';
 import twitchIcon from '../../../assets/twitch-icon.svg';
 import { Summary } from './summary';
+import { Language } from './language';
 
 /* eslint-disable no-unused-vars */
 export enum TabState {
@@ -42,30 +37,10 @@ type ListProps = {
 export function List({ fileReaderResponse, appSettings }: ListProps) {
   const [tab, setTab] = useState(TabState.Statistics);
   const [search, setSearch] = useState<string>('');
-  const {t, i18n} = useTranslation();
-
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = (lang: string) => {
-    i18n.changeLanguage(lang);
-    window.Main.saveSetting('lang', lang);
-    setAnchorEl(null);
-  };
+  const { t } = useTranslation();
 
   if (fileReaderResponse === null) {
     return null;
-  }
-
-  let flag;
-  switch (i18n.language) {
-    case 'pl':
-      flag = flagPL;
-      break;
-    default:
-      flag = flagGB;
   }
 
   const { items, stats } = fileReaderResponse;
@@ -79,30 +54,10 @@ export function List({ fileReaderResponse, appSettings }: ListProps) {
               setSearch(text);
             }}
           />
-          <Summary fileReaderResponse={fileReaderResponse} />
-          <IconButton onClick={handleClick}>
-            <img style={{ height: '1em' }} src={flag} />
-          </IconButton>
+          <Summary fileReaderResponse={fileReaderResponse} gameMode={appSettings.gameMode} />
+          <Language />
           <SettingsPanel appSettings={appSettings} />
         </ButtonPanel>
-        <Menu
-          anchorEl={anchorEl}
-          open={open}
-          onClose={() => { setAnchorEl(null); }}
-        >
-          <MenuItem onClick={() => { handleClose('en') }}>
-            <IconButton disableRipple disableFocusRipple >
-              <img style={{ height: '1em' }} src={flagGB} />
-            </IconButton>
-            {t('English')}
-          </MenuItem>
-          <MenuItem onClick={() => { handleClose('pl') }}>
-            <IconButton disableRipple disableFocusRipple>
-              <img style={{ height: '1em' }} src={flagPL} />
-            </IconButton>
-            {t('Polski')}
-          </MenuItem>
-        </Menu>
         <Logo>
           <Image
             src={logo}
@@ -137,6 +92,7 @@ export function List({ fileReaderResponse, appSettings }: ListProps) {
         player={items}
         stats={stats}
         search=""
+        gameMode={appSettings.gameMode}
       />
       <TabPanel
         value={search.length ? TabState.UniqueArmor : tab}
@@ -144,6 +100,7 @@ export function List({ fileReaderResponse, appSettings }: ListProps) {
         items={holyGrailSeedData.uniques.armor}
         player={items}
         search={search}
+        gameMode={appSettings.gameMode}
       />
       <TabPanel
         value={search.length ? TabState.UniqueWeapons : tab}
@@ -151,6 +108,7 @@ export function List({ fileReaderResponse, appSettings }: ListProps) {
         items={holyGrailSeedData.uniques.weapons}
         player={items}
         search={search}
+        gameMode={appSettings.gameMode}
       />
       <TabPanel
         value={search.length ? TabState.UniqueOther : tab}
@@ -158,6 +116,7 @@ export function List({ fileReaderResponse, appSettings }: ListProps) {
         items={holyGrailSeedData.uniques.other}
         player={items}
         search={search}
+        gameMode={appSettings.gameMode}
       />
       <TabPanel
         value={search.length ? TabState.Sets : tab}
@@ -165,6 +124,7 @@ export function List({ fileReaderResponse, appSettings }: ListProps) {
         sets={holyGrailSeedData.sets}
         player={items}
         search={search}
+        gameMode={appSettings.gameMode}
       />
     </Container>
   );
