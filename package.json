@@ -3,10 +3,10 @@
   "author": "Kamil Tunkiewicz <kamil.tunkiewicz(at)gmail.com>",
   "version": "1.6.0",
   "description": "Scan your Diablo 2 Resurrected saves to check your Holy Grail progress",
-  "main": "./.webpack/main/index.js",
+  "main": "./.webpack/main",
   "scripts": {
     "start": "ELECTRON_ENV=development electron-forge start",
-    "start-win": "electron-forge start",
+    "start-win": "set ELECTRON_ENV=development&&electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "release": "electron-forge publish",

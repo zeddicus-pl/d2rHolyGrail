@@ -21,8 +21,12 @@ export const Image = styled.img`
   width: 50vw;
 `
 
-export const Text = styled.p`
+export const Text = styled.div`
   font-family: 'Gwendolyn', cursive;
-  font-size: 10vw;
+  font-size: 13vw;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
   text-shadow: 0 0 15px rgba(0,0,0,0.5);
 `
