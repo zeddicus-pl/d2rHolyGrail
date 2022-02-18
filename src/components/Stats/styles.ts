@@ -13,7 +13,7 @@ export const ImageContainer = styled.div`
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -70%);
   text-align: center;
 `
 
