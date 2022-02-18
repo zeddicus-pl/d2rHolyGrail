@@ -126,10 +126,10 @@ export function Summary({ fileReaderResponse, gameMode }: ListProps) {
             </DialogContent>
             <DialogActions>
               <Button onClick={copyToClip} disabled={working}>
-                {t(working && mode === 'copy' ? t("Generating image...") : t("Copy to clipboard"))}
+                {working && mode === 'copy' ? t("Generating image...") : t("Copy to clipboard")}
               </Button>
               <Button onClick={saveToDisk} disabled={working}>
-                {t(working && mode === 'file' ? t("Generating image...") : t("Save as file"))}
+                {working && mode === 'file' ? t("Generating image...") : t("Save as file")}
               </Button>
             </DialogActions>
           </Dialog>
