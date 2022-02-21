@@ -8,9 +8,11 @@ import { CircularProgressbarWithChildren, buildStyles } from 'react-circular-pro
 import { ProgressProvider } from '../components/Stats/animation';
 import { ThemeProvider } from '@mui/system';
 import { GlobalStyle } from '../styles/GlobalStyle';
-import { Header, Container } from './styles';
 import { Win } from '../components/Stats/win';
 import { computeStats } from '../utils/objects';
+
+import { Header, Container } from './styles';
+import 'react-circular-progressbar/dist/styles.css';
 
 export default function StreamApp() {
   const [data, setData] = useState<FileReaderResponse | null>(null);
@@ -35,10 +37,10 @@ export default function StreamApp() {
     <GlobalStyle />
     <ThemeProvider theme={createTheme({palette: { mode: 'dark' }})}>
       <Container>
-        <Grid xs={12}>
+        <Grid item xs={12}>
           <Header>{t('Holy Grail')}</Header>
         </Grid>
-        <Grid xs={8} style={{ position: 'relative' }}>
+        <Grid item xs={8} style={{ position: 'relative' }}>
           <ProgressProvider valueStart={0} valueEnd={totalStats.owned}>
             { (value: number) => <CircularProgressbarWithChildren
               value={totalStats.owned}

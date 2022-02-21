@@ -1,9 +1,10 @@
-import { forwardRef, useState, ReactElement, Ref } from 'react';
+import { forwardRef, useState, ReactElement, Ref, useRef, useEffect, SyntheticEvent } from 'react';
 import Dialog from '@mui/material/Dialog';
 import ListItemText from '@mui/material/ListItemText';
 import ListItem from '@mui/material/ListItem';
 import List from '@mui/material/List';
 import ListItemIcon from '@mui/material/ListItemIcon';
+import InfoIcon from '@mui/icons-material/Info';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
@@ -14,9 +15,10 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import { TransitionProps } from '@mui/material/transitions';
 import { useTranslation } from 'react-i18next';
 import { GameMode, Settings } from '../../@types/main.d';
-import { Divider, FormControl, Grid, MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import { Grid, Accordion, AccordionDetails, AccordionSummary, Divider, FormControl, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import FolderIcon from '@mui/icons-material/Folder';
 import GroupIcon from '@mui/icons-material/Group';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -33,7 +35,15 @@ type SettingsPanelProps = {
 
 export default function SettingsPanel({ appSettings }: SettingsPanelProps) {
   const [open, setOpen] = useState(false);
+  const [iframeVisible, setIframeVisible] = useState(false);
   const { t } = useTranslation();
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+
+  useEffect(() => {
+    if (iframeRef.current) {
+      iframeRef.current.src = 'http://localhost:3666/';
+    }
+  }, [iframeVisible]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -79,6 +89,17 @@ export default function SettingsPanel({ appSettings }: SettingsPanelProps) {
         <List>
           <ListItem button disabled={gameMode === GameMode.Manual}>
             <ListItemIcon>
+              <InfoIcon />
+            </ListItemIcon>
+            <ListItemText
+              primary={t("App version: v1.6.1")}
+              secondary={"Click here to open releases page in GitHub for changelog and older versions"}
+              onClick={() => { window.Main.openUrl('https://github.com/zeddicus-pl/d2rHolyGrail/releases') }}
+            />
+          </ListItem>
+          <Divider />
+          <ListItem button disabled={gameMode === GameMode.Manual}>
+            <ListItemIcon>
               <FolderIcon />
             </ListItemIcon>
             <ListItemText
@@ -111,10 +132,24 @@ export default function SettingsPanel({ appSettings }: SettingsPanelProps) {
             </FormControl>
           </ListItem>
         </List>
+        <Divider />
         <Grid m={{ t: 2 }} p={3}>
-          <h3>{t('HTTP feed preview')}</h3>
-          <p><a onClick={() => { window.Main.openUrl("http://localhost:3666/") }}>http://localhost:3666/</a></p>
-          <iframe src="http://localhost:3666/" style={{ width: 300, height: 300, background: '#000', border: 0 }} />
+          <Accordion onChange={(event: SyntheticEvent, expanded: boolean) => {
+            setIframeVisible(expanded);
+          }}>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+            >
+              <Typography>{t("Streaming tools")}</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography>{t("To add a progress overlay into your stream, add a Browser source in your OBS, and point it to the below address. Set it to 300x300 width and heigth.")}</Typography>
+              <Typography><a onClick={() => { window.Main.openUrl("http://localhost:3666/") }}>http://localhost:3666/</a></Typography>
+              <div style={{ paddingTop: 15 }}>
+                <iframe ref={iframeRef} style={{ width: 300, height: 300, background: '#000', border: 0 }} />
+              </div>
+            </AccordionDetails>
+          </Accordion>
         </Grid>
       </Dialog>
     </>

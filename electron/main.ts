@@ -154,6 +154,8 @@ async function closeApp () {
 const addStreamListener = (socket: Socket): void => {
   streamListeners.set(socket.id, socket);
   socket.emit("updatedSettings", currentSettings);
+  updateDataToListeners();
+  updateSettingsToListeners();
 }
 
 const removeStreamListener = (socket: Socket): void => {
@@ -302,7 +304,7 @@ const tickReader = async () => {
     readingFiles = false;
   }
 }
-setInterval(tickReader, 200);
+setInterval(tickReader, 500);
 
 const prepareChokidarGlobe = (filename: string): string => {
   if (filename.length < 2) {
@@ -422,12 +424,12 @@ const parseSave = async (saveName: string, content: Buffer, extension: string): 
       return [];
     }
     const items = response.items || [];
-    const merc_items = response.merc_items || [];
-    const corpse_items = response.corpse_items || [];
+    const mercItems = response.merc_items || [];
+    const corpseItems = response.corpse_items || [];
     const itemList = [
-      ...items
-      ...merc_items,
-      ...corpse_items,
+      ...items,
+      ...mercItems,
+      ...corpseItems,
     ]
     parseItems(itemList);
   };

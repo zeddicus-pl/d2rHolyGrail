@@ -88,14 +88,13 @@ export function App() {
       setUiState(UiState.Reading);
     });
     window.Main.on('openFolder', (fileReaderResponse: FileReaderResponse) => {
-      console.log('open folder');
-      setFileReaderResponse(fileReaderResponse);
       if (fileReaderResponse === null) {
         if (uiState !== UiState.Loading) {
           setUiState(UiState.Ready);
         }
         return;
       }
+      setFileReaderResponse(fileReaderResponse);
       if (uiState !== UiState.Reading) {
         setUiState(UiState.List);
         return;
