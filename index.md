@@ -17,6 +17,13 @@ I created this application for my favourite streamer [NadinWins](https://www.twi
 
 ## Changelog
 
+### v1.6.1
+- Fixed performance issues
+- Added app version information in the settings screen
+- Corrected PL items translations
+- Item count in summary now only shows HG items
+- Fixed bug that caused some old save files not the read correctly
+
 ### v1.6.0
 - Added manual selection mode
 - Added choosing between softcore and hardcode game modes
