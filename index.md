@@ -33,11 +33,26 @@ Older versions can be found on [the releases page on GitHub](https://github.com/
 
 ## Screenshots
 
-<img width="1195" alt="Screenshot 2022-02-15 at 18 07 47" src="https://user-images.githubusercontent.com/79473394/154112597-e2f2753b-83ba-41ae-93f6-844c04c38d07.png">
+Welcome screen:
 
-<img width="1194" alt="Screenshot 2022-02-15 at 18 08 01" src="https://user-images.githubusercontent.com/79473394/154112605-729bab3b-edcf-4f70-8981-1ffe88587fb0.png">
+<img width="1100" alt="Screenshot 2022-02-18 at 12 07 46" src="https://user-images.githubusercontent.com/79473394/154920597-0ee633c2-075c-478a-9a54-0b1207330a94.png">
 
-<img width="1193" alt="Screenshot 2022-02-15 at 18 07 33" src="https://user-images.githubusercontent.com/79473394/154112617-68eca365-f0ee-4243-a5ac-cb7c3cbb4acb.png">
+Statistics screen:
+
+<img width="1101" alt="Screenshot 2022-02-18 at 12 08 08" src="https://user-images.githubusercontent.com/79473394/154920611-1a783acd-2750-479a-9931-16b624a988c9.png">
+
+Item list (automatic save reading mode):
+
+<img width="1096" alt="Screenshot 2022-02-18 at 12 08 30" src="https://user-images.githubusercontent.com/79473394/154920654-c999dec4-057d-4206-a5f4-145ceccce837.png">
+
+Item list (manual selection mode)
+
+<img width="1101" alt="Screenshot 2022-02-18 at 12 09 36" src="https://user-images.githubusercontent.com/79473394/154920850-38df8b6b-2a40-4d09-b79d-c336869446f3.png">
+
+Settings:
+
+<img width="1102" alt="Screenshot 2022-02-18 at 12 08 57" src="https://user-images.githubusercontent.com/79473394/154920878-9c658ee6-2b03-4696-86af-9eae0220ec10.png">
+
 
 ## How to use
 
