@@ -18,6 +18,8 @@ import express from "express";
 import http from "http";
 import request from "request";
 import { Server, Socket } from "socket.io";
+import { holyGrailSeedData } from './holyGrailSeedData';
+import { flattenObject } from '../src/utils/objects';
 
 const { readFile } = promises;
 
@@ -152,7 +154,6 @@ async function closeApp () {
 const addStreamListener = (socket: Socket): void => {
   streamListeners.set(socket.id, socket);
   socket.emit("updatedSettings", currentSettings);
-  socket.emit("openFolder", currentData);
 }
 
 const removeStreamListener = (socket: Socket): void => {
@@ -283,7 +284,7 @@ const openAndParseSaves = (event: IpcMainEvent) => {
     if (result.filePaths[0]) {
       const path = result.filePaths[0];
       event.reply('openFolderWorking', null);
-      parseSaves(event, path);
+      parseSaves(event, path, true);
     } else {
       event.reply('openFolder', null);
     }
@@ -297,7 +298,7 @@ const tickReader = async () => {
     console.log('re-reading files!');
     readingFiles = true;
     filesChanged = false;
-    await parseSaves(eventToReply, watchPath);
+    await parseSaves(eventToReply, watchPath, false);
     readingFiles = false;
   }
 }
@@ -311,7 +312,7 @@ const prepareChokidarGlobe = (filename: string): string => {
   return resolved.substring(0, 1) + resolved.substring(1).split(sep).join('/') + '/*.{d2s,sss,d2x}';
 }
 
-const parseSaves = async (event: IpcMainEvent, path: string) => {
+const parseSaves = async (event: IpcMainEvent, path: string, userRequested: boolean) => {
   const results: FileReaderResponse = {
     items: {},
     stats: {},
@@ -340,6 +341,10 @@ const parseSaves = async (event: IpcMainEvent, path: string) => {
       watchPath = path;
     }
   }
+
+  // prepare item list
+  const flatItems: {[itemName: string]: any} = {};
+  flattenObject(holyGrailSeedData, flatItems);
 
   const promises = files.map((file) => {
     const saveName = basename(file).replace(".d2s", "").replace(".sss", "").replace(".d2x", "");
@@ -375,7 +380,9 @@ const parseSaves = async (event: IpcMainEvent, path: string) => {
               saveName: [ saveName ],
             }
           }
-          results.stats[saveName] = result.length;
+          if (flatItems[itemName]) {
+            results.stats[saveName] = (results.stats[saveName] || 0) + 1;
+          }
         });
       })
       .catch((e) => {
@@ -384,7 +391,7 @@ const parseSaves = async (event: IpcMainEvent, path: string) => {
       })
   });
   return Promise.all(promises).then(() => {
-    if (path && path !== '') {
+    if (userRequested && path && path !== '') {
       saveSetting('saveDir', path);
     }
     event.reply('openFolder', results);
@@ -414,10 +421,13 @@ const parseSave = async (saveName: string, content: Buffer, extension: string): 
     if (currentSettings.gameMode === GameMode.Hardcore && !response.header.status.hardcore) {
       return [];
     }
+    const items = response.items || [];
+    const merc_items = response.merc_items || [];
+    const corpse_items = response.corpse_items || [];
     const itemList = [
-      ...response.items,
-      ...response.merc_items,
-      ...response.corpse_items,
+      ...items
+      ...merc_items,
+      ...corpse_items,
     ]
     parseItems(itemList);
   };
@@ -442,7 +452,7 @@ const parseSave = async (saveName: string, content: Buffer, extension: string): 
 async function readFilesUponStart (event: IpcMainEvent) {
   const saveDir = getSetting('saveDir');
   if (saveDir && existsSync(saveDir)) {
-    parseSaves(event, saveDir);
+    parseSaves(event, saveDir, false);
   } else {
     event.reply('noDirectorySelected', null);
   }

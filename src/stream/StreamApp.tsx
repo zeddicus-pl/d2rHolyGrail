@@ -4,13 +4,13 @@ import { FileReaderResponse, Settings } from '../@types/main';
 import { useTranslation } from 'react-i18next';
 import { Grid, createTheme } from '@mui/material';
 import { holyGrailSeedData } from '../../electron/holyGrailSeedData';
-import { computeStats } from '../components/Stats';
 import { CircularProgressbarWithChildren, buildStyles } from 'react-circular-progressbar';
 import { ProgressProvider } from '../components/Stats/animation';
 import { ThemeProvider } from '@mui/system';
 import { GlobalStyle } from '../styles/GlobalStyle';
 import { Header, Container } from './styles';
 import { Win } from '../components/Stats/win';
+import { computeStats } from '../utils/objects';
 
 export default function StreamApp() {
   const [data, setData] = useState<FileReaderResponse | null>(null);

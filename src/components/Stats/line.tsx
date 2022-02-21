@@ -1,11 +1,5 @@
 import { TableCell, TableRow } from "@mui/material";
-
-export type Stats = {
-  exists: number,
-  owned: number,
-  remaining: number,
-  percent: number,
-}
+import { Stats } from "../../utils/objects";
 
 type StatisticsLineProps = {
   title: string,

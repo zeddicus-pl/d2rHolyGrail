@@ -42,12 +42,14 @@ export function App() {
   }
 
   const saveSetting = <K extends keyof Settings>(setting: K, value: Settings[K]) => {
+    console.log('savesettings');
     window.Main.saveSetting(setting, value);
     appSettings[setting] = value;
     setAppSettings(appSettings);
   }
 
   const readData = (settings: Settings) => {
+    console.log('readdata');
     if (settings.gameMode === GameMode.Manual) {
       window.Main.loadManualItems();
     } else if (settings.saveDir && settings.saveDir !== '') {
@@ -73,16 +75,20 @@ export function App() {
 
   useEffect(() => {
     window.Main.on('updatedSettings', (settings: Settings) => {
+      console.log('updated settings');
       updateSettings(settings);
       readData(settings);
     });
     window.Main.on('noDirectorySelected', () => {
+      console.log('no dir selected');
       setUiState(UiState.Ready);
     });
     window.Main.on('openFolderWorking', () => {
+      console.log('open folder working');
       setUiState(UiState.Reading);
     });
     window.Main.on('openFolder', (fileReaderResponse: FileReaderResponse) => {
+      console.log('open folder');
       setFileReaderResponse(fileReaderResponse);
       if (fileReaderResponse === null) {
         if (uiState !== UiState.Loading) {

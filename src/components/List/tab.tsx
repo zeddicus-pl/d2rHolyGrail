@@ -8,8 +8,9 @@ import { GameMode, ItemsInSaves, SaveFileStats } from '../../@types/main.d';
 
 import { title } from '.';
 import Popup from './popup';
-import { simplifyItemName, Statistics } from '../Stats';
+import { Statistics } from '../Stats';
 import { ChangeEvent, MouseEvent } from 'react';
+import { simplifyItemName } from '../../utils/objects';
 
 type TabPanelProps = {
   index: number,

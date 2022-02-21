@@ -1,66 +1,26 @@
 import { useMemo, useEffect, useState } from 'react';
 import { Grid, Typography, Table, TableBody, TableCell, TableContainer, TableRow, TableHead } from '@mui/material';
 import { ItemsInSaves, SaveFileStats } from '../../@types/main';
-import { IUniqueArmors, IUniqueWeapons, IUniqueOther, ISetItems, IHolyGrailData } from 'd2-holy-grail/client/src/common/definitions/union/IHolyGrailData';
 
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-import { StatisticsLine, Stats } from './line';
+import { StatisticsLine } from './line';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { Win } from './win';
 import { ProgressProvider } from './animation';
 import { holyGrailSeedData } from '../../../electron/holyGrailSeedData';
 import { useTranslation } from 'react-i18next';
+import { computeStats } from '../../utils/objects';
 
 type StatsProps = {
   items: ItemsInSaves,
   stats: SaveFileStats,
   noFileSummary?: boolean,
   noCelebration?: boolean,
-}
-
-export const simplifyItemName = (name: string): string => name.replace(/[^a-z0-9]/gi, '').toLowerCase();
-
-const flattenObject = (object: any, flat: any) => {
-  Object.keys(object).forEach((key: any) => {
-    if (typeof object[key] === 'object' && Object.keys(object[key]).length > 0) {
-      flattenObject(object[key], flat);
-    } else {
-      flat[simplifyItemName(key)] = {};
-    }
-  });
-}
-
-const countItems = (object: any, items: ItemsInSaves): { exists: number, owned: number } => {
-  let exists = 0;
-  let owned = 0;
-  Object.keys(object).forEach((key: any) => {
-    exists = exists + 1;
-    if (items[key]) {
-      owned = owned + 1;
-    }
-  });
-  return { exists, owned };
-}
-
-export const computeStats = (
-  items: ItemsInSaves,
-  template: IUniqueArmors | IUniqueWeapons | IUniqueOther | ISetItems | IHolyGrailData
-): Stats => {
-  const flat = {};
-  flattenObject(template, flat);
-  const { exists, owned } = countItems(flat, items);
-  const percent = (owned / exists) * 100;
-  return {
-    exists,
-    owned,
-    remaining: exists - owned,
-    percent: percent > 99.5 && percent < 100 ? 99 : Math.round((owned / exists) * 100),
-  }
 }
 
 export function Statistics({ items, stats, noFileSummary, noCelebration }: StatsProps) {
