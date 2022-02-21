@@ -87,7 +87,7 @@ export default function SettingsPanel({ appSettings }: SettingsPanelProps) {
           </Toolbar>
         </AppBar>
         <List>
-          <ListItem button disabled={gameMode === GameMode.Manual}>
+          <ListItem button>
             <ListItemIcon>
               <InfoIcon />
             </ListItemIcon>
