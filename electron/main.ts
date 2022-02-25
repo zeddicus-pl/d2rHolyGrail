@@ -20,6 +20,7 @@ import request from "request";
 import { Server, Socket } from "socket.io";
 import { holyGrailSeedData } from './holyGrailSeedData';
 import { flattenObject } from '../src/utils/objects';
+import { execute } from 'njar';
 
 const { readFile } = promises;
 
@@ -52,6 +53,7 @@ let currentSettings: Settings = {
   saveDir: '',
   gameMode: GameMode.Both,
 }
+let silospenFallback = false;
 
 const streamListeners: Map<string, Socket> = new Map();
 
@@ -142,6 +144,8 @@ function createWindow () {
   });
 
   server.listen(3666);
+
+  runSilospenServer();
 }
 
 async function closeApp () {
@@ -462,28 +466,60 @@ async function readFilesUponStart (event: IpcMainEvent) {
 
 const fetchSilospen = (event: IpcMainEvent, type: string, itemName: string) => {
   const name = silospenMapping[itemName.trim()] || 'null';
-  const url = 'https://dropcalc.silospen.com/dropcalc.php?type=item&monsterId=undefined&difficulty=none&monsterType=BOSS&players=1&party=1&magicFind=0&itemQuality='+type+'&decMode=false&version=D2R_V1_0&itemId=' + encodeURIComponent(name);
-  console.log(url);
-  fetch(url, {
-    agent: httpsAgent
-  })
-    .then((response: any) => response.text())
-    .then((text: any) => {
-      const lines: SilospenItem = text
-        .split('</td></tr><tr><td>')
-        .map((line: string) => line.replace('<tr><td>', '').replace('</td></tr>', ''))
-        .map((line: string) => {
-          if (line.indexOf('No Results!') !== -1) {
-            return { name: "No Results!", area: "", chance: 0 };
-          }
-          const [name, area, chance] = line.split('</td><td>');
-          return { name, area, chance: chance.split(':')[1]};
-        });
-      event.reply('silospenResponse', lines)
+  if (silospenFallback) {
+    const url = 'https://dropcalc.silospen.com/dropcalc.php?type=item&monsterId=undefined&difficulty=none&monsterType=BOSS&players=1&party=1&magicFind=0&itemQuality='+type+'&decMode=false&version=D2R_V1_0&itemId=' + encodeURIComponent(name);
+    console.log(url);
+    fetch(url, {
+      agent: httpsAgent
     })
-    .catch((err: any) =>
-      event.reply('silospenResponse', err.message)
-    );
+      .then((response: any) => response.text())
+      .then((text: any) => {
+        const lines: SilospenItem[] = text
+          .split('</td></tr><tr><td>')
+          .map((line: string) => line.replace('<tr><td>', '').replace('</td></tr>', ''))
+          .map((line: string) => {
+            if (line.indexOf('No Results!') !== -1) {
+              return { name: "No Results!", area: "", chance: 0 };
+            }
+            const [name, area, chance] = line.split('</td><td>');
+            return { name, area, chance: chance.split(':')[1]};
+          });
+        event.reply('silospenResponse', lines)
+      })
+      .catch((err: any) =>
+        event.reply('silospenResponse', err.message)
+      );
+  } else {
+    const url = 'http://localhost:3667/item?version=D2R_V1_0&monsterType=BOSS&itemQuality='+type+'&party=1&players=1&magicFind=0&itemId=' + encodeURIComponent(name);  
+    console.log(url);
+    fetch(url)
+      .then((response: any) => response.json())
+      .then((json: any) => {
+        const lines: SilospenItem[] = json.map((item: any) => {
+          return {
+            name: item.name,
+            area: item.area,
+            chance: Math.round(1 / item.prob),
+          }
+        })
+        event.reply('silospenResponse', lines);
+      })
+      .catch((err: any) =>
+        event.reply('silospenResponse', err.message)
+      );
+  }
+}
+
+function runSilospenServer() {
+  const jarPath = join(__dirname, './assets/DropCalc-1.0.jar');
+  try {
+    execute(jarPath);
+    setTimeout(() => {
+
+    })
+  } catch (e) {
+    silospenFallback = true;
+  }
 }
 
 const saveImage = async (data: string) => {
