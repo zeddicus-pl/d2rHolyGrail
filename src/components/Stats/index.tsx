@@ -12,7 +12,7 @@ import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { Win } from './win';
 import { ProgressProvider } from './animation';
-import { holyGrailSeedData } from '../../../electron/holyGrailSeedData';
+import { holyGrailSeedData } from '../../../electron/lib/holyGrailSeedData';
 import { useTranslation } from 'react-i18next';
 import { computeStats } from '../../utils/objects';
 

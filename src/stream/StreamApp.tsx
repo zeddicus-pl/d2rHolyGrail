@@ -3,7 +3,7 @@ import { io } from "socket.io-client";
 import { FileReaderResponse, Settings } from '../@types/main';
 import { useTranslation } from 'react-i18next';
 import { Grid, createTheme } from '@mui/material';
-import { holyGrailSeedData } from '../../electron/holyGrailSeedData';
+import { holyGrailSeedData } from '../../electron/lib/holyGrailSeedData';
 import { CircularProgressbarWithChildren, buildStyles } from 'react-circular-progressbar';
 import { ProgressProvider } from '../components/Stats/animation';
 import { ThemeProvider } from '@mui/system';

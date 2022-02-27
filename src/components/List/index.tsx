@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { FileReaderResponse, Settings } from '../../@types/main';
 import { Search } from '../Search';
 
-import { holyGrailSeedData } from '../../../electron/holyGrailSeedData';
+import { holyGrailSeedData } from '../../../electron/lib/holyGrailSeedData';
 
 import logo from '../../../assets/logo.svg';
 import twitchIcon from '../../../assets/twitch-icon.svg';

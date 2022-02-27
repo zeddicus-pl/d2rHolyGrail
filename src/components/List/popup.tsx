@@ -13,7 +13,7 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
-import { diablo2ioMapping } from '../../../electron/diablo2ioMapping';
+import { diablo2ioMapping } from '../../../electron/lib/diablo2ioMapping';
 import { useTranslation } from 'react-i18next';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({

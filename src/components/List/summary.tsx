@@ -9,7 +9,7 @@ import { toast } from 'material-react-toastify';
 import html2canvas from 'html2canvas';
 import CloseIcon from '@mui/icons-material/Close';
 
-import { holyGrailSeedData } from '../../../electron/holyGrailSeedData';
+import { holyGrailSeedData } from '../../../electron/lib/holyGrailSeedData';
 
 import logo from '../../../assets/logo.svg';
 import twitchIcon from '../../../assets/twitch-icon.svg';
