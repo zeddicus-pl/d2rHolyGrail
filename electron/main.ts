@@ -6,7 +6,7 @@ import WindowStateKeeper from "electron-window-state";
 import { fetchSilospen, runSilospenServer } from './lib/silospenDropCalculator'
 import { currentData, loadManualItems, openAndParseSaves, readFilesUponStart, saveManualItem, shutdown } from './lib/items';
 import { getSetting, getSettings, saveSetting } from './lib/settings';
-import { updateDataToListeners } from './lib/stream';
+import { setupStreamFeed, updateDataToListeners } from './lib/stream';
 
 // these constants are set by the build stage
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string
@@ -16,8 +16,8 @@ export const CSP_HEADER =
   "default-src 'self' 'unsafe-inline' data: ws:; " +
   "script-src 'self' 'unsafe-eval' 'unsafe-inline' data:; " +
   "style-src 'unsafe-inline'; " +
-  "style-src-elem 'unsafe-inline' https://fonts.googleapis.com; " +
-  "font-src https://fonts.gstatic.com; " +
+  "style-src-elem 'unsafe-inline' http://localhost:*; " +
+  "font-src http://localhost:*; " +
   "frame-src http://localhost:3666";
 
 export let eventToReply: IpcMainEvent | null;
@@ -75,6 +75,7 @@ function createWindow () {
     closeApp();
   })
 
+  setupStreamFeed();
   runSilospenServer();
 }
 

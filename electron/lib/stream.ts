@@ -20,7 +20,7 @@ export function setupStreamFeed() {
   });
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  streamApp.get("/", (req: any, res: any) => {
+  streamApp.get("/", (req, res) => {
     if (STREAM_WEBPACK_ENTRY.startsWith("http")) {
       request(STREAM_WEBPACK_ENTRY)
         .on("response", remoteRes => {
@@ -34,8 +34,10 @@ export function setupStreamFeed() {
   });
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  streamApp.get("/stream/index.js", (req: any, res: any) => {
-    res.sendFile(resolve(join(__dirname, "..", "renderer", "stream", "index.js")));
+  streamApp.get("/stream/*", (req, res) => {
+    const filename = req.url.split('/').pop()?.replace('..', '') || 'none';
+    console.log(req.url, req.path, filename);
+    res.sendFile(resolve(join(__dirname, "..", "renderer", "stream", filename)));
   });
 
   io.on("connection", (socket: Socket) => {

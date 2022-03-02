@@ -1,7 +1,7 @@
 import { join } from 'path';
 import { IpcMainEvent } from 'electron/renderer';
 // @ts-ignore
-import fetch from 'node-fetch';
+import fetch, { Response } from 'node-fetch';
 import { silospenMapping } from './silospenMapping';
 import { execute } from 'njar';
 import { SilospenItem } from '../../src/@types/main';
@@ -65,9 +65,15 @@ export function runSilospenServer() {
     execute(jarPath);
     setTimeout(() => {
       fetch('http://localhost:3667')
-        .then((response: any) => console.log('TEST', response));
+        .then((response: Response) => {
+          if (response.status !== 200) {
+            console.log('FAILED to run silospen drop calculator server (status !== 200)')
+            silospenFallback = true;
+          }
+        });
     }, 5000);
   } catch (e) {
+    console.log('FAILED to run silospen drop calculator server, exception:', e)
     silospenFallback = true;
   }
 }
