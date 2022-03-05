@@ -69,13 +69,17 @@ export function runSilospenServer() {
   try {
     execute(jarPath);
     setTimeout(() => {
-      fetch('http://localhost:3667')
-        .then((response: Response) => {
-          if (response.status !== 200) {
-            console.log('FAILED to run silospen drop calculator server (status !== 200)')
-            silospenFallback = true;
-          }
-        });
+      try {
+        fetch('http://localhost:3667')
+          .then((response: Response) => {
+            if (response.status !== 200) {
+              console.log('FAILED to run silospen drop calculator server (status !== 200)')
+              silospenFallback = true;
+            }
+          });
+      } catch (e) {
+        silospenFallback = true;
+      }
     }, 5000);
   } catch (e) {
     console.log('FAILED to run silospen drop calculator server, exception:', e)
