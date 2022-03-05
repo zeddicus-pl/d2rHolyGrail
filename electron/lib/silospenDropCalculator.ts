@@ -4,7 +4,7 @@ import { IpcMainEvent } from 'electron/renderer';
 import fetch, { Response } from 'node-fetch';
 import { silospenMapping } from './silospenMapping';
 import { holyGrailSeedData } from './holyGrailSeedData';
-import { execute } from 'njar';
+import { execute, versions } from 'njar';
 import { SilospenItem, AllSilospenItems } from '../../src/@types/main.d';
 import https from 'https';
 import settingsStore from './settings';
@@ -64,28 +64,34 @@ export function fetchSilospen(event: IpcMainEvent, type: string, itemName: strin
   }
 }
 
-export function runSilospenServer() {
+export async function runSilospenServer() {
   const jarPath = join(__dirname, './bin/DropCalc-1.0.jar');
   try {
-    execute(jarPath);
-    setTimeout(() => {
-      try {
-        fetch('http://localhost:3667')
-          .then((response: Response) => {
-            if (response.status !== 200) {
-              console.log('FAILED to run silospen drop calculator server (status !== 200)');
+    const versionList = await versions();
+    if (versionList && versionList.length) {
+      execute(jarPath);
+      setTimeout(() => {
+        try {
+          fetch('http://localhost:3667')
+            .then((response: Response) => {
+              if (response.status !== 200) {
+                console.log('FAILED to run silospen drop calculator server (status !== 200)');
+                silospenFallback = true;
+              }
+            })
+            .catch((e) => {
+              console.log('FAILED to run silospen drop calculator server (fetch failed)', e);
               silospenFallback = true;
-            }
-          })
-          .catch((e) => {
-            console.log('FAILED to run silospen drop calculator server (fetch failed)', e);
-            silospenFallback = true;
-          });
-      } catch (e) {
-        console.log('FAILED to run silospen drop calculator server (fetch failed)', e);
-        silospenFallback = true;
-      }
-    }, 5000);
+            });
+        } catch (e) {
+          console.log('FAILED to run silospen drop calculator server (fetch failed)', e);
+          silospenFallback = true;
+        }
+      }, 5000);
+    } else {
+      console.log('NO JAVA FOUND IN SYSTEM');
+      silospenFallback = true;
+    }
   } catch (e) {
     console.log('FAILED to run silospen drop calculator server, exception:', e);
     silospenFallback = true;
