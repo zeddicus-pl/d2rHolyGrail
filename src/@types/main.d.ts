@@ -30,6 +30,10 @@ export type SilospenItem = {
   chance: string,
 }
 
+export type AllSilospenItems = {
+  [itemName: string]: SilospenItem[],
+}
+
 /* eslint-disable no-unused-vars */
 export enum GameMode {
   Both = 'both',
@@ -43,4 +47,6 @@ export type Settings = {
   saveDir: string,
   lang: string,
   gameMode: GameMode,
+  magicFind: Number,
+  playersNumber: Number,
 }

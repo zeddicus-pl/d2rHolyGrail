@@ -4,7 +4,7 @@ import { Container, Image, Logo, ButtonPanel } from './styles';
 import { TabPanel } from './tab';
 import SettingsPanel from '../Settings'
 import { useTranslation } from 'react-i18next';
-import { FileReaderResponse, Settings } from '../../@types/main';
+import { FileReaderResponse, Settings } from '../../@types/main.d';
 import { Search } from '../Search';
 
 import { holyGrailSeedData } from '../../../electron/lib/holyGrailSeedData';
@@ -54,7 +54,10 @@ export function List({ fileReaderResponse, appSettings }: ListProps) {
               setSearch(text);
             }}
           />
-          <Summary fileReaderResponse={fileReaderResponse} gameMode={appSettings.gameMode} />
+          <Summary
+            fileReaderResponse={fileReaderResponse}
+            appSettings={appSettings}
+          />
           <Language />
           <SettingsPanel appSettings={appSettings} />
         </ButtonPanel>
@@ -92,7 +95,7 @@ export function List({ fileReaderResponse, appSettings }: ListProps) {
         player={items}
         stats={stats}
         search=""
-        gameMode={appSettings.gameMode}
+        appSettings={appSettings}
       />
       <TabPanel
         value={search.length ? TabState.UniqueArmor : tab}
@@ -100,7 +103,7 @@ export function List({ fileReaderResponse, appSettings }: ListProps) {
         items={holyGrailSeedData.uniques.armor}
         player={items}
         search={search}
-        gameMode={appSettings.gameMode}
+        appSettings={appSettings}
       />
       <TabPanel
         value={search.length ? TabState.UniqueWeapons : tab}
@@ -108,7 +111,7 @@ export function List({ fileReaderResponse, appSettings }: ListProps) {
         items={holyGrailSeedData.uniques.weapons}
         player={items}
         search={search}
-        gameMode={appSettings.gameMode}
+        appSettings={appSettings}
       />
       <TabPanel
         value={search.length ? TabState.UniqueOther : tab}
@@ -116,7 +119,7 @@ export function List({ fileReaderResponse, appSettings }: ListProps) {
         items={holyGrailSeedData.uniques.other}
         player={items}
         search={search}
-        gameMode={appSettings.gameMode}
+        appSettings={appSettings}
       />
       <TabPanel
         value={search.length ? TabState.Sets : tab}
@@ -124,7 +127,7 @@ export function List({ fileReaderResponse, appSettings }: ListProps) {
         sets={holyGrailSeedData.sets}
         player={items}
         search={search}
-        gameMode={appSettings.gameMode}
+        appSettings={appSettings}
       />
     </Container>
   );

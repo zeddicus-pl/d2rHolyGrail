@@ -4,7 +4,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import { Container, Image, Logo } from './styles';
 import { TabPanel } from './tab';
 import { useTranslation } from 'react-i18next';
-import { FileReaderResponse, GameMode } from '../../@types/main.d';
+import { FileReaderResponse, Settings } from '../../@types/main.d';
 import { toast } from 'material-react-toastify';
 import html2canvas from 'html2canvas';
 import CloseIcon from '@mui/icons-material/Close';
@@ -17,10 +17,10 @@ import { TabState } from '.';
 
 type ListProps = {
   fileReaderResponse: FileReaderResponse | null,
-  gameMode: GameMode,
+  appSettings: Settings,
 }
 
-export function Summary({ fileReaderResponse, gameMode }: ListProps) {
+export function Summary({ fileReaderResponse, appSettings }: ListProps) {
   const { t } = useTranslation();
 
   if (fileReaderResponse === null) {
@@ -159,7 +159,7 @@ export function Summary({ fileReaderResponse, gameMode }: ListProps) {
                   search=""
                   noFileSummary
                   noCelebration
-                  gameMode={gameMode}
+                  appSettings={appSettings}
                 />
                 <TabPanel
                   value={TabState.UniqueArmor}
@@ -167,7 +167,7 @@ export function Summary({ fileReaderResponse, gameMode }: ListProps) {
                   items={holyGrailSeedData.uniques.armor}
                   player={items}
                   search=" "
-                  gameMode={gameMode}
+                  appSettings={appSettings}
                 />
                 <TabPanel
                   value={TabState.UniqueWeapons}
@@ -175,7 +175,7 @@ export function Summary({ fileReaderResponse, gameMode }: ListProps) {
                   items={holyGrailSeedData.uniques.weapons}
                   player={items}
                   search=" "
-                  gameMode={gameMode}
+                  appSettings={appSettings}
                 />
                 <TabPanel
                   value={TabState.UniqueOther}
@@ -183,7 +183,7 @@ export function Summary({ fileReaderResponse, gameMode }: ListProps) {
                   items={holyGrailSeedData.uniques.other}
                   player={items}
                   search=" "
-                  gameMode={gameMode}
+                  appSettings={appSettings}
                 />
                 <TabPanel
                   value={TabState.Sets}
@@ -191,7 +191,7 @@ export function Summary({ fileReaderResponse, gameMode }: ListProps) {
                   sets={holyGrailSeedData.sets}
                   player={items}
                   search=" "
-                  gameMode={gameMode}
+                  appSettings={appSettings}
                 />
               </Container>
             </div>

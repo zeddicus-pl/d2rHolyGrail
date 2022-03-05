@@ -4,8 +4,8 @@ import http from "http";
 import request from "request";
 import { Server, Socket } from "socket.io";
 import { CSP_HEADER } from '../main';
-import { currentSettings } from './settings';
-import { currentData } from './items';
+import settingsStore from './settings';
+import itemsDatabase from './items';
 
 // these constants are set by the build stage
 declare const STREAM_WEBPACK_ENTRY: string;
@@ -19,7 +19,6 @@ export function setupStreamFeed() {
     serveClient: false,
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   streamApp.get("/", (req, res) => {
     if (STREAM_WEBPACK_ENTRY.startsWith("http")) {
       request(STREAM_WEBPACK_ENTRY)
@@ -33,18 +32,16 @@ export function setupStreamFeed() {
     }
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   streamApp.get("/stream/*", (req, res) => {
     const filename = req.url.split('/').pop()?.replace('..', '') || 'none';
-    console.log(req.url, req.path, filename);
     res.sendFile(resolve(join(__dirname, "..", "renderer", "stream", filename)));
   });
 
   io.on("connection", (socket: Socket) => {
-    console.log('client connected')
+    console.log('stream client connected')
     addStreamListener(socket);
     socket.on("disconnect", () => {
-      console.log('client disconnected')
+      console.log('stream client disconnected')
       removeStreamListener(socket);
     });
   });
@@ -54,20 +51,19 @@ export function setupStreamFeed() {
 
 export function updateSettingsToListeners() {
   streamListeners.forEach((socket) => {
-    socket.emit("updatedSettings", currentSettings);
+    socket.emit("updatedSettings", settingsStore.getSettings());
   })
 }
 
 export function updateDataToListeners() {
   streamListeners.forEach((socket) => {
-    socket.emit("openFolder", currentData);
+    socket.emit("openFolder", itemsDatabase.getItems());
   })
 }
 
-
 const addStreamListener = (socket: Socket): void => {
   streamListeners.set(socket.id, socket);
-  socket.emit("updatedSettings", currentSettings);
+  socket.emit("updatedSettings", settingsStore.getSettings());
   updateDataToListeners();
   updateSettingsToListeners();
 }

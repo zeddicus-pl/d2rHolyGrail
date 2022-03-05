@@ -5,8 +5,8 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import { Chip, Typography } from '@mui/material';
-import { SilospenItem } from '../../@types/main';
+import { Button, Chip, Grid, Typography } from '@mui/material';
+import { Settings, SilospenItem } from '../../@types/main.d';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -15,6 +15,7 @@ import TableRow from '@mui/material/TableRow';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import { diablo2ioMapping } from '../../../electron/lib/diablo2ioMapping';
 import { useTranslation } from 'react-i18next';
+import DropCalcSettings from '../Settings/dropCalcSettings';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -31,9 +32,10 @@ type PopupProps = {
   itemType: string,
   children: ReactChild,
   saveFiles: string[],
+  appSettings: Settings,
 }
 
-export default function Popup({ itemType, itemName, fullItemName, saveFiles, children }: PopupProps) {
+export default function Popup({ itemType, itemName, fullItemName, saveFiles, children, appSettings }: PopupProps) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [drop, setDrop] = useState<ReactChild | null>(null);
@@ -117,20 +119,34 @@ export default function Popup({ itemType, itemName, fullItemName, saveFiles, chi
               </a>
             </Typography>
           </h4>
-          <h4>
-            {t('Silospen.com drop calculator')}
-            <Typography variant="subtitle2">
-              <a
-                href="#"
-                onClick={() => { window.Main.openUrl('https://dropcalc.silospen.com/') }}
-                style={{
-                  fontSize: '10pt',
-                }}
-              >
-                https://dropcalc.silospen.com/
-              </a>
-            </Typography>
-          </h4>
+          <Grid container spacing={0}>
+            <Grid item xs={6}>
+              <h4>
+                {t('Silospen.com drop calculator')}
+                <Typography variant="subtitle2">
+                  <a
+                    href="#"
+                    onClick={() => { window.Main.openUrl('https://dropcalc.silospen.com/') }}
+                    style={{
+                      fontSize: '10pt',
+                    }}
+                  >
+                    https://dropcalc.silospen.com/
+                  </a>
+                </Typography>
+              </h4>
+            </Grid>
+            <Grid item xs={6}>
+              <Grid container spacing={0} alignItems="center">
+                <Grid item xs>
+                  <DropCalcSettings appSettings={appSettings} />
+                </Grid>
+                <Grid item xs={2}>
+                  <Button variant='outlined' fullWidth onClick={() => { window.Main.getSilospen(itemType, itemName); }}>{t("Update")}</Button>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
           <div style={{ margin: 20 }}>
             {drop}
           </div>

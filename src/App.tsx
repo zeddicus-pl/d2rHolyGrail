@@ -9,6 +9,7 @@ import { createTheme } from '@mui/material';
 import { ToastContainer } from 'material-react-toastify';
 import 'material-react-toastify/dist/ReactToastify.css';
 import { FileReaderResponse, GameMode, Settings } from './@types/main.d';
+import defaultSettings from './utils/defaultSettings';
 
 /* eslint-disable no-unused-vars */
 export enum UiState {
@@ -23,11 +24,7 @@ export enum UiState {
 export function App() {
   const [fileReaderResponse, setFileReaderResponse] = useState<FileReaderResponse | null>(null);
   const [uiState, setUiState] = useState(UiState.Loading);
-  const [appSettings, setAppSettings] = useState<Settings>({
-    saveDir: '',
-    lang: '',
-    gameMode: GameMode.Both,
-  });
+  const [appSettings, setAppSettings] = useState<Settings>(defaultSettings);
 
   const updateSettings = (settings: Settings) => {
     // @ts-ignore
@@ -38,18 +35,22 @@ export function App() {
     if (!settings.saveDir) {
       settings.saveDir = '';
     }
+    if (!settings.magicFind && settings.magicFind !== 0) {
+      settings.magicFind = 0;
+    }
+    if (!settings.playersNumber) {
+      settings.playersNumber = 1;
+    }
     setAppSettings(settings);
   }
 
   const saveSetting = <K extends keyof Settings>(setting: K, value: Settings[K]) => {
-    console.log('savesettings');
     window.Main.saveSetting(setting, value);
     appSettings[setting] = value;
     setAppSettings(appSettings);
   }
 
   const readData = (settings: Settings) => {
-    console.log('readdata');
     if (settings.gameMode === GameMode.Manual) {
       window.Main.loadManualItems();
     } else if (settings.saveDir && settings.saveDir !== '') {
@@ -75,16 +76,13 @@ export function App() {
 
   useEffect(() => {
     window.Main.on('updatedSettings', (settings: Settings) => {
-      console.log('updated settings');
       updateSettings(settings);
       readData(settings);
     });
     window.Main.on('noDirectorySelected', () => {
-      console.log('no dir selected');
       setUiState(UiState.Ready);
     });
     window.Main.on('openFolderWorking', () => {
-      console.log('open folder working');
       setUiState(UiState.Reading);
     });
     window.Main.on('openFolder', (fileReaderResponse: FileReaderResponse) => {

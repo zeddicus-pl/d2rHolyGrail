@@ -3,9 +3,9 @@ import { writeFile } from 'fs';
 import { extname, join } from 'path';
 import { IpcMainEvent } from 'electron/renderer';
 import WindowStateKeeper from "electron-window-state";
-import { fetchSilospen, runSilospenServer } from './lib/silospenDropCalculator'
-import { currentData, loadManualItems, openAndParseSaves, readFilesUponStart, saveManualItem, shutdown } from './lib/items';
-import { getSetting, getSettings, saveSetting } from './lib/settings';
+import { fetchSilospen, getAllDropRates, runSilospenServer } from './lib/silospenDropCalculator'
+import itemsDatabase from './lib/items';
+import settingsStore from './lib/settings';
 import { setupStreamFeed, updateDataToListeners } from './lib/stream';
 
 // these constants are set by the build stage
@@ -80,16 +80,16 @@ function createWindow () {
 }
 
 async function closeApp () {
-  shutdown();
+  itemsDatabase.shutdown();
   app.quit();
 }
 
 async function registerListeners () {
   ipcMain.on('readFilesUponStart', (event) => {
-    readFilesUponStart(event);
+    itemsDatabase.readFilesUponStart(event);
   });
   ipcMain.on('openFolderRequest', (event) => {
-    openAndParseSaves(event);
+    itemsDatabase.openAndParseSaves(event);
   });
   ipcMain.on('openUrl', (_, url) => {
     shell.openExternal(url);
@@ -98,30 +98,34 @@ async function registerListeners () {
     fetchSilospen(event, type, itemName);
   });
   ipcMain.on('getSetting', (event, key) => {
-    event.returnValue = getSetting(key);
+    event.returnValue = settingsStore.getSetting(key);
   });
   ipcMain.on('getSettings', (event) => {
     eventToReply = event;
-    event.returnValue = getSettings();
+    event.returnValue = settingsStore.getSettings();
   });
   ipcMain.on('saveSetting', (event, key, value) => {
-    saveSetting(key, value);
+    settingsStore.saveSetting(key, value);
   });
   ipcMain.on('saveImage', (event, data: string) => {
     saveImage(data);
   });
   ipcMain.on('loadManualItems', (event) => {
     eventToReply = event;
-    loadManualItems();
-    event.reply('openFolder', currentData);
+    itemsDatabase.loadManualItems();
+    event.reply('openFolder', itemsDatabase.getItems());
     updateDataToListeners();
   });
   ipcMain.on('saveManualItem', (event, itemId, isFound) => {
     eventToReply = event;
-    saveManualItem(itemId, isFound);
-    event.reply('openFolder', currentData);
+    itemsDatabase.saveManualItem(itemId, isFound);
+    event.reply('openFolder', itemsDatabase.getItems());
     updateDataToListeners();
   });
+  ipcMain.on('getAllDropRates', (event) => {
+    eventToReply = event;
+    getAllDropRates();
+  })
 }
 
 app.on('ready', createWindow)

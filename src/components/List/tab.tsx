@@ -4,13 +4,14 @@ import { grey } from '@mui/material/colors';
 import { useTranslation } from 'react-i18next';
 
 import { IUniqueArmors, IUniqueWeapons, IUniqueOther, ISetItems } from 'd2-holy-grail/client/src/common/definitions/union/IHolyGrailData';
-import { GameMode, ItemsInSaves, SaveFileStats } from '../../@types/main.d';
+import { GameMode, ItemsInSaves, SaveFileStats, Settings } from '../../@types/main.d';
 
 import { title } from '.';
 import Popup from './popup';
 import { Statistics } from '../Stats';
 import { ChangeEvent, MouseEvent } from 'react';
 import { simplifyItemName } from '../../utils/objects';
+import { CountLabel, CountLabelContainer } from './styles';
 
 type TabPanelProps = {
   index: number,
@@ -22,11 +23,12 @@ type TabPanelProps = {
   search: string,
   noFileSummary?: boolean,
   noCelebration?: boolean,
-  gameMode: GameMode
+  appSettings: Settings,
 };
 
 export function TabPanel(props: TabPanelProps) {
-  const { value, index, items, sets, player, stats, search, noFileSummary, noCelebration, gameMode } = props;
+  const { value, index, items, sets, player, stats, search, noFileSummary, noCelebration, appSettings } = props;
+  const { gameMode } = appSettings;
   const { t } = useTranslation();
 
   let itemList = items || sets;
@@ -91,13 +93,22 @@ export function TabPanel(props: TabPanelProps) {
                               itemType="UNIQUE"
                               key={itemName}
                               saveFiles={player[itemName] ? player[itemName].saveName : []}
+                              appSettings={appSettings}
                             >
                               <ListItem disablePadding style={{color: player[itemName] ? grey[400] : grey[700]}}>
                                 <ListItemButton>
                                   {gameMode !== GameMode.Manual && player[itemName] && (
-                                    <ListItemIcon>
-                                      <DoneIcon />
-                                    </ListItemIcon>
+                                    <CountLabelContainer>
+                                      <ListItemIcon>
+                                        <DoneIcon />
+                                      </ListItemIcon>
+                                      {
+                                        player[itemName] &&
+                                        player[itemName].saveName &&
+                                        player[itemName].saveName.length > 1 &&
+                                        <CountLabel className="countLabel">x{player[itemName].saveName.length}</CountLabel>
+                                      }
+                                    </CountLabelContainer>
                                   )}
                                   {gameMode === GameMode.Manual && (
                                     <ListItemIcon>
@@ -145,6 +156,7 @@ export function TabPanel(props: TabPanelProps) {
                         itemType="SET"
                         key={itemName}
                         saveFiles={player[itemName] ? player[itemName].saveName : []}
+                        appSettings={appSettings}
                       >
                         <ListItem disablePadding key={itemName} style={{color: player[itemName] ? grey[400] : grey[700]}}>
                           <ListItemButton>
@@ -178,7 +190,14 @@ export function TabPanel(props: TabPanelProps) {
         </Box>
       )}
       {value === index && !sets && !items && stats && (
-        <Statistics items={player} stats={stats} noFileSummary={noFileSummary || gameMode === GameMode.Manual} noCelebration={noCelebration} />
+        <Statistics
+          items={player}
+          stats={stats}
+          noFileSummary={noFileSummary || gameMode === GameMode.Manual}
+          noCelebration={noCelebration}
+          magicFind={appSettings.magicFind}
+          players={appSettings.playersNumber}
+        />
       )}
     </div>
   );

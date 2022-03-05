@@ -36,3 +36,15 @@ export const Image = styled.img`
 export const ButtonPanel = styled.div`
   float: right;
 `
+
+export const CountLabelContainer = styled.div`
+  position: relative;
+`
+
+export const CountLabel = styled.div`
+  position: absolute;
+  left: 18px;
+  bottom: -1px;
+  color: rgb(97, 97, 97);
+  font-size: 8.5pt;
+`

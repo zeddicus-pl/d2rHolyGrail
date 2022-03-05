@@ -1,6 +1,6 @@
 import { useMemo, useEffect, useState } from 'react';
 import { Grid, Typography, Table, TableBody, TableCell, TableContainer, TableRow, TableHead } from '@mui/material';
-import { ItemsInSaves, SaveFileStats } from '../../@types/main';
+import { ItemsInSaves, SaveFileStats } from '../../@types/main.d';
 
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -15,15 +15,18 @@ import { ProgressProvider } from './animation';
 import { holyGrailSeedData } from '../../../electron/lib/holyGrailSeedData';
 import { useTranslation } from 'react-i18next';
 import { computeStats } from '../../utils/objects';
+// import DropTips from './dropTips';
 
 type StatsProps = {
   items: ItemsInSaves,
   stats: SaveFileStats,
   noFileSummary?: boolean,
   noCelebration?: boolean,
+  magicFind: Number,
+  players: Number,
 }
 
-export function Statistics({ items, stats, noFileSummary, noCelebration }: StatsProps) {
+export function Statistics({ items, stats, noFileSummary, noCelebration, magicFind, players }: StatsProps) {
   const armorStats = useMemo(() => computeStats(items, holyGrailSeedData.uniques.armor), [items]);
   const weaponsStats = useMemo(() => computeStats(items, holyGrailSeedData.uniques.weapons), [items]);
   const otherStats = useMemo(() => computeStats(items, holyGrailSeedData.uniques.other), [items]);
@@ -128,6 +131,7 @@ export function Statistics({ items, stats, noFileSummary, noCelebration }: Stats
             </Grid>
           </>
         }
+        { /* <DropTips magicFind={magicFind} players={players} items={items} /> */ }
         {!noCelebration && totalStats.exists === totalStats.owned && <Win/>}
       </Grid>
     </>

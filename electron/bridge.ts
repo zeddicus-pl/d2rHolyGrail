@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron'
-import { Settings } from '../src/@types/main'
+import { Settings } from '../src/@types/main.d'
 
 export const api = {
   readFilesUponStart: () => {
@@ -31,6 +31,9 @@ export const api = {
   },
   saveManualItem: (itemName: string, isFound: boolean) => {
     ipcRenderer.send('saveManualItem', itemName, isFound);
+  },
+  getAllDropRates: () => {
+    ipcRenderer.send('getAllDropRates');
   },
   on: (channel: string, callback: Function) => {
     ipcRenderer.removeAllListeners(channel);

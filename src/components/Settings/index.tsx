@@ -19,6 +19,8 @@ import { Grid, Accordion, AccordionDetails, AccordionSummary, Divider, FormContr
 import FolderIcon from '@mui/icons-material/Folder';
 import GroupIcon from '@mui/icons-material/Group';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import CalculateIcon from '@mui/icons-material/Calculate';
+import DropCalcSettings from './dropCalcSettings';
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -130,6 +132,16 @@ export default function SettingsPanel({ appSettings }: SettingsPanelProps) {
                 <MenuItem value={GameMode.Manual}>{t("Manual selection of items")}</MenuItem>
               </Select>
             </FormControl>
+          </ListItem>
+          <Divider />
+          <ListItem>
+            <ListItemIcon>
+              <CalculateIcon />
+            </ListItemIcon>
+            <ListItemText
+              primary={t('Drop calculator settings')}
+            />
+            <DropCalcSettings appSettings={appSettings} />
           </ListItem>
         </List>
         <Divider />

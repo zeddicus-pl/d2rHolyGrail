@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { io } from "socket.io-client";
-import { FileReaderResponse, Settings } from '../@types/main';
+import { FileReaderResponse, Settings } from '../@types/main.d';
 import { useTranslation } from 'react-i18next';
 import { Grid, createTheme } from '@mui/material';
 import { holyGrailSeedData } from '../../electron/lib/holyGrailSeedData';

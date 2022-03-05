@@ -1,4 +1,4 @@
-import { ItemsInSaves } from '../@types/main';
+import { ItemsInSaves } from '../@types/main.d';
 import { IUniqueArmors, IUniqueWeapons, IUniqueOther, ISetItems, IHolyGrailData } from 'd2-holy-grail/client/src/common/definitions/union/IHolyGrailData';
 
 export type Stats = {
