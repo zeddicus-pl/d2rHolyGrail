@@ -17,8 +17,8 @@ export const CSP_HEADER =
   "script-src 'self' 'unsafe-eval' 'unsafe-inline' data:; " +
   "style-src 'unsafe-inline'; " +
   "style-src-elem 'unsafe-inline' http://localhost:*; " +
-  "font-src http://localhost:*; " +
-  "frame-src http://localhost:3666";
+  "font-src file: http://localhost:*; " +
+  "frame-src file: http://localhost:3666";
 
 export let eventToReply: IpcMainEvent | null;
 export function setEventToReply(e: IpcMainEvent) {
