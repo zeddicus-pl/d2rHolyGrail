@@ -161,9 +161,17 @@ export function TabPanel(props: TabPanelProps) {
                         <ListItem disablePadding key={itemName} style={{color: player[itemName] ? grey[400] : grey[700]}}>
                           <ListItemButton>
                             {gameMode !== GameMode.Manual && player[itemName] && (
-                              <ListItemIcon>
-                                <DoneIcon />
-                              </ListItemIcon>
+                              <CountLabelContainer>
+                                <ListItemIcon>
+                                  <DoneIcon />
+                                </ListItemIcon>
+                                {
+                                  player[itemName] &&
+                                  player[itemName].saveName &&
+                                  player[itemName].saveName.length > 1 &&
+                                  <CountLabel className="countLabel">x{player[itemName].saveName.length}</CountLabel>
+                                }
+                              </CountLabelContainer>
                             )}
                             {gameMode === GameMode.Manual && (
                               <ListItemIcon>

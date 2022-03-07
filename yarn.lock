@@ -1483,8 +1483,8 @@
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
 "@dschu012/d2s@https://github.com/zeddicus-pl/d2s.git":
-  version "2.0.16"
-  resolved "https://github.com/zeddicus-pl/d2s.git#dd68c2308c1fda8262ccb8bf41deb9a2c9b00b8b"
+  version "2.1.17"
+  resolved "https://github.com/zeddicus-pl/d2s.git#f2d6d4879516d416ee3e535d614bd9a791ac5111"
 
 "@electron-forge/async-ora@6.0.0-beta.63":
   version "6.0.0-beta.63"
