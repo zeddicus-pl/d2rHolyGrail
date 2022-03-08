@@ -17,6 +17,13 @@ I created this application for my favourite streamer [NadinWins](https://www.twi
 
 ## Changelog
 
+### v1.7.0
+- Fixed reading new save format used in PTR games
+- Added magic find and number of players settings for drop calculator
+- Added small numbers next to "ticks" representing how many copies of given item you have
+- Fixed some PL translations
+- The Silospen Drop Calculator server is now integrated into the app, so it works offline and much faster. **This only works if you have Java 9 installed in your system.** I'm working on making this Java 8 compatible too, but for now it only works with Java 9. If there is no Java, or too old, it will fallback to reading from Silospen server
+
 ### v1.6.1
 - Fixed performance issues
 - Added app version information in the settings screen
