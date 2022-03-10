@@ -87,9 +87,6 @@ In practice this works very smooth, allowing you to see new items nearly real-ti
 
 The app also has a HTTP feed to use in OBS (with Browser component) which can be used if you stream your Diablo 2 Resurrected gameplay.
 
-### INFO:
-This app is still in testing phase, so please report any issues. It will never try to modify save files, so this is safe to use. Also, the app may ask your windows firewall about network access, because it has that HTTP feed functionality. I'll make it configurable in future so it can be turned on/off.
-
 ### Licence and credits
 
 The app uses ISC licence.
