@@ -6,7 +6,7 @@ import DialogContent from '@mui/material/DialogContent';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import { Button, Chip, Grid, Typography } from '@mui/material';
-import { Settings, SilospenItem } from '../../@types/main.d';
+import { ItemDetails, Settings, SilospenItem } from '../../@types/main.d';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -31,7 +31,7 @@ type PopupProps = {
   fullItemName: string,
   itemType: string,
   children: ReactChild,
-  saveFiles: string[],
+  saveFiles: {[saveName: string]: ItemDetails[]},
   appSettings: Settings,
 }
 
@@ -41,7 +41,6 @@ export default function Popup({ itemType, itemName, fullItemName, saveFiles, chi
   const [drop, setDrop] = useState<ReactChild | null>(null);
 
   const diablo2ioUrl = diablo2ioMapping[itemName] || 'https://diablo2.io/';
-  const saveFilesUniq = Array.from(new Set(saveFiles));
 
   const handleClickOpen = () => {
     window.Main.on('silospenResponse', (drops: SilospenItem[]) => {
@@ -100,7 +99,10 @@ export default function Popup({ itemType, itemName, fullItemName, saveFiles, chi
             </IconButton>
             {saveFiles.length ?
               <small style={{ fontSize: '11pt', fontWeight: 'normal' }}>
-                {saveFilesUniq.map(saveFile => <Chip key={saveFile} label={saveFile} />)}
+                {Object.keys(saveFiles).map(saveFile => <Chip
+                    key={saveFile}
+                    label={saveFiles[saveFile].length > 1 ? saveFile + ' x' + saveFiles[saveFile].length : saveFile}
+                />)}
               </small>
             : null}
         </DialogTitle>

@@ -1,16 +1,24 @@
 import * as d2s from '@dschu012/d2s';
+import { IHolyGrailData } from 'd2-holy-grail/client/src/common/definitions/union/IHolyGrailData';
 
 export type SaveFileStats = {
   [filename: string]: number | null,
 }
 
-export type ItemInSave = {
-  item: d2s.types.IItem | null,
-  saveName: string[],
+export type Item = {
+  name: string,
+  type: string,
+  inSaves: {[saveName: string]: ItemDetails[]},
+}
+
+export type ItemDetails = {
+  ethereal: boolean,
+  ilevel: number | null,
+  socketed: boolean,
 }
 
 export type ItemsInSaves = {
-  [itemName: string]: ItemInSave,
+  [itemName: string]: Item,
 }
 
 export type SavesHistory = {
@@ -22,6 +30,7 @@ export type SavesHistory = {
 export type FileReaderResponse = {
   items: ItemsInSaves,
   stats: SaveFileStats,
+  availableRunes: {[runeType: string]: Item}
 }
 
 export type SilospenItem = {
@@ -41,6 +50,18 @@ export enum GameMode {
   Hardcore = 'hardcore',
   Manual = 'manual',
 }
+
+export enum GrailType {
+  Normal = 'normal',
+  Ethereal = 'ethereal',
+  Both = 'both',
+  Each = 'each',
+}
+
+export enum GameVersion {
+  Resurrected = 0,
+  Classic = 0,
+}
 /* eslint-enable no-unused-vars */
 
 export type Settings = {
@@ -49,4 +70,35 @@ export type Settings = {
   gameMode: GameMode,
   magicFind: Number,
   playersNumber: Number,
+  grailType: GrailType,
+  grailRunes: boolean,
+  grailRunewords: boolean,
+  gameVersion: GameVersion,
+}
+
+export type HolyGrailSeed = IHolyGrailData & {
+  runes?: {[runeId: string]: {}},
+  runewords?: {[runewordId: string]: {}},
+}
+
+export type HolyGrailStats = {
+  normal: SubStats,
+  ethereal: SubStats,
+  runes: Stats,
+  runewords: Stats,
+}
+
+export type Stats = {
+  exists: number,
+  owned: number,
+  remaining: number,
+  percent: number,
+}
+
+export type SubStats = {
+  armor: Stats,
+  weapon: Stats,
+  other: Stats,
+  sets: Stats,
+  total: Stats,
 }

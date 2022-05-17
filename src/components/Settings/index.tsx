@@ -21,6 +21,7 @@ import GroupIcon from '@mui/icons-material/Group';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CalculateIcon from '@mui/icons-material/Calculate';
 import DropCalcSettings from './dropCalcSettings';
+import packageJson from '../../../package.json';
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -94,7 +95,7 @@ export default function SettingsPanel({ appSettings }: SettingsPanelProps) {
               <InfoIcon />
             </ListItemIcon>
             <ListItemText
-              primary={t("App version: v1.6.1")}
+              primary={t("App version: ") + packageJson.version}
               secondary={"Click here to open releases page in GitHub for changelog and older versions"}
               onClick={() => { window.Main.openUrl('https://github.com/zeddicus-pl/d2rHolyGrail/releases') }}
             />

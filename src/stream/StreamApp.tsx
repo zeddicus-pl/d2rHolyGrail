@@ -3,7 +3,7 @@ import { io } from "socket.io-client";
 import { FileReaderResponse, Settings } from '../@types/main.d';
 import { useTranslation } from 'react-i18next';
 import { Grid, createTheme } from '@mui/material';
-import { holyGrailSeedData } from '../../electron/lib/holyGrailSeedData';
+import { getHolyGrailSeedData } from '../../electron/lib/holyGrailSeedData';
 import { CircularProgressbarWithChildren, buildStyles } from 'react-circular-progressbar';
 import { ProgressProvider } from '../components/Stats/animation';
 import { ThemeProvider } from '@mui/system';
@@ -13,16 +13,19 @@ import { computeStats } from '../utils/objects';
 
 import { Header, Container } from './styles';
 import 'react-circular-progressbar/dist/styles.css';
+import { Statistics } from '../components/Stats';
 
 export default function StreamApp() {
-  const [data, setData] = useState<FileReaderResponse | null>(null);
-  const totalStats = useMemo(() => data ? computeStats(data.items, holyGrailSeedData) : {exists: 0, owned: 0, percent: 0}, [data]);
+  const [settings, setSettings] = useState<Settings>({} as Settings);
+  const [data, setData] = useState<FileReaderResponse>({ items: {}, stats: {}, availableRunes: {} });
+  const totalStats = useMemo(() => computeStats(data.items, getHolyGrailSeedData(settings), settings), [data, settings]);
   const { t, i18n } = useTranslation();
 
   useEffect(() => {
     const socket = io();
     socket.on("updatedSettings", function (settings: Settings) {
       i18n.changeLanguage(settings.lang);
+      setSettings(settings);
     });
     socket.on("openFolder", function (data: FileReaderResponse) {
       setData(data);
@@ -41,24 +44,8 @@ export default function StreamApp() {
           <Header>{t('Holy Grail')}</Header>
         </Grid>
         <Grid item xs={8} style={{ position: 'relative' }}>
-          <ProgressProvider valueStart={0} valueEnd={totalStats.owned}>
-            { (value: number) => <CircularProgressbarWithChildren
-              value={totalStats.owned}
-              maxValue={totalStats.exists}
-              styles={buildStyles({
-                pathColor: '#6E55AE',
-                textColor: '#ddd',
-                trailColor: '#333',
-              })}
-            >
-              <div style={{ fontSize: '18vw' }}>{totalStats.percent}%</div>
-              <div style={{ fontSize: '9vw' }}>{totalStats.owned} / {totalStats.exists}</div>
-            </CircularProgressbarWithChildren>}
-          </ProgressProvider>
+          <Statistics appSettings={settings} holyGrailStats={totalStats} onlyCircle />
         </Grid>
-        <>
-          { totalStats.exists === totalStats.owned && <Win /> }
-        </>
       </Container>
     </ThemeProvider>
   </>;

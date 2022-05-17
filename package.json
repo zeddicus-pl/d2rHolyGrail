@@ -1,13 +1,16 @@
 {
   "name": "d2rholygrail",
   "author": "Kamil Tunkiewicz <kamil.tunkiewicz(at)gmail.com>",
-  "version": "1.6.1",
+  "version": "2.0.0",
   "description": "Scan your Diablo 2 Resurrected saves to check your Holy Grail progress",
   "main": "./.webpack/main",
   "scripts": {
     "start": "ELECTRON_ENV=development electron-forge start",
     "start-win": "set ELECTRON_ENV=development&&electron-forge start",
     "package": "electron-forge package",
+    "build": "yarn run package && yarn run build-mac && yarn run build-win && rm -rf out",
+    "build-mac": "electron-builder build -m",
+    "build-win": "electron-builder build -w",
     "make": "electron-forge make",
     "release": "electron-forge publish",
     "lint": "eslint . --ext js,ts"
@@ -30,6 +33,7 @@
     "circle-flags": "https://github.com/HatScripts/circle-flags",
     "css-loader": "^6.6.0",
     "d2-holy-grail": "https://github.com/Nasicus/d2-holy-grail.git",
+    "electron-dl": "^3.3.1",
     "electron-json-storage": "^4.5.0",
     "electron-window-state": "^5.0.3",
     "express": "^4.17.2",
@@ -39,6 +43,7 @@
     "njar": "^1.0.4",
     "node-fetch": "2",
     "node-loader": "^2.0.0",
+    "platform-folders": "^0.6.0",
     "react": "17.0.2",
     "react-circle-flags": "^0.0.15",
     "react-circular-progressbar": "^2.0.4",
@@ -79,6 +84,7 @@
     "copy-webpack-plugin": "^10.2.4",
     "cross-env": "7.0.3",
     "electron": "16.0.9",
+    "electron-builder": "^23.0.3",
     "eslint": "8.9.0",
     "eslint-config-prettier": "8.3.0",
     "eslint-config-standard": "16.0.3",
@@ -95,6 +101,33 @@
     "ts-jest": "27.1.3",
     "typescript": "4.5.5",
     "wait-on": "6.0.1"
+  },
+  "build": {
+    "appId": "d2rHolyGrail",
+    "productName": "d2rHolyGrail",
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "./assets/icon.ico"
+    },
+    "mac": {
+      "identity": null
+    },
+    "nsis": {
+      "installerIcon": "./assets/install.ico",
+      "uninstallerIcon": "./assets/delete.ico",
+      "uninstallDisplayName": "d2rHolyGrail",
+      "license": "./assets/license.txt",
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "files": [
+      ".webpack/**/*"
+    ],
+    "directories": {
+      "buildResources": "assets"
+    }
   },
   "config": {
     "forge": {
@@ -134,24 +167,10 @@
       ],
       "makers": [
         {
-          "name": "@electron-forge/maker-squirrel",
-          "config": {
-            "name": "HolyGrail"
-          }
-        },
-        {
           "name": "@electron-forge/maker-zip",
           "platforms": [
             "darwin"
           ]
-        },
-        {
-          "name": "@electron-forge/maker-deb",
-          "config": {}
-        },
-        {
-          "name": "@electron-forge/maker-rpm",
-          "config": {}
         }
       ]
     }

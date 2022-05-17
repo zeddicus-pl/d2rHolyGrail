@@ -7,6 +7,7 @@ import { fetchSilospen, getAllDropRates, runSilospenServer } from './lib/silospe
 import itemsDatabase from './lib/items';
 import settingsStore from './lib/settings';
 import { setupStreamFeed, updateDataToListeners } from './lib/stream';
+import { registerUpdateDownloader } from './lib/update';
 
 // these constants are set by the build stage
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string
@@ -18,7 +19,8 @@ export const CSP_HEADER =
   "style-src 'unsafe-inline'; " +
   "style-src-elem 'unsafe-inline' http://localhost:*; " +
   "font-src file: http://localhost:*; " +
-  "frame-src file: http://localhost:3666";
+  "frame-src file: http://localhost:3666;" +
+  "connect-src https://api.github.com data: ws:;";
 
 export let eventToReply: IpcMainEvent | null;
 export function setEventToReply(e: IpcMainEvent) {
@@ -73,8 +75,9 @@ function createWindow () {
 
   mainWindow.on('closed', () => {
     closeApp();
-  })
+  });
 
+  registerUpdateDownloader(mainWindow);
   setupStreamFeed();
   runSilospenServer();
 }
@@ -125,7 +128,7 @@ async function registerListeners () {
   ipcMain.on('getAllDropRates', (event) => {
     eventToReply = event;
     getAllDropRates();
-  })
+  });
 }
 
 app.on('ready', createWindow)

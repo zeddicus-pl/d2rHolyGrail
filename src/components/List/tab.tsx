@@ -4,7 +4,7 @@ import { grey } from '@mui/material/colors';
 import { useTranslation } from 'react-i18next';
 
 import { IUniqueArmors, IUniqueWeapons, IUniqueOther, ISetItems } from 'd2-holy-grail/client/src/common/definitions/union/IHolyGrailData';
-import { GameMode, ItemsInSaves, SaveFileStats, Settings } from '../../@types/main.d';
+import { GameMode, HolyGrailStats, ItemsInSaves, SaveFileStats, Settings } from '../../@types/main.d';
 
 import { title } from '.';
 import Popup from './popup';
@@ -22,12 +22,13 @@ type TabPanelProps = {
   player: ItemsInSaves,
   search: string,
   noFileSummary?: boolean,
-  noCelebration?: boolean,
+  noAnimation?: boolean,
   appSettings: Settings,
+  holyGrailStats: HolyGrailStats,
 };
 
 export function TabPanel(props: TabPanelProps) {
-  const { value, index, items, sets, player, stats, search, noFileSummary, noCelebration, appSettings } = props;
+  const { value, index, items, sets, player, stats, search, noFileSummary, noAnimation, appSettings, holyGrailStats } = props;
   const { gameMode } = appSettings;
   const { t } = useTranslation();
 
@@ -92,7 +93,7 @@ export function TabPanel(props: TabPanelProps) {
                               fullItemName={t(itemFullName)}
                               itemType="UNIQUE"
                               key={itemName}
-                              saveFiles={player[itemName] ? player[itemName].saveName : []}
+                              saveFiles={player[itemName] ? player[itemName].inSaves : {}}
                               appSettings={appSettings}
                             >
                               <ListItem disablePadding style={{color: player[itemName] ? grey[400] : grey[700]}}>
@@ -104,9 +105,13 @@ export function TabPanel(props: TabPanelProps) {
                                       </ListItemIcon>
                                       {
                                         player[itemName] &&
-                                        player[itemName].saveName &&
-                                        player[itemName].saveName.length > 1 &&
-                                        <CountLabel className="countLabel">x{player[itemName].saveName.length}</CountLabel>
+                                        Object.keys(player[itemName].inSaves).length > 1 &&
+                                        <CountLabel className="countLabel">x{
+                                          Object.values(player[itemName].inSaves).reduce(
+                                            (count, items) => count + items.length,
+                                            0
+                                          )
+                                        }</CountLabel>
                                       }
                                     </CountLabelContainer>
                                   )}
@@ -155,7 +160,7 @@ export function TabPanel(props: TabPanelProps) {
                         fullItemName={t(itemFullName)}
                         itemType="SET"
                         key={itemName}
-                        saveFiles={player[itemName] ? player[itemName].saveName : []}
+                        saveFiles={player[itemName] ? player[itemName].inSaves : {}}
                         appSettings={appSettings}
                       >
                         <ListItem disablePadding key={itemName} style={{color: player[itemName] ? grey[400] : grey[700]}}>
@@ -167,9 +172,13 @@ export function TabPanel(props: TabPanelProps) {
                                 </ListItemIcon>
                                 {
                                   player[itemName] &&
-                                  player[itemName].saveName &&
-                                  player[itemName].saveName.length > 1 &&
-                                  <CountLabel className="countLabel">x{player[itemName].saveName.length}</CountLabel>
+                                  Object.keys(player[itemName].inSaves).length > 1 &&
+                                  <CountLabel className="countLabel">x{
+                                    Object.values(player[itemName].inSaves).reduce(
+                                      (count, items) => count + items.length,
+                                      0
+                                    )
+                                  }</CountLabel>
                                 }
                               </CountLabelContainer>
                             )}
@@ -199,12 +208,10 @@ export function TabPanel(props: TabPanelProps) {
       )}
       {value === index && !sets && !items && stats && (
         <Statistics
-          items={player}
-          stats={stats}
-          noFileSummary={noFileSummary || gameMode === GameMode.Manual}
-          noCelebration={noCelebration}
-          magicFind={appSettings.magicFind}
-          players={appSettings.playersNumber}
+          stats={!noFileSummary && gameMode !== GameMode.Manual ? stats : undefined}
+          noAnimation={noAnimation}
+          appSettings={appSettings}
+          holyGrailStats={holyGrailStats}
         />
       )}
     </div>

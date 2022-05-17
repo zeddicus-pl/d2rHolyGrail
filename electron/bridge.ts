@@ -38,6 +38,15 @@ export const api = {
   on: (channel: string, callback: Function) => {
     ipcRenderer.removeAllListeners(channel);
     ipcRenderer.on(channel, (_, data) => callback(data))
+  },
+  isWindows: () => {
+    return process.platform.includes('win');
+  },
+  downloadNewVersion: (url: string) => {
+    ipcRenderer.send('downloadNewVersion', url);
+  },
+  cancelDownload: () => {
+    ipcRenderer.send('cancelDownload');
   }
 }
 

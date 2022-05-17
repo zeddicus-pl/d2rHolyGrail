@@ -4,12 +4,12 @@ import ShareIcon from '@mui/icons-material/Share';
 import { Container, Image, Logo } from './styles';
 import { TabPanel } from './tab';
 import { useTranslation } from 'react-i18next';
-import { FileReaderResponse, Settings } from '../../@types/main.d';
+import { FileReaderResponse, HolyGrailStats, Settings } from '../../@types/main.d';
 import { toast } from 'material-react-toastify';
 import html2canvas from 'html2canvas';
 import CloseIcon from '@mui/icons-material/Close';
 
-import { holyGrailSeedData } from '../../../electron/lib/holyGrailSeedData';
+import { getHolyGrailSeedData } from '../../../electron/lib/holyGrailSeedData';
 
 import logo from '../../../assets/logo.svg';
 import twitchIcon from '../../../assets/twitch-icon.svg';
@@ -18,9 +18,10 @@ import { TabState } from '.';
 type ListProps = {
   fileReaderResponse: FileReaderResponse | null,
   appSettings: Settings,
+  holyGrailStats: HolyGrailStats,
 }
 
-export function Summary({ fileReaderResponse, appSettings }: ListProps) {
+export function Summary({ fileReaderResponse, appSettings, holyGrailStats }: ListProps) {
   const { t } = useTranslation();
 
   if (fileReaderResponse === null) {
@@ -97,7 +98,9 @@ export function Summary({ fileReaderResponse, appSettings }: ListProps) {
       copyWhenSummaryRendered();
     }, 500);
   }
-
+ 
+  const holyGrailSeedData = getHolyGrailSeedData(appSettings);
+ 
   return (
     <>
       <IconButton onClick={() => setOpen(true)}>
@@ -158,8 +161,9 @@ export function Summary({ fileReaderResponse, appSettings }: ListProps) {
                   stats={stats}
                   search=""
                   noFileSummary
-                  noCelebration
+                  noAnimation
                   appSettings={appSettings}
+                  holyGrailStats={holyGrailStats}
                 />
                 <TabPanel
                   value={TabState.UniqueArmor}
@@ -168,6 +172,7 @@ export function Summary({ fileReaderResponse, appSettings }: ListProps) {
                   player={items}
                   search=" "
                   appSettings={appSettings}
+                  holyGrailStats={holyGrailStats}
                 />
                 <TabPanel
                   value={TabState.UniqueWeapons}
@@ -176,6 +181,7 @@ export function Summary({ fileReaderResponse, appSettings }: ListProps) {
                   player={items}
                   search=" "
                   appSettings={appSettings}
+                  holyGrailStats={holyGrailStats}
                 />
                 <TabPanel
                   value={TabState.UniqueOther}
@@ -184,6 +190,7 @@ export function Summary({ fileReaderResponse, appSettings }: ListProps) {
                   player={items}
                   search=" "
                   appSettings={appSettings}
+                  holyGrailStats={holyGrailStats}
                 />
                 <TabPanel
                   value={TabState.Sets}
@@ -192,6 +199,7 @@ export function Summary({ fileReaderResponse, appSettings }: ListProps) {
                   player={items}
                   search=" "
                   appSettings={appSettings}
+                  holyGrailStats={holyGrailStats}
                 />
               </Container>
             </div>

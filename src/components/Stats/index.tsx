@@ -1,6 +1,5 @@
-import { useMemo, useEffect, useState } from 'react';
 import { Grid, Typography, Table, TableBody, TableCell, TableContainer, TableRow, TableHead } from '@mui/material';
-import { ItemsInSaves, SaveFileStats } from '../../@types/main.d';
+import { GrailType, HolyGrailStats, SaveFileStats, Settings } from '../../@types/main.d';
 
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -8,39 +7,86 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { StatisticsLine } from './line';
-import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css';
 import { Win } from './win';
-import { ProgressProvider } from './animation';
-import { holyGrailSeedData } from '../../../electron/lib/holyGrailSeedData';
+import { getHolyGrailSeedData } from '../../../electron/lib/holyGrailSeedData';
 import { useTranslation } from 'react-i18next';
-import { computeStats } from '../../utils/objects';
-// import DropTips from './dropTips';
+import Circle from './circle';
 
 type StatsProps = {
-  items: ItemsInSaves,
-  stats: SaveFileStats,
-  noFileSummary?: boolean,
-  noCelebration?: boolean,
-  magicFind: Number,
-  players: Number,
+  appSettings: Settings,
+  holyGrailStats: HolyGrailStats,
+  stats?: SaveFileStats,
+  noAnimation?: boolean,
+  onlyCircle?: boolean,
 }
 
-export function Statistics({ items, stats, noFileSummary, noCelebration, magicFind, players }: StatsProps) {
-  const armorStats = useMemo(() => computeStats(items, holyGrailSeedData.uniques.armor), [items]);
-  const weaponsStats = useMemo(() => computeStats(items, holyGrailSeedData.uniques.weapons), [items]);
-  const otherStats = useMemo(() => computeStats(items, holyGrailSeedData.uniques.other), [items]);
-  const setsStats = useMemo(() => computeStats(items, holyGrailSeedData.sets), [items]);
-  const totalStats = useMemo(() => computeStats(items, holyGrailSeedData), [items]);
+export function Statistics({ stats, noAnimation, appSettings, holyGrailStats, onlyCircle }: StatsProps) {
+  const holyGrailSeedData = getHolyGrailSeedData(appSettings)
   const { t } = useTranslation();
 
-  const [ saveFileStats, setSaveFileStats ] = useState<SaveFileStats>({})
-  useEffect(() => {
-    window.Main.on('saveFileRead', (filename: string, itemsCount: number) => {
-      saveFileStats[filename] = itemsCount;
-      setSaveFileStats(saveFileStats);
-    });
-  }, []);
+  const showNormal = appSettings.grailType !== GrailType.Ethereal;
+  const showEthereal = appSettings.grailType === GrailType.Ethereal || appSettings.grailType === GrailType.Each;
+
+  let counterTotal: number | false = false;
+  let counterOwned: number | false = false;
+  let subCounterTotal: number | false = false;
+  let subCounterOwned: number | false = false;
+  let counterPercent: number | false = false;
+  let owned: number = 0;
+  let total: number = 0;
+  switch (appSettings.grailType) {
+    case GrailType.Normal:
+    case GrailType.Both:
+      counterTotal = holyGrailStats.normal.total.exists
+        + (appSettings.grailRunes ? holyGrailStats.runes.exists : 0)
+        + (appSettings.grailRunewords ? holyGrailStats.runewords.exists : 0);
+      counterOwned = holyGrailStats.normal.total.owned
+        + (appSettings.grailRunes ? holyGrailStats.runes.owned : 0)
+        + (appSettings.grailRunewords ? holyGrailStats.runewords.owned : 0);
+      counterPercent = (counterOwned / counterTotal) * 100;
+      counterPercent = counterPercent > 99.5 && counterPercent < 100 ? 99 : Math.round(counterPercent);
+      owned = counterOwned;
+      total = counterTotal;
+      break;
+    case GrailType.Ethereal:
+      counterTotal = holyGrailStats.ethereal.total.exists
+        + (appSettings.grailRunes ? holyGrailStats.runes.exists : 0)
+        + (appSettings.grailRunewords ? holyGrailStats.runewords.exists : 0);
+      counterOwned = holyGrailStats.ethereal.total.owned
+        + (appSettings.grailRunes ? holyGrailStats.runes.owned : 0)
+        + (appSettings.grailRunewords ? holyGrailStats.runewords.owned : 0);
+      counterPercent = (counterOwned / counterTotal) * 100;
+      counterPercent = counterPercent > 99.5 && counterPercent < 100 ? 99 : Math.round(counterPercent);    
+      owned = counterOwned;
+      total = counterTotal;
+      break;
+    case GrailType.Each:
+      counterTotal = holyGrailStats.normal.total.exists
+        + (appSettings.grailRunes ? holyGrailStats.runes.exists : 0)
+        + (appSettings.grailRunewords ? holyGrailStats.runewords.exists : 0);
+      counterOwned = holyGrailStats.normal.total.owned
+        + (appSettings.grailRunes ? holyGrailStats.runes.owned : 0)
+        + (appSettings.grailRunewords ? holyGrailStats.runewords.owned : 0);
+      subCounterTotal = holyGrailStats.ethereal.total.exists;
+      subCounterOwned = holyGrailStats.ethereal.total.owned;
+      owned = counterOwned + subCounterTotal;
+      total = counterTotal + subCounterTotal;
+      break;
+  }
+
+  counterPercent = (owned / total) * 100;
+  counterPercent = counterPercent > 99.5 && counterPercent < 100 ? 99 : Math.round(counterPercent);
+
+  if (onlyCircle) {
+    return <Circle
+      animated={!noAnimation}
+      owned={counterOwned}
+      total={counterTotal}
+      percent={counterPercent}
+      subOwned={subCounterOwned}
+      subTotal={subCounterTotal}
+    />
+  }
 
   return (
     <>
@@ -58,11 +104,18 @@ export function Statistics({ items, stats, noFileSummary, noCelebration, magicFi
                 </TableRow>
               </TableHead>
               <TableBody>
-                <StatisticsLine title={t("Unique armor")} stats={armorStats} />
-                <StatisticsLine title={t("Unique weapons")} stats={weaponsStats} />
-                <StatisticsLine title={t("Unique other")} stats={otherStats} />
-                <StatisticsLine title={t("Sets")} stats={setsStats} />
-                <StatisticsLine bold title={t("Total")} stats={totalStats} />
+                {showNormal && <StatisticsLine title={t("Unique armor")} stats={holyGrailStats.normal.armor} />}
+                {showEthereal && <StatisticsLine title={t("Ethereal unique armor")} stats={holyGrailStats.ethereal.armor} />}
+                {showNormal && <StatisticsLine title={t("Unique weapons")} stats={holyGrailStats.normal.weapon} />}
+                {showEthereal && <StatisticsLine title={t("Ethereal unique weapons")} stats={holyGrailStats.ethereal.weapon} />}
+                {showNormal && <StatisticsLine title={t("Unique other")} stats={holyGrailStats.normal.other} />}
+                {showEthereal && <StatisticsLine title={t("Ethereal unique other")} stats={holyGrailStats.ethereal.other} />}
+                {showNormal && <StatisticsLine title={t("Sets")} stats={holyGrailStats.normal.sets} />}
+                {showEthereal && <StatisticsLine title={t("Ethereal sets")} stats={holyGrailStats.ethereal.sets} />}
+                {appSettings.grailRunes && <StatisticsLine title={t("Runes")} stats={holyGrailStats.runes} />}
+                {appSettings.grailRunewords && <StatisticsLine title={t("Runewords")} stats={holyGrailStats.runewords} />}
+                {showNormal && <StatisticsLine bold title={t("Total")} stats={holyGrailStats.normal.total} />}
+                {showEthereal && <StatisticsLine bold title={t("Total ethereal")} stats={holyGrailStats.normal.total} />}
               </TableBody>
             </Table>
           </TableContainer>
@@ -70,31 +123,17 @@ export function Statistics({ items, stats, noFileSummary, noCelebration, magicFi
         <Grid item md={4}>
           <div style={{ width: 250, height: 300, textAlign: 'center', margin: 'auto' }}>
             <Typography variant="h5" gutterBottom>{t("Progress:")}</Typography>
-            {!noFileSummary && <ProgressProvider valueStart={0} valueEnd={totalStats.owned}>
-              { (value: number) => <CircularProgressbar
-                value={value}
-                maxValue={totalStats.exists}
-                text={`${totalStats.percent}%`}
-                styles={buildStyles({
-                  pathColor: '#6E55AE',
-                  textColor: '#ddd',
-                  trailColor: '#333',
-                })}
-              />}
-            </ProgressProvider>}
-            {noFileSummary && <CircularProgressbar
-                value={totalStats.owned}
-                maxValue={totalStats.exists}
-                text={`${totalStats.percent}%`}
-                styles={buildStyles({
-                  pathColor: '#6E55AE',
-                  textColor: '#ddd',
-                  trailColor: '#333',
-                })}
-              />}
+            <Circle
+              animated={!noAnimation}
+              owned={counterOwned}
+              total={counterTotal}
+              percent={counterPercent}
+              subOwned={subCounterOwned}
+              subTotal={subCounterTotal}
+            />
           </div>
         </Grid>
-        {!noFileSummary &&
+        {stats &&
           <>
             <Grid container style={{ marginTop: 50, alignItems: 'center', justifyContent: 'center' }}>
               <Grid item xs={4}>
@@ -131,8 +170,7 @@ export function Statistics({ items, stats, noFileSummary, noCelebration, magicFi
             </Grid>
           </>
         }
-        { /* <DropTips magicFind={magicFind} players={players} items={items} /> */ }
-        {!noCelebration && totalStats.exists === totalStats.owned && <Win/>}
+        {!noAnimation && total === owned && <Win/>}
       </Grid>
     </>
   );

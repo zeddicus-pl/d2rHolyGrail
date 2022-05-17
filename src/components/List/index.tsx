@@ -4,15 +4,16 @@ import { Container, Image, Logo, ButtonPanel } from './styles';
 import { TabPanel } from './tab';
 import SettingsPanel from '../Settings'
 import { useTranslation } from 'react-i18next';
-import { FileReaderResponse, Settings } from '../../@types/main.d';
+import { FileReaderResponse, HolyGrailStats, Settings } from '../../@types/main.d';
 import { Search } from '../Search';
 
-import { holyGrailSeedData } from '../../../electron/lib/holyGrailSeedData';
+import { getHolyGrailSeedData } from '../../../electron/lib/holyGrailSeedData';
 
 import logo from '../../../assets/logo.svg';
 import twitchIcon from '../../../assets/twitch-icon.svg';
 import { Summary } from './summary';
 import { Language } from './language';
+import { computeStats } from '../../utils/objects';
 
 /* eslint-disable no-unused-vars */
 export enum TabState {
@@ -44,6 +45,8 @@ export function List({ fileReaderResponse, appSettings }: ListProps) {
   }
 
   const { items, stats } = fileReaderResponse;
+  const holyGrailSeedData = getHolyGrailSeedData(appSettings);
+  const holyGrailStats = computeStats(items, holyGrailSeedData, appSettings);
 
   return (
     <Container>
@@ -57,6 +60,7 @@ export function List({ fileReaderResponse, appSettings }: ListProps) {
           <Summary
             fileReaderResponse={fileReaderResponse}
             appSettings={appSettings}
+            holyGrailStats={holyGrailStats}
           />
           <Language />
           <SettingsPanel appSettings={appSettings} />
@@ -96,6 +100,7 @@ export function List({ fileReaderResponse, appSettings }: ListProps) {
         stats={stats}
         search=""
         appSettings={appSettings}
+        holyGrailStats={holyGrailStats}
       />
       <TabPanel
         value={search.length ? TabState.UniqueArmor : tab}
@@ -104,6 +109,7 @@ export function List({ fileReaderResponse, appSettings }: ListProps) {
         player={items}
         search={search}
         appSettings={appSettings}
+        holyGrailStats={holyGrailStats}
       />
       <TabPanel
         value={search.length ? TabState.UniqueWeapons : tab}
@@ -112,6 +118,7 @@ export function List({ fileReaderResponse, appSettings }: ListProps) {
         player={items}
         search={search}
         appSettings={appSettings}
+        holyGrailStats={holyGrailStats}
       />
       <TabPanel
         value={search.length ? TabState.UniqueOther : tab}
@@ -120,6 +127,7 @@ export function List({ fileReaderResponse, appSettings }: ListProps) {
         player={items}
         search={search}
         appSettings={appSettings}
+        holyGrailStats={holyGrailStats}
       />
       <TabPanel
         value={search.length ? TabState.Sets : tab}
@@ -128,6 +136,7 @@ export function List({ fileReaderResponse, appSettings }: ListProps) {
         player={items}
         search={search}
         appSettings={appSettings}
+        holyGrailStats={holyGrailStats}
       />
     </Container>
   );

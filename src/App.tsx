@@ -10,6 +10,8 @@ import { ToastContainer } from 'material-react-toastify';
 import 'material-react-toastify/dist/ReactToastify.css';
 import { FileReaderResponse, GameMode, Settings } from './@types/main.d';
 import defaultSettings from './utils/defaultSettings';
+import { getHolyGrailSeedData } from '../electron/lib/holyGrailSeedData';
+import VersionCheck from './components/Settings/VersionCheck';
 
 /* eslint-disable no-unused-vars */
 export enum UiState {
@@ -93,6 +95,8 @@ export function App() {
         return;
       }
       setFileReaderResponse(fileReaderResponse);
+      console.log(fileReaderResponse);
+      console.log(getHolyGrailSeedData(appSettings));
       if (uiState !== UiState.Reading) {
         setUiState(UiState.List);
         return;
@@ -137,6 +141,7 @@ export function App() {
             draggable={false}
             pauseOnHover
           />
+          <VersionCheck />
         </>
       </ThemeProvider>
     </>

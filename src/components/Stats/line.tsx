@@ -1,5 +1,5 @@
 import { TableCell, TableRow } from "@mui/material";
-import { Stats } from "../../utils/objects";
+import { Stats } from "../../@types/main";
 
 type StatisticsLineProps = {
   title: string,

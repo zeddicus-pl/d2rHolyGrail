@@ -6,14 +6,16 @@ import { existsSync, promises } from 'fs';
 import { basename, extname, join, resolve, sep } from 'path';
 import { IpcMainEvent } from 'electron/renderer';
 import { readdirSync } from 'original-fs';
-import { FileReaderResponse, GameMode } from '../../src/@types/main.d';
+import { FileReaderResponse, GameMode, Item, ItemDetails } from '../../src/@types/main.d';
 import storage from 'electron-json-storage';
 import chokidar, { FSWatcher } from 'chokidar';
-import { holyGrailSeedData } from './holyGrailSeedData';
+import { getHolyGrailSeedData } from './holyGrailSeedData';
 import { flattenObject } from '../../src/utils/objects';
 import { eventToReply, setEventToReply } from '../main';
 import settingsStore from './settings';
 import { updateDataToListeners } from './stream';
+import { runesMapping } from './runesMapping';
+import getPath from 'platform-folders';
 const { readFile } = promises;
 
 class ItemsStore {
@@ -26,7 +28,8 @@ class ItemsStore {
   constructor() {
     this.currentData = {
       items: {},
-      stats: {}
+      stats: {},
+      availableRunes: {},
     };
     this.fileWatcher = null;
     this.watchPath = null;
@@ -42,12 +45,12 @@ class ItemsStore {
   loadManualItems = () => {
     const data = (storage.getSync('manualItems') as FileReaderResponse);
     if (!data.items) {
-      storage.set('manualItems', {items: {}, stats: {}}, (err) => {
+      storage.set('manualItems', { items: {}, stats: {} }, (err) => {
         if (err) {
           console.log(err);
         }
       });
-      this.currentData = {items: {}, stats: {}}
+      this.currentData = { items: {}, stats: {}, availableRunes: {} }
     } else {
       this.currentData = data;
     }
@@ -55,9 +58,9 @@ class ItemsStore {
 
   saveManualItem = (itemId: string, isFound: boolean) => {
     if (isFound) {
-      this.currentData.items[itemId] = { item: null, saveName: [] }
+      this.currentData.items[itemId] = <Item>{};
     } else if (this.currentData.items[itemId]) {
-      delete(this.currentData.items[itemId]);
+      delete (this.currentData.items[itemId]);
     }
     storage.set('manualItems', this.currentData, (err) => {
       if (err) {
@@ -68,9 +71,13 @@ class ItemsStore {
 
   openAndParseSaves = (event: IpcMainEvent) => {
     return dialog.showOpenDialog({
+      defaultPath: getPath('savegames'),
       title: "Select Diablo 2 / Diablo 2 Resurrected save folder",
       message: "Select Diablo 2 / Diablo 2 Resurrected save folder",
-      properties: ['openDirectory'],
+      properties: ['openDirectory', 'openFile'],
+      filters: [
+        { name: "Diablo 2 Save Files", extensions: ["d2s", "d2x", "sss", "d2i"] },
+      ]
     }).then((result) => {
       if (result.filePaths[0]) {
         const path = result.filePaths[0];
@@ -89,15 +96,16 @@ class ItemsStore {
       return filename;
     }
     const resolved = resolve(filename);
-    return resolved.substring(0, 1) + resolved.substring(1).split(sep).join('/') + '/*.{d2s,sss,d2x}';
+    return resolved.substring(0, 1) + resolved.substring(1).split(sep).join('/') + '/*.{d2s,sss,d2x,d2i}';
   }
 
   parseSaves = async (event: IpcMainEvent, path: string, userRequested: boolean) => {
     const results: FileReaderResponse = {
       items: {},
       stats: {},
+      availableRunes: {}
     };
-    const files = readdirSync(path).filter(file => ['.d2s', '.sss', '.d2x'].indexOf(extname(file).toLowerCase()) !== -1);
+    const files = readdirSync(path).filter(file => ['.d2s', '.sss', '.d2x', '.d2i'].indexOf(extname(file).toLowerCase()) !== -1);
 
     if (!eventToReply) {
       setEventToReply(event);
@@ -123,8 +131,9 @@ class ItemsStore {
     }
 
     // prepare item list
-    const flatItems: {[itemName: string]: any} = {};
-    flattenObject(holyGrailSeedData, flatItems);
+    const settings = settingsStore.getSettings();
+    const flatItems: { [itemName: string]: any } = {};
+    flattenObject(getHolyGrailSeedData(settings), flatItems);
 
     const promises = files.map((file) => {
       const saveName = basename(file).replace(".d2s", "").replace(".sss", "").replace(".d2x", "");
@@ -133,7 +142,8 @@ class ItemsStore {
         .then((result) => {
           result.forEach((item) => {
             let name = item.unique_name || item.set_name || item.rare_name || item.rare_name2 || '';
-            if (name.indexOf('Rainbow Facet') !== -1) {
+            name = name.toLowerCase().replace(/[^a-z0-9]/gi, '');
+            if (name.indexOf('rainbowfacet') !== -1) {
               let type = '';
               let skill = '';
               item.magic_attributes.forEach((attr) => {
@@ -145,24 +155,30 @@ class ItemsStore {
                 if (attr.name === 'passive_ltng_mastery') { skill = 'lightning' }
               })
               name = name + skill + type;
+            } else if (name === '') {
+              return;
+            } else if (!flatItems[name]) {
+              return;
+            };
+            const savedItem: ItemDetails = {
+              ethereal: !!item.ethereal,
+              ilevel: item.level,
+              socketed: !!item.socketed,
             }
-            if (name === '') return;
-            const itemName = name.toLowerCase().replace(/[^a-z0-9]/gi, '');
-            if (results.items[itemName]) {
-              if (results.items[itemName].saveName) {
-                results.items[itemName].saveName.push(saveName);
-              } else {
-                results.items[itemName].saveName = [saveName];
+            if (results.items[name]) {
+              if (!results.items[name].inSaves[saveName]) {
+                results.items[name].inSaves[saveName] = [];
               }
+              results.items[name].inSaves[saveName].push(savedItem);
             } else {
-              results.items[itemName] = {
-                item,
-                saveName: [ saveName ],
+              results.items[name] = {
+                name,
+                inSaves: {},
+                type: item.type,
               }
+              results.items[name].inSaves[saveName] = [ savedItem ];
             }
-            if (flatItems[itemName]) {
-              results.stats[saveName] = (results.stats[saveName] || 0) + 1;
-            }
+            results.stats[saveName] = (results.stats[saveName] || 0) + 1;
           });
         })
         .catch((e) => {
@@ -182,14 +198,29 @@ class ItemsStore {
 
   parseSave = async (saveName: string, content: Buffer, extension: string): Promise<d2s.types.IItem[]> => {
     const items: d2s.types.IItem[] = [];
-    
-    const parseItems = (itemList: d2s.types.IItem[]) => {
+
+    const parseItems = (itemList: d2s.types.IItem[], isEmbed: boolean = false) => {
       itemList.forEach((item) => {
         if (item.unique_name || item.set_name || item.rare_name || item.rare_name2) {
           items.push(item);
         }
+        const isRune = item.type.match(/^r[0-3][0-9]$/) && runesMapping[item.type];
+        if (isRune) {
+          if (isEmbed) {
+            item.socketed = 1; // the "socketed" in Rune item types will indicated that *it* sits inside socket
+          }
+          items.push(item);
+        }
         if (item.socketed_items && item.socketed_items.length) {
-          parseItems(item.socketed_items);
+          parseItems(item.socketed_items, true);
+        }
+        if (item.runeword_name) {
+          // we push Runewords as "items" for easier displaying in a list
+          const newItem = <d2s.types.IItem>{
+            runeword_name: "runeword" + item.runeword_name,
+            type_name: "runeword",
+          };
+          items.push(newItem);
         }
       });
     }
@@ -222,7 +253,10 @@ class ItemsStore {
     switch (extension) {
       case '.sss':
       case '.d2x':
-          await d2stash.read(content, constants, 0x60).then(parseStash);
+        await d2stash.read(content, constants, 0x60).then(parseStash);
+        break;
+      case '.d2i':
+        await d2stash.read(content, constants, 0x62).then(parseStash);
         break;
       default:
         await d2s.read(content, constants).then(parseD2S);

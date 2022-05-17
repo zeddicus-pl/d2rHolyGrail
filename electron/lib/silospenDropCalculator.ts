@@ -3,7 +3,7 @@ import { IpcMainEvent } from 'electron/renderer';
 // @ts-ignore
 import fetch, { Response } from 'node-fetch';
 import { silospenMapping } from './silospenMapping';
-import { holyGrailSeedData } from './holyGrailSeedData';
+import { getHolyGrailSeedData } from './holyGrailSeedData';
 import { execute, versions } from 'njar';
 import { SilospenItem, AllSilospenItems } from '../../src/@types/main.d';
 import https from 'https';
@@ -99,7 +99,7 @@ export async function runSilospenServer() {
 }
 
 const sets: AllSilospenItems = {};
-flattenObject(holyGrailSeedData.sets, sets);
+flattenObject(getHolyGrailSeedData(null).sets, sets);
 
 export async function getAllDropRates() {
   const keys = Object.keys(silospenMapping);
