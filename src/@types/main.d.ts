@@ -59,8 +59,8 @@ export enum GrailType {
 }
 
 export enum GameVersion {
-  Resurrected = 0,
-  Classic = 0,
+  Resurrected = 'Resurrected',
+  Classic = 'Classic',
 }
 /* eslint-enable no-unused-vars */
 

@@ -1,17 +1,58 @@
+import { IItem } from '@dschu012/d2s/lib/d2/types';
 import { ISetItems, IUniqueArmors, IUniqueOther, IUniqueWeapons } from 'd2-holy-grail/client/src/common/definitions/union/IHolyGrailData';
 import { runewordsMapping } from '../../electron/lib/runewordsMapping';
-import { GameVersion, GrailType, HolyGrailSeed, HolyGrailStats, ItemsInSaves, Settings, Stats, SubStats } from '../@types/main.d';
+import { GameVersion, GrailType, HolyGrailSeed, HolyGrailStats, Item, ItemsInSaves, Settings, Stats, SubStats } from '../@types/main.d';
 
 export const simplifyItemName = (name: string): string => name.replace(/[^a-z0-9]/gi, '').toLowerCase();
+export const isRune = (item: Item | IItem): boolean => !!item.type && !!item.type.match(/^r[0-3][0-9]$/);
 
-export const flattenObject = (object: any, flat: {[itemId: string]: {}}) => {
-  Object.keys(object).forEach((key: any) => {
-    if (typeof object[key] === 'object' && Object.keys(object[key]).length > 0) {
-      flattenObject(object[key], flat);
-    } else {
-      flat[simplifyItemName(key)] = {};
+export type ItemNames = {[itemId: string]: {}};
+type FlatItemsCache = {
+  runes: ItemNames,
+  runewords: ItemNames,
+  armor: ItemNames,
+  weapon: ItemNames,
+  other: ItemNames,
+  sets: ItemNames,
+  all: ItemNames,
+}
+const flatItemsCache: FlatItemsCache = {
+  runes: {},
+  runewords: {},
+  armor: {},
+  weapon: {},
+  other: {},
+  sets: {},
+  all: {},
+};
+
+// Flattens an object recursively, taking only the key names
+export const flattenObject = (
+  object: any,
+  cacheKey: keyof FlatItemsCache | null = null
+): ItemNames => {
+
+  const _flattenObject = (object: any, flat: ItemNames) => {
+    Object.keys(object).forEach((key: any) => {
+      if (typeof object[key] === 'object' && Object.keys(object[key]).length > 0) {
+        _flattenObject(object[key], flat);
+      } else {
+        flat[simplifyItemName(key)] = {};
+      }
+    });
+  }
+
+  if (!cacheKey || !flatItemsCache[cacheKey] || Object.keys(flatItemsCache[cacheKey]).length === 0) {
+    const flat: {[itemId: string]: {}} = {};
+    _flattenObject(object, flat);
+    if (cacheKey) {
+      flatItemsCache[cacheKey] = flat;
+      return flatItemsCache[cacheKey];
     }
-  });
+    return flat;
+  }
+
+  return flatItemsCache[cacheKey];
 }
 
 type StatsColl = {
@@ -25,9 +66,9 @@ export const computeSubStats = (
   items: ItemsInSaves,
   template: {[itemId: string]: {}} | IUniqueArmors | IUniqueWeapons | IUniqueOther | ISetItems,
   settings: Settings,
+  cacheKey: keyof FlatItemsCache | null,
 ): StatsColl => {
-  const flat: {[itemId: string]: {}} = {};
-  flattenObject(template, flat);
+  const flat = flattenObject(template, cacheKey);
 
   let runesCount = 0;
   const runesFound: {[runeId: string]: boolean} = {};
@@ -45,7 +86,7 @@ export const computeSubStats = (
     }
 
     // runes
-    if (item.type && item.type.match(/^r[0-3][0-9]$/) && settings.grailRunes && !runesFound[itemId]) {
+    if (item.type && isRune(item) && settings.grailRunes && !runesFound[itemId]) {
       runesCount++;
       runesFound[item.name] = true;
       return;
@@ -53,9 +94,10 @@ export const computeSubStats = (
 
     // runewords
     if (
+      settings.grailRunewords &&
       item.type === 'runeword' &&
       !runewordsFound[itemId] &&
-      !(settings.gameVersion == GameVersion.Classic && settings.grailRunewords && runewordsMapping[item.name].patch === 2.4)
+      !(settings.gameVersion == GameVersion.Classic && runewordsMapping[item.name].patch === 2.4)
     ) {
       runewordsCount++;
       runewordsFound[item.name] = true;
@@ -63,14 +105,33 @@ export const computeSubStats = (
     }
 
     // items
-    if ((settings.grailType === GrailType.Ethereal || settings.grailType === GrailType.Each) && !etherealFound[itemId]) {
-      etherealCount++;
-      etherealFound[itemId] = true;
-    } else if (!normalFound[itemId]) {
-      normalCount++;
-      normalFound[itemId] = true;
+    let isEthereal = false;
+    let isNormal = false;
+
+    for (const saveName in item.inSaves) {
+      const saveItems = item.inSaves[saveName];
+      for (const itemInSave of saveItems) {
+        if (itemInSave.ethereal) {
+          isEthereal = true;
+        } else {
+          isNormal = true;
+        }
+      }
     }
 
+    if (settings.grailType === GrailType.Both && !normalFound[itemId]) {
+      normalCount++;
+      normalFound[itemId] = true;
+    } else {
+      if (isEthereal && (settings.grailType === GrailType.Ethereal || settings.grailType === GrailType.Each) && !etherealFound[itemId]) {
+        etherealCount++;
+        etherealFound[itemId] = true;
+      }
+      if (isNormal && (settings.grailType === GrailType.Normal || settings.grailType === GrailType.Each) && !normalFound[itemId]) {
+        normalCount++;
+        normalFound[itemId] = true;
+      } 
+    }
   });
 
   const runesExists = settings.grailRunes ? 33 : 0;
@@ -82,34 +143,34 @@ export const computeSubStats = (
     ? Object.keys(flat).length
     : 0;
 
-  const runesPercent = (runesCount / runesExists) * 100;
-  const runewordsPercent = (runewordsCount / runewordsExists) * 100;
-  const normalPercent = (normalCount / normalExists) * 100;
-  const etherealPercent = (etherealCount / etherealExists) * 100;
+  const runesPercent = !runesExists ? 0 : (runesCount / runesExists) * 100;
+  const runewordsPercent = !runewordsExists ? 0 : (runewordsCount / runewordsExists) * 100;
+  const normalPercent = !normalExists ? 0 : (normalCount / normalExists) * 100;
+  const etherealPercent = !etherealExists ? 0 : (etherealCount / etherealExists) * 100;
 
   return {
     normal: {
       exists: normalExists,
       owned: normalCount,
-      percent: normalPercent > 99.5 && normalPercent < 100 ? 99 : Math.round((normalCount / normalExists) * 100),
+      percent: normalPercent > 99.5 && normalPercent < 100 ? 99 : Math.round(normalPercent),
       remaining: normalExists - normalCount,
     },
     ethereal: {
       exists: etherealExists,
-      owned: 0,
-      percent: etherealPercent > 99.5 && etherealPercent < 100 ? 99 : Math.round((etherealCount / etherealExists) * 100),
+      owned: etherealCount,
+      percent: etherealPercent > 99.5 && etherealPercent < 100 ? 99 : Math.round(etherealPercent),
       remaining: etherealExists - etherealCount,
     },
     runes: {
       exists: runesExists,
-      owned: 0,
-      percent: runesPercent > 99.5 && runesPercent < 100 ? 99 : Math.round((runesCount / runesExists) * 100),
+      owned: runesCount,
+      percent: runesPercent > 99.5 && runesPercent < 100 ? 99 : Math.round(runesPercent),
       remaining: runesExists - runesCount,
     },
     runewords: {
       exists: runewordsExists,
-      owned: 0,
-      percent: runewordsPercent > 99.5 && runewordsPercent < 100 ? 99 : Math.round((runewordsCount / runewordsExists) * 100),
+      owned: runewordsCount,
+      percent: runewordsPercent > 99.5 && runewordsPercent < 100 ? 99 : Math.round(runewordsPercent),
       remaining: runewordsExists - runewordsCount,
     },
   };
@@ -120,18 +181,18 @@ export const computeStats = (
   template: HolyGrailSeed,
   settings: Settings
 ): HolyGrailStats => {
-  const runesStats = computeSubStats(items, template.runes || {}, settings);
-  const runewordsStats = computeSubStats(items, template.runewords || {}, settings);
-  const armorStats = computeSubStats(items, template.uniques.armor, settings);
-  const weaponStats = computeSubStats(items, template.uniques.weapons, settings);
-  const otherStats = computeSubStats(items, template.uniques.other, settings);
-  const setsStats = computeSubStats(items, template.sets, settings);
+  const runesStats = computeSubStats(items, template.runes || {}, settings, 'runes');
+  const runewordsStats = computeSubStats(items, template.runewords || {}, settings, 'runewords');
+  const armorStats = computeSubStats(items, template.uniques.armor, settings, 'armor');
+  const weaponStats = computeSubStats(items, template.uniques.weapons, settings, 'weapon');
+  const otherStats = computeSubStats(items, template.uniques.other, settings, 'other');
+  const setsStats = computeSubStats(items, template.sets, settings, 'sets');
   const normalExists = armorStats.normal.exists + weaponStats.normal.exists + otherStats.normal.exists + setsStats.normal.exists;
   const etherealExists = armorStats.ethereal.exists + weaponStats.ethereal.exists + otherStats.ethereal.exists + setsStats.ethereal.exists;
   const normalOwned = armorStats.normal.owned + weaponStats.normal.owned + otherStats.normal.owned + setsStats.normal.owned;
   const etherealOwned = armorStats.ethereal.owned + weaponStats.ethereal.owned + otherStats.ethereal.owned + setsStats.ethereal.owned;
-  const normalPercent = (normalOwned / normalExists) * 100;
-  const etherealPercent = (etherealOwned / etherealExists) * 100;
+  const normalPercent = !normalExists ? 0 : (normalOwned / normalExists) * 100;
+  const etherealPercent = !etherealExists ? 0 : (etherealOwned / etherealExists) * 100;
   return {
     normal: {
       armor: armorStats.normal,
@@ -141,7 +202,7 @@ export const computeStats = (
       total: {
         exists: normalExists,
         owned: normalOwned,
-        percent: normalPercent > 99.5 && normalPercent < 100 ? 99 : Math.round((normalOwned / normalExists) * 100),
+        percent: normalPercent > 99.5 && normalPercent < 100 ? 99 : Math.round(normalPercent),
         remaining: normalExists - normalOwned,
       }
     },
@@ -153,7 +214,7 @@ export const computeStats = (
       total: {
         exists: etherealExists,
         owned: etherealOwned,
-        percent: etherealPercent > 99.5 && etherealPercent < 100 ? 99 : Math.round((etherealOwned / etherealExists) * 100),
+        percent: etherealPercent > 99.5 && etherealPercent < 100 ? 99 : Math.round(etherealPercent),
         remaining: etherealExists - etherealOwned,
       }
     },

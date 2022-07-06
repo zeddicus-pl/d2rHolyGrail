@@ -97,7 +97,7 @@ export default function Popup({ itemType, itemName, fullItemName, saveFiles, chi
             >
               <CloseIcon />
             </IconButton>
-            {saveFiles.length ?
+            {saveFiles && Object.keys(saveFiles).length ?
               <small style={{ fontSize: '11pt', fontWeight: 'normal' }}>
                 {Object.keys(saveFiles).map(saveFile => <Chip
                     key={saveFile}

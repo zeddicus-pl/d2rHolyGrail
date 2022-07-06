@@ -106,7 +106,6 @@ const VersionCheck = () => {
     }, []);
 
     useEffect(() => {
-        console.log({ newVersionUrl, isDownloading });
         if (newVersionUrl !== '' && !isDownloading) {
             if (!toastId.current) {
                 toastId.current = toastNewVersionButton();

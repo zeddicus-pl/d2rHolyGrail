@@ -6,7 +6,7 @@ import WindowStateKeeper from "electron-window-state";
 import { fetchSilospen, getAllDropRates, runSilospenServer } from './lib/silospenDropCalculator'
 import itemsDatabase from './lib/items';
 import settingsStore from './lib/settings';
-import { setupStreamFeed, updateDataToListeners } from './lib/stream';
+import { setupStreamFeed, streamPort, updateDataToListeners } from './lib/stream';
 import { registerUpdateDownloader } from './lib/update';
 
 // these constants are set by the build stage
@@ -19,8 +19,8 @@ export const CSP_HEADER =
   "style-src 'unsafe-inline'; " +
   "style-src-elem 'unsafe-inline' http://localhost:*; " +
   "font-src file: http://localhost:*; " +
-  "frame-src file: http://localhost:3666;" +
-  "connect-src https://api.github.com data: ws:;";
+  "frame-src file: http://localhost:*;" +
+  "connect-src https://api.github.com data: ws: http://localhost:*;";
 
 export let eventToReply: IpcMainEvent | null;
 export function setEventToReply(e: IpcMainEvent) {
@@ -128,6 +128,10 @@ async function registerListeners () {
   ipcMain.on('getAllDropRates', (event) => {
     eventToReply = event;
     getAllDropRates();
+  });
+  ipcMain.on('getStreamPort', (event) => {
+    eventToReply = event;
+    event.returnValue = streamPort;
   });
 }
 

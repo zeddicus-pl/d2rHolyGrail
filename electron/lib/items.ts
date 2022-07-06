@@ -10,7 +10,7 @@ import { FileReaderResponse, GameMode, Item, ItemDetails } from '../../src/@type
 import storage from 'electron-json-storage';
 import chokidar, { FSWatcher } from 'chokidar';
 import { getHolyGrailSeedData } from './holyGrailSeedData';
-import { flattenObject } from '../../src/utils/objects';
+import { flattenObject, isRune, simplifyItemName } from '../../src/utils/objects';
 import { eventToReply, setEventToReply } from '../main';
 import settingsStore from './settings';
 import { updateDataToListeners } from './stream';
@@ -132,14 +132,14 @@ class ItemsStore {
 
     // prepare item list
     const settings = settingsStore.getSettings();
-    const flatItems: { [itemName: string]: any } = {};
-    flattenObject(getHolyGrailSeedData(settings), flatItems);
+    const flatItems = flattenObject(getHolyGrailSeedData(settings));
 
     const promises = files.map((file) => {
-      const saveName = basename(file).replace(".d2s", "").replace(".sss", "").replace(".d2x", "");
+      const saveName = basename(file).replace(".d2s", "").replace(".sss", "").replace(".d2x", "").replace(".d2i", "");
       return readFile(join(path, file))
         .then((buffer) => this.parseSave(saveName, buffer, extname(file).toLowerCase()))
         .then((result) => {
+          results.stats[saveName] = 0;
           result.forEach((item) => {
             let name = item.unique_name || item.set_name || item.rare_name || item.rare_name2 || '';
             name = name.toLowerCase().replace(/[^a-z0-9]/gi, '');
@@ -155,9 +155,13 @@ class ItemsStore {
                 if (attr.name === 'passive_ltng_mastery') { skill = 'lightning' }
               })
               name = name + skill + type;
-            } else if (name === '') {
-              return;
+            } else if (isRune(item)) {
+              name = runesMapping[item.type].name.toLowerCase();
+            } else if (item.type === 'runeword') {
+              name = item.runeword_name;
             } else if (!flatItems[name]) {
+              return;
+            } else if (name === '') {
               return;
             };
             const savedItem: ItemDetails = {
@@ -204,8 +208,7 @@ class ItemsStore {
         if (item.unique_name || item.set_name || item.rare_name || item.rare_name2) {
           items.push(item);
         }
-        const isRune = item.type.match(/^r[0-3][0-9]$/) && runesMapping[item.type];
-        if (isRune) {
+        if (isRune(item) && runesMapping[item.type]) {
           if (isEmbed) {
             item.socketed = 1; // the "socketed" in Rune item types will indicated that *it* sits inside socket
           }
@@ -217,8 +220,8 @@ class ItemsStore {
         if (item.runeword_name) {
           // we push Runewords as "items" for easier displaying in a list
           const newItem = <d2s.types.IItem>{
-            runeword_name: "runeword" + item.runeword_name,
-            type_name: "runeword",
+            runeword_name: "runeword" + simplifyItemName(item.runeword_name),
+            type: "runeword",
           };
           items.push(newItem);
         }
@@ -245,6 +248,13 @@ class ItemsStore {
     };
 
     const parseStash = (response: d2s.types.IStash) => {
+      const settings = settingsStore.getSettings()
+      if (settings.gameMode === GameMode.Softcore && response.hardcore === true) {
+        return [];
+      }
+      if (settings.gameMode === GameMode.Hardcore && response.hardcore === false) {
+        return [];
+      }
       response.pages.forEach(page => {
         parseItems(page.items);
       });
@@ -253,7 +263,10 @@ class ItemsStore {
     switch (extension) {
       case '.sss':
       case '.d2x':
-        await d2stash.read(content, constants, 0x60).then(parseStash);
+        await d2stash.read(content, constants, 0x60).then((response) => {
+          response.hardcore === saveName.toLowerCase().includes('hardcore');
+          parseStash(response);
+        });
         break;
       case '.d2i':
         await d2stash.read(content, constants, 0x62).then(parseStash);

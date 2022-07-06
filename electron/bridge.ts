@@ -47,6 +47,9 @@ export const api = {
   },
   cancelDownload: () => {
     ipcRenderer.send('cancelDownload');
+  },
+  getStreamPort: () => {
+    return ipcRenderer.sendSync('getStreamPort');
   }
 }
 

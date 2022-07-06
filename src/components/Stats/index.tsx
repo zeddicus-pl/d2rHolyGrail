@@ -34,6 +34,22 @@ export function Statistics({ stats, noAnimation, appSettings, holyGrailStats, on
   let counterPercent: number | false = false;
   let owned: number = 0;
   let total: number = 0;
+  
+  const grandOwned = holyGrailStats.normal.total.owned + holyGrailStats.ethereal.total.owned;
+    + (appSettings.grailRunes ? holyGrailStats.runes.owned : 0)
+    + (appSettings.grailRunewords ? holyGrailStats.runewords.owned : 0);
+  const grandExists = holyGrailStats.normal.total.exists + holyGrailStats.ethereal.total.exists
+    + (appSettings.grailRunes ? holyGrailStats.runes.exists : 0)
+    + (appSettings.grailRunewords ? holyGrailStats.runewords.exists : 0);
+  const grandRemaining = grandExists - grandOwned;
+  const grandPercent = (grandOwned / grandExists) * 100;
+  const grandTotal = {
+    exists: grandExists,
+    owned: grandOwned,
+    remaining: grandRemaining,
+    percent: grandPercent > 99.5 && grandPercent < 100 ? 99 : Math.round(grandPercent),
+  }
+
   switch (appSettings.grailType) {
     case GrailType.Normal:
     case GrailType.Both:
@@ -69,13 +85,12 @@ export function Statistics({ stats, noAnimation, appSettings, holyGrailStats, on
         + (appSettings.grailRunewords ? holyGrailStats.runewords.owned : 0);
       subCounterTotal = holyGrailStats.ethereal.total.exists;
       subCounterOwned = holyGrailStats.ethereal.total.owned;
-      owned = counterOwned + subCounterTotal;
+      owned = counterOwned + subCounterOwned;
       total = counterTotal + subCounterTotal;
+      counterPercent = (owned / total) * 100;
+      counterPercent = counterPercent > 99.5 && counterPercent < 100 ? 99 : Math.round(counterPercent);    
       break;
   }
-
-  counterPercent = (owned / total) * 100;
-  counterPercent = counterPercent > 99.5 && counterPercent < 100 ? 99 : Math.round(counterPercent);
 
   if (onlyCircle) {
     return <Circle
@@ -114,8 +129,10 @@ export function Statistics({ stats, noAnimation, appSettings, holyGrailStats, on
                 {showEthereal && <StatisticsLine title={t("Ethereal sets")} stats={holyGrailStats.ethereal.sets} />}
                 {appSettings.grailRunes && <StatisticsLine title={t("Runes")} stats={holyGrailStats.runes} />}
                 {appSettings.grailRunewords && <StatisticsLine title={t("Runewords")} stats={holyGrailStats.runewords} />}
-                {showNormal && <StatisticsLine bold title={t("Total")} stats={holyGrailStats.normal.total} />}
-                {showEthereal && <StatisticsLine bold title={t("Total ethereal")} stats={holyGrailStats.normal.total} />}
+                {showNormal && appSettings.grailType !== GrailType.Each && <StatisticsLine bold title={t("Total")} stats={holyGrailStats.normal.total} />}
+                {showNormal && appSettings.grailType === GrailType.Each && <StatisticsLine bold title={t("Total normal")} stats={holyGrailStats.normal.total} />}
+                {showEthereal && <StatisticsLine bold title={t("Total ethereal")} stats={holyGrailStats.ethereal.total} />}
+                {appSettings.grailType === GrailType.Each && <StatisticsLine bold title={t("Total")} stats={grandTotal} />}
               </TableBody>
             </Table>
           </TableContainer>

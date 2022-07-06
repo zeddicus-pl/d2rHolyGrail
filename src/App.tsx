@@ -3,7 +3,7 @@ import { GlobalStyle } from './styles/GlobalStyle'
 import { Greetings } from './components/Greetings'
 import { List } from './components/List'
 
-import { useState, useEffect, MouseEventHandler } from 'react';
+import { useState, useEffect, MouseEventHandler, useRef } from 'react';
 import { ThemeProvider } from '@mui/system';
 import { createTheme } from '@mui/material';
 import { ToastContainer } from 'material-react-toastify';
@@ -26,7 +26,7 @@ export enum UiState {
 export function App() {
   const [fileReaderResponse, setFileReaderResponse] = useState<FileReaderResponse | null>(null);
   const [uiState, setUiState] = useState(UiState.Loading);
-  const [appSettings, setAppSettings] = useState<Settings>(defaultSettings);
+  const appSettings = useRef(defaultSettings);
 
   const updateSettings = (settings: Settings) => {
     // @ts-ignore
@@ -35,31 +35,44 @@ export function App() {
     }
     // @ts-ignore
     if (!settings.saveDir) {
-      settings.saveDir = '';
+      settings.saveDir = defaultSettings.saveDir;
     }
     if (!settings.magicFind && settings.magicFind !== 0) {
-      settings.magicFind = 0;
+      settings.magicFind = defaultSettings.magicFind;
     }
     if (!settings.playersNumber) {
-      settings.playersNumber = 1;
+      settings.playersNumber = defaultSettings.playersNumber;
     }
-    setAppSettings(settings);
+    if (typeof settings.grailType === 'undefined') {
+      settings.grailType = defaultSettings.grailType;
+    }
+    if (typeof settings.grailRunes === 'undefined') {
+      settings.grailRunes = defaultSettings.grailRunes;
+    }
+    if (typeof settings.grailRunewords === 'undefined') {
+      settings.grailRunewords = defaultSettings.grailRunewords;
+    }
+    if (typeof settings.gameVersion === 'undefined') {
+      settings.gameVersion = defaultSettings.gameVersion;
+    }
+    appSettings.current = settings;
   }
 
   const saveSetting = <K extends keyof Settings>(setting: K, value: Settings[K]) => {
     window.Main.saveSetting(setting, value);
-    appSettings[setting] = value;
-    setAppSettings(appSettings);
+    appSettings.current[setting] = value;
   }
 
   const readData = (settings: Settings) => {
-    if (settings.gameMode === GameMode.Manual) {
-      window.Main.loadManualItems();
-    } else if (settings.saveDir && settings.saveDir !== '') {
-      window.Main.readFilesUponStart();
-    } else {
-      setUiState(UiState.Ready);
-    }
+    setTimeout(() => {
+      if (settings.gameMode === GameMode.Manual) {
+        window.Main.loadManualItems();
+      } else if (settings.saveDir && settings.saveDir !== '') {
+        window.Main.readFilesUponStart();
+      } else {
+        setUiState(UiState.Ready);
+      }
+    }, 1);
   }
 
   const handleFileClick = async () => {
@@ -96,7 +109,7 @@ export function App() {
       }
       setFileReaderResponse(fileReaderResponse);
       console.log(fileReaderResponse);
-      console.log(getHolyGrailSeedData(appSettings));
+      console.log(getHolyGrailSeedData(appSettings.current));
       if (uiState !== UiState.Reading) {
         setUiState(UiState.List);
         return;
@@ -127,7 +140,7 @@ export function App() {
           {uiState === UiState.List &&
             <List
               fileReaderResponse={fileReaderResponse}
-              appSettings={appSettings}
+              appSettings={appSettings.current}
             />
           }
           <ToastContainer

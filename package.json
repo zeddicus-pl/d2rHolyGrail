@@ -18,7 +18,7 @@
   "keywords": [],
   "license": "ISC",
   "dependencies": {
-    "@dschu012/d2s": "https://github.com/zeddicus-pl/d2s.git",
+    "@dschu012/d2s": "^2.0.18",
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
     "@mui/icons-material": "^5.4.2",
@@ -37,6 +37,7 @@
     "electron-json-storage": "^4.5.0",
     "electron-window-state": "^5.0.3",
     "express": "^4.17.2",
+    "get-port": "^6.1.2",
     "html2canvas": "^1.4.1",
     "i18next": "^21.6.11",
     "material-react-toastify": "^1.0.1",

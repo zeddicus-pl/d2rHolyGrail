@@ -6,13 +6,15 @@ import { Server, Socket } from "socket.io";
 import { CSP_HEADER } from '../main';
 import settingsStore from './settings';
 import itemsDatabase from './items';
+import getPort, {portNumbers} from 'get-port';
 
 // these constants are set by the build stage
 declare const STREAM_WEBPACK_ENTRY: string;
 
 const streamListeners: Map<string, Socket> = new Map();
+export let streamPort = 3666;
 
-export function setupStreamFeed() {
+export async function setupStreamFeed() {
   const streamApp = express();
   const server = http.createServer(streamApp);
     const io = new Server(server, {
@@ -46,7 +48,8 @@ export function setupStreamFeed() {
     });
   });
 
-  server.listen(3666);
+  streamPort = await getPort({port: portNumbers(3666, 3766)});
+  server.listen(streamPort);
 }
 
 export function updateSettingsToListeners() {

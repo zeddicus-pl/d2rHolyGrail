@@ -10,12 +10,14 @@ import https from 'https';
 import settingsStore from './settings';
 import { flattenObject } from '../../src/utils/objects';
 import { eventToReply } from '../main';
+import getPort, {portNumbers} from 'get-port';
 
 const httpsAgent = new https.Agent({
   rejectUnauthorized: false,
 });
 
 let silospenFallback = false;
+let silospenPort = 3766;
 
 export function fetchSilospen(event: IpcMainEvent, type: string, itemName: string) {
   const name = silospenMapping[itemName.trim()] || 'null';
@@ -45,7 +47,7 @@ export function fetchSilospen(event: IpcMainEvent, type: string, itemName: strin
         event.reply('silospenResponse', err.message)
       );
   } else {
-    const url = 'http://localhost:3667/item?version=D2R_V1_0&monsterType=BOSS&itemQuality='+type+'&party=1&players='+players+'&magicFind='+mf+'&itemId=' + encodeURIComponent(name);
+    const url = 'http://localhost:'+silospenPort+'/item?version=D2R_V1_0&monsterType=BOSS&itemQuality='+type+'&party=1&players='+players+'&magicFind='+mf+'&itemId=' + encodeURIComponent(name);
     fetch(url)
       .then((response: any) => response.json())
       .then((json: any) => {
@@ -66,13 +68,14 @@ export function fetchSilospen(event: IpcMainEvent, type: string, itemName: strin
 
 export async function runSilospenServer() {
   const jarPath = join(__dirname, './bin/DropCalc-1.0.jar');
+  silospenPort = await getPort({port: portNumbers(3766, 3866)});
   try {
     const versionList = await versions();
     if (versionList && versionList.length) {
-      execute(jarPath);
+      execute(jarPath, [ '--server.port=' + silospenPort ]); // executing async, not waiting to finish, because the process is meant to run in the background
       setTimeout(() => {
         try {
-          fetch('http://localhost:3667')
+          fetch('http://localhost:' + silospenPort)
             .then((response: Response) => {
               if (response.status !== 200) {
                 console.log('FAILED to run silospen drop calculator server (status !== 200)');
@@ -87,7 +90,7 @@ export async function runSilospenServer() {
           console.log('FAILED to run silospen drop calculator server (fetch failed)', e);
           silospenFallback = true;
         }
-      }, 5000);
+      }, 6000); // it starts up in around 3-4 seconds for me
     } else {
       console.log('NO JAVA FOUND IN SYSTEM');
       silospenFallback = true;
@@ -98,8 +101,7 @@ export async function runSilospenServer() {
   }
 }
 
-const sets: AllSilospenItems = {};
-flattenObject(getHolyGrailSeedData(null).sets, sets);
+const sets = flattenObject(getHolyGrailSeedData(null).sets, 'sets');
 
 export async function getAllDropRates() {
   const keys = Object.keys(silospenMapping);
