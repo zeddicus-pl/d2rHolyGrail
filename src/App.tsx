@@ -108,8 +108,6 @@ export function App() {
         return;
       }
       setFileReaderResponse(fileReaderResponse);
-      console.log(fileReaderResponse);
-      console.log(getHolyGrailSeedData(appSettings.current));
       if (uiState !== UiState.Reading) {
         setUiState(UiState.List);
         return;

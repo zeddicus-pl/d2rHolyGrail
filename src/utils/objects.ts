@@ -85,8 +85,8 @@ export const computeSubStats = (
 
   Object.keys(flat).forEach(itemId => {
     const item = items[itemId];
-    const etItemh = ethItems[itemId];
-    if (!item && !ethItems) {
+    const ethItem = ethItems[itemId];
+    if (!item && !ethItem) {
       return;
     }
 

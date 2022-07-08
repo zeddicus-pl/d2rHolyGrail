@@ -238,6 +238,10 @@ class ItemsStore {
           parseItems(item.socketed_items, true);
         }
         if (item.runeword_name) {
+          // super funny bug in d2s parser :D
+          if (item.runeword_name === 'Love') {
+            item.runeword_name = 'Lore';
+          }
           // we push Runewords as "items" for easier displaying in a list
           const newItem = <d2s.types.IItem>{
             runeword_name: "runeword" + simplifyItemName(item.runeword_name),

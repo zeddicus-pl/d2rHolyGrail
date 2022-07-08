@@ -53,6 +53,9 @@ export function List({ fileReaderResponse, appSettings }: ListProps) {
   
   const dingPlayer: LegacyRef<HTMLAudioElement> = useRef<HTMLAudioElement>(null);
   const playSound = () => {
+    if (!appSettings.enableSounds) {
+      return;
+    }
     dingPlayer.current?.load();
     dingPlayer.current?.play();
   };
@@ -217,15 +220,6 @@ export function List({ fileReaderResponse, appSettings }: ListProps) {
         <Trans>Rune icons from</Trans>
         &nbsp;
         <a href="https://www.deviantart.com/buckethelm" style={{ color: '#eee' }}>BucketHelm</a>
-      </div>}
-      {tab == TabState.Statistics && <div style={{ opacity: 0.3, paddingTop: 20 }}>
-        <a href="http://creativecommons.org/licenses/by/4.0/" style={{ color: '#eee' }}>
-          <img src={cc} alt="" style={{ width: 20, verticalAlign: "bottom"}} />
-        </a>
-        &nbsp;
-        <Trans>Sounds from</Trans>
-        &nbsp;
-        <a href="https://freesound.org/people/InspectorJ/" style={{ color: '#eee' }}>InspectorJ</a>
       </div>}
       <audio preload='auto' ref={dingPlayer} style={{ display: 'none' }}>
         <source src={dingSound} type="audio/mpeg" />

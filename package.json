@@ -1,13 +1,13 @@
 {
   "name": "d2rholygrail",
   "author": "Kamil Tunkiewicz <kamil.tunkiewicz(at)gmail.com>",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Scan your Diablo 2 Resurrected saves to check your Holy Grail progress",
   "main": "./.webpack/main",
   "scripts": {
     "start": "set ELECTRON_ENV=development&&electron-forge start",
     "package": "electron-forge package",
-    "build": "yarn run package && yarn run build-win && rm -rf out",
+    "build": "yarn run package && yarn run build-win",
     "build-win": "electron-builder build -w",
     "make": "electron-forge make",
     "release": "electron-forge publish",
@@ -103,7 +103,7 @@
   },
   "build": {
     "appId": "d2rHolyGrail",
-    "productName": "d2rHolyGrail",
+    "productName": "Diablo 2 Holy Grail",
     "win": {
       "target": [
         "nsis"
@@ -116,7 +116,7 @@
     "nsis": {
       "installerIcon": "./assets/install.ico",
       "uninstallerIcon": "./assets/delete.ico",
-      "uninstallDisplayName": "d2rHolyGrail",
+      "uninstallDisplayName": "Diablo 2 Holy Grail",
       "license": "./assets/license.txt",
       "oneClick": false,
       "allowToChangeInstallationDirectory": true

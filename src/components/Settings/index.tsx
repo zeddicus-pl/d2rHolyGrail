@@ -13,7 +13,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { TransitionProps } from '@mui/material/transitions';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { GameMode, GameVersion, GrailType, Settings } from '../../@types/main.d';
 import { Grid, Accordion, AccordionDetails, AccordionSummary, Divider, FormControl, MenuItem, Select, SelectChangeEvent, Checkbox, FormControlLabel } from '@mui/material';
 import FolderIcon from '@mui/icons-material/Folder';
@@ -25,6 +25,7 @@ import DropCalcSettings from './dropCalcSettings';
 import packageJson from '../../../package.json';
 import i18n from '../../i18n';
 import { settingsKeys } from '../../utils/defaultSettings';
+import cc from '../../../assets/cc.svg';
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -84,6 +85,11 @@ export default function SettingsPanel({ appSettings }: SettingsPanelProps) {
     window.Main.saveSetting(settingsKeys.grailRunewords, runewords);
   };
 
+  const handleSound = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const sound = event.target.checked;
+    window.Main.saveSetting(settingsKeys.enableSounds, sound);
+  };
+
   const handleGameVersion = (event: SelectChangeEvent) => {
     const version = (event.target.value as GameVersion);
     window.Main.saveSetting(settingsKeys.gameVersion, version);
@@ -125,7 +131,7 @@ export default function SettingsPanel({ appSettings }: SettingsPanelProps) {
             </ListItemIcon>
             <ListItemText
               primary={t("App version: ") + packageJson.version}
-              secondary={"Click here to open releases page in GitHub for changelog and older versions"}
+              secondary={t("Click here to open releases page in GitHub for changelog and older versions")}
               onClick={() => { window.Main.openUrl('https://github.com/zeddicus-pl/d2rHolyGrail/releases') }}
             />
           </ListItem>
@@ -194,8 +200,22 @@ export default function SettingsPanel({ appSettings }: SettingsPanelProps) {
                 control={<Checkbox checked={appSettings.grailRunewords} onChange={handleRunewords} />}
                 label={i18n.t`Include Runewords`}
               />
+              <FormControlLabel
+                sx={{mt: 1}}
+                control={<Checkbox checked={appSettings.enableSounds} onChange={handleSound} />}
+                label={i18n.t`Play sound when new item is found`}
+              />
             </FormControl>
           </ListItem>
+          <div style={{ opacity: 0.5, textAlign: 'right', padding: 10  }}>
+            <a href="http://creativecommons.org/licenses/by/4.0/" style={{ color: '#eee' }}>
+              <img src={cc} alt="" style={{ width: 20, verticalAlign: "bottom"}} />
+            </a>
+            &nbsp;
+            <Trans>Sounds from</Trans>
+            &nbsp;
+            <a href="https://freesound.org/people/InspectorJ/" style={{ color: '#eee' }}>InspectorJ</a>
+          </div>
           <Divider />
           <ListItem>
             <ListItemIcon>

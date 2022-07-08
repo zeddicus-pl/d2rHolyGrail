@@ -425,7 +425,7 @@ export function TabPanel(props: TabPanelProps) {
                         </ListItemIcon>
                       )}
                       <ListItemText
-                        primary={<h3>{runeword.name}</h3>}
+                        primary={<h3>{t(runeword.name)}</h3>}
                         secondary={<RuneList>{runeword.runes.map(runeName => {
                           const rune = runes && runes[runeName] && runesMapping[runes[runeName]];
                           if (!rune) return;

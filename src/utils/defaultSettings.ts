@@ -11,6 +11,7 @@ export const settingsKeys: {[name in keyof Settings]: name} = {
   grailRunes: 'grailRunes',
   grailRunewords: 'grailRunewords',
   onlyMissing: 'onlyMissing',
+  enableSounds: 'enableSounds',
 }
 
 const defaultSettings: Settings = {
@@ -24,6 +25,7 @@ const defaultSettings: Settings = {
   [settingsKeys.grailRunes]: false,
   [settingsKeys.grailRunewords]: false,
   [settingsKeys.onlyMissing]: false,
+  [settingsKeys.enableSounds]: false,
 }
 
 export default defaultSettings;
