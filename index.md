@@ -3,9 +3,9 @@
 
 ## Download
 
-[Windows 64-bit](https://github.com/zeddicus-pl/d2rHolyGrail/releases/latest/download/HolyGrail-win32-x64.zip)
+[Windows 64-bit installer](https://github.com/zeddicus-pl/d2rHolyGrail/releases/latest/download/HolyGrail-setup.exe)
 
-[MacOS](https://github.com/zeddicus-pl/d2rHolyGrail/releases/latest/download/HolyGrail-macos.zip)
+> Info: I'm not planing to spend few hundred dollars to sign this app, so forgive me the Windows warning when you run this app.
 
 ## Streamers using the app
 
@@ -16,6 +16,20 @@ I created this application for my favourite streamer [NadinWins](https://www.twi
 <iframe src="https://clips.twitch.tv/embed?clip=DreamyPlacidScallionPeoplesChamp-QfdXJQ9MKHuO9owj&parent=holygrail.link" style="margin:auto; width: 640px; height: 480px; border: 0px; max-width: 100%"></iframe>
 
 ## Changelog
+
+### v2.0.1
+- Items from D2R Shared Stash are included in the count
+- You can select from 4 main types of grail:
+  - Normal & ethereal items count as one
+  - Only normal
+  - Only ehereal
+  - Normal & Ethereal count separetely
+- Includes Runes and Runewords count (configurable)
+- Plays sound when new item is found (configurable)
+- Switch control to only show missing items
+- Automatic checking for updates
+- Improvements in UI speed
+- By default folder open dialog opens in "Saved Games" folder
 
 ### v1.7.0
 - Fixed reading new save format used in PTR games
@@ -49,29 +63,36 @@ Older versions can be found on [the releases page on GitHub](https://github.com/
 
 Welcome screen:
 
-<img width="1100" alt="Screenshot 2022-02-18 at 12 07 46" src="https://user-images.githubusercontent.com/79473394/154920597-0ee633c2-075c-478a-9a54-0b1207330a94.png">
+<img width="838" alt="image" src="https://user-images.githubusercontent.com/5413271/178063053-6940aa35-1a14-493f-8ba3-5d780d2a935d.png">
 
-Statistics screen:
+Statistics screen (simple Grail):
 
-<img width="1101" alt="Screenshot 2022-02-18 at 12 08 08" src="https://user-images.githubusercontent.com/79473394/154920611-1a783acd-2750-479a-9931-16b624a988c9.png">
+<img width="838" alt="image" src="https://user-images.githubusercontent.com/5413271/178061570-64cc1866-e51c-4405-8d89-ef801bef8f17.png">
+
+Statistics screen (normal + eth + runes + runewords Grail):
+
+<img width="788" alt="image" src="https://user-images.githubusercontent.com/5413271/178061757-c22cb983-ce4c-419d-a1d8-5a7006e2c1ee.png">
 
 Item list (automatic save reading mode):
 
-<img width="1096" alt="Screenshot 2022-02-18 at 12 08 30" src="https://user-images.githubusercontent.com/79473394/154920654-c999dec4-057d-4206-a5f4-145ceccce837.png">
+<img width="838" alt="image" src="https://user-images.githubusercontent.com/5413271/178061927-5cab7361-242f-4e4a-a140-595898963117.png">
+
+Runeword list:
+
+<img width="844" alt="image" src="https://user-images.githubusercontent.com/5413271/178062113-3a27b971-9940-4788-afc0-c7cfbe40957c.png">
 
 Item list (manual selection mode)
 
-<img width="1101" alt="Screenshot 2022-02-18 at 12 09 36" src="https://user-images.githubusercontent.com/79473394/154920850-38df8b6b-2a40-4d09-b79d-c336869446f3.png">
+<img width="838" alt="image" src="https://user-images.githubusercontent.com/5413271/178062198-77e3485e-96fd-47ff-a418-a6d1f69bebfe.png">
 
 Settings:
 
-<img width="1102" alt="Screenshot 2022-02-18 at 12 08 57" src="https://user-images.githubusercontent.com/79473394/154920878-9c658ee6-2b03-4696-86af-9eae0220ec10.png">
-
+<img width="838" alt="image" src="https://user-images.githubusercontent.com/5413271/178062250-3c055863-d1f0-4c8c-91dd-31550ed6bd3c.png">
 
 ## How to use
 
-- Download and unpack anywhere
-- Run the application
+- Install the app
+- Run it from the desktop shortcut or Start menu
 - Upon start the app will ask you to show where your saved games location is.
 
 Diablo 2 Resurrected store the saves in your home folder, in "Saved Games" folder.
