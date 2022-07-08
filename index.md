@@ -3,7 +3,7 @@
 
 ## Download
 
-[Windows 64-bit installer](https://github.com/zeddicus-pl/d2rHolyGrail/releases/latest/download/HolyGrail-setup.exe)
+[Windows 64-bit installer](https://github.com/zeddicus-pl/d2rHolyGrail/releases/latest/download/HolyGrail-win-setup.exe)
 
 > Info: I'm not planing to spend few hundred dollars to sign this app, so forgive me the Windows warning when you run this app.
 
