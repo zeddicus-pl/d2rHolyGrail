@@ -1,7 +1,9 @@
 import { IItem } from '@dschu012/d2s/lib/d2/types';
 import { ISetItems, IUniqueArmors, IUniqueOther, IUniqueWeapons } from 'd2-holy-grail/client/src/common/definitions/union/IHolyGrailData';
+import { RefObject } from 'react';
+import { runesSeed, runewordsSeed } from '../../electron/lib/holyGrailSeedData';
 import { runewordsMapping } from '../../electron/lib/runewordsMapping';
-import { GameVersion, GrailType, HolyGrailSeed, HolyGrailStats, Item, ItemsInSaves, Settings, Stats, SubStats } from '../@types/main.d';
+import { GameMode, GameVersion, GrailType, HolyGrailSeed, HolyGrailStats, Item, ItemsInSaves, Settings, Stats } from '../@types/main.d';
 
 export const simplifyItemName = (name: string): string => name.replace(/[^a-z0-9]/gi, '').toLowerCase();
 export const isRune = (item: Item | IItem): boolean => !!item.type && !!item.type.match(/^r[0-3][0-9]$/);
@@ -60,10 +62,12 @@ type StatsColl = {
   ethereal: Stats,
   runes: Stats,
   runewords: Stats,
+  uniqItemsList: string[], // list of uniq items used for finding out if new item appeared
 }
 
 export const computeSubStats = (
   items: ItemsInSaves,
+  ethItems: ItemsInSaves,
   template: {[itemId: string]: {}} | IUniqueArmors | IUniqueWeapons | IUniqueOther | ISetItems,
   settings: Settings,
   cacheKey: keyof FlatItemsCache | null,
@@ -81,23 +85,25 @@ export const computeSubStats = (
 
   Object.keys(flat).forEach(itemId => {
     const item = items[itemId];
-    if (!item) {
+    const etItemh = ethItems[itemId];
+    if (!item && !ethItems) {
       return;
     }
 
     // runes
-    if (item.type && isRune(item) && settings.grailRunes && !runesFound[itemId]) {
+    if (item && item.type && runesSeed[itemId] && settings.grailRunes && !runesFound[itemId]) {
       runesCount++;
-      runesFound[item.name] = true;
+      runesFound[itemId] = true;
       return;
     }
 
     // runewords
     if (
+      item &&
+      runewordsSeed[itemId] &&
       settings.grailRunewords &&
-      item.type === 'runeword' &&
       !runewordsFound[itemId] &&
-      !(settings.gameVersion == GameVersion.Classic && runewordsMapping[item.name].patch === 2.4)
+      !(settings.gameVersion == GameVersion.Classic && runewordsMapping[runewordsSeed[itemId]].patch === 2.4)
     ) {
       runewordsCount++;
       runewordsFound[item.name] = true;
@@ -105,19 +111,8 @@ export const computeSubStats = (
     }
 
     // items
-    let isEthereal = false;
-    let isNormal = false;
-
-    for (const saveName in item.inSaves) {
-      const saveItems = item.inSaves[saveName];
-      for (const itemInSave of saveItems) {
-        if (itemInSave.ethereal) {
-          isEthereal = true;
-        } else {
-          isNormal = true;
-        }
-      }
-    }
+    let isEthereal = !!ethItems[itemId];
+    let isNormal = !!items[itemId];
 
     if (settings.grailType === GrailType.Both && !normalFound[itemId]) {
       normalCount++;
@@ -173,26 +168,56 @@ export const computeSubStats = (
       percent: runewordsPercent > 99.5 && runewordsPercent < 100 ? 99 : Math.round(runewordsPercent),
       remaining: runewordsExists - runewordsCount,
     },
+    uniqItemsList: Object.keys({
+      ...normalFound,
+      ...runesFound,
+      ...runewordsFound
+      // when in GraiType.Each, we want to know separately about new normal and new eth items
+    }).concat(Object.keys(etherealFound).map((ethKey => settings.grailType === GrailType.Each ? 'ether' + ethKey : ethKey))),
   };
 }
 
+let prevUniqItemsFound: string[] = [];
+let prevSoundTimestamp = Date.now();
 export const computeStats = (
   items: ItemsInSaves,
+  ethItems: ItemsInSaves,
   template: HolyGrailSeed,
-  settings: Settings
+  settings: Settings,
+  playSound: null | Function = null,
 ): HolyGrailStats => {
-  const runesStats = computeSubStats(items, template.runes || {}, settings, 'runes');
-  const runewordsStats = computeSubStats(items, template.runewords || {}, settings, 'runewords');
-  const armorStats = computeSubStats(items, template.uniques.armor, settings, 'armor');
-  const weaponStats = computeSubStats(items, template.uniques.weapons, settings, 'weapon');
-  const otherStats = computeSubStats(items, template.uniques.other, settings, 'other');
-  const setsStats = computeSubStats(items, template.sets, settings, 'sets');
+  const runesStats = computeSubStats(items, ethItems, template.runes || {}, settings, 'runes');
+  const runewordsStats = computeSubStats(items, ethItems, template.runewords || {}, settings, 'runewords');
+  const armorStats = computeSubStats(items, ethItems, template.uniques.armor, settings, 'armor');
+  const weaponStats = computeSubStats(items, ethItems, template.uniques.weapons, settings, 'weapon');
+  const otherStats = computeSubStats(items, ethItems, template.uniques.other, settings, 'other');
+  const setsStats = computeSubStats(items, ethItems, template.sets, settings, 'sets');
   const normalExists = armorStats.normal.exists + weaponStats.normal.exists + otherStats.normal.exists + setsStats.normal.exists;
   const etherealExists = armorStats.ethereal.exists + weaponStats.ethereal.exists + otherStats.ethereal.exists + setsStats.ethereal.exists;
   const normalOwned = armorStats.normal.owned + weaponStats.normal.owned + otherStats.normal.owned + setsStats.normal.owned;
   const etherealOwned = armorStats.ethereal.owned + weaponStats.ethereal.owned + otherStats.ethereal.owned + setsStats.ethereal.owned;
   const normalPercent = !normalExists ? 0 : (normalOwned / normalExists) * 100;
   const etherealPercent = !etherealExists ? 0 : (etherealOwned / etherealExists) * 100;
+
+  const uniqiItemsFound = runesStats.uniqItemsList
+    .concat(runewordsStats.uniqItemsList)
+    .concat(armorStats.uniqItemsList)
+    .concat(weaponStats.uniqItemsList)
+    .concat(otherStats.uniqItemsList)
+    .concat(setsStats.uniqItemsList);
+  
+  if (settings.gameMode !== GameMode.Manual && playSound && Date.now() - prevSoundTimestamp > 1000) {
+    prevSoundTimestamp = Date.now();
+    // play sound if new item is found
+    for (const itemId of uniqiItemsFound) {
+      if (!prevUniqItemsFound.includes(itemId)) {
+        playSound();
+        break;
+      }
+    }
+  }
+  prevUniqItemsFound = uniqiItemsFound;
+
   return {
     normal: {
       armor: armorStats.normal,
@@ -222,4 +247,3 @@ export const computeStats = (
     runewords: runewordsStats.runewords,
   };
 }
-

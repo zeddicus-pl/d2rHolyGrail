@@ -30,3 +30,19 @@ export const Text = styled.div`
   text-align: center;
   text-shadow: 0 0 15px rgba(0,0,0,0.5);
 `
+
+export const CirclePercent = styled.div`
+  font-size: 70px;
+`
+
+export const CircleSub = styled.div`
+  font-size: 30px;
+`
+
+export const CircleSubNormal = styled.div`
+  padding-top: 2px;
+`
+
+export const CircleSubOther = styled.div`
+  padding-top: 4px;
+`

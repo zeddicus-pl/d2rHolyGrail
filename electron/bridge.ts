@@ -32,6 +32,9 @@ export const api = {
   saveManualItem: (itemName: string, isFound: boolean) => {
     ipcRenderer.send('saveManualItem', itemName, isFound);
   },
+  saveManualEthItem: (itemName: string, isFound: boolean) => {
+    ipcRenderer.send('saveManualEthItem', itemName, isFound);
+  },
   getAllDropRates: () => {
     ipcRenderer.send('getAllDropRates');
   },

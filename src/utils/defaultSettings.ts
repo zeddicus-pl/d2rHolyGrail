@@ -10,6 +10,7 @@ export const settingsKeys: {[name in keyof Settings]: name} = {
   grailType: 'grailType',
   grailRunes: 'grailRunes',
   grailRunewords: 'grailRunewords',
+  onlyMissing: 'onlyMissing',
 }
 
 const defaultSettings: Settings = {
@@ -22,6 +23,7 @@ const defaultSettings: Settings = {
   [settingsKeys.grailType]: GrailType.Both,
   [settingsKeys.grailRunes]: false,
   [settingsKeys.grailRunewords]: false,
+  [settingsKeys.onlyMissing]: false,
 }
 
 export default defaultSettings;

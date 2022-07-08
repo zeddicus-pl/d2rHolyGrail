@@ -6,7 +6,7 @@ import { existsSync, promises } from 'fs';
 import { basename, extname, join, resolve, sep } from 'path';
 import { IpcMainEvent } from 'electron/renderer';
 import { readdirSync } from 'original-fs';
-import { FileReaderResponse, GameMode, Item, ItemDetails } from '../../src/@types/main.d';
+import { FileReaderResponse, GameMode, GrailType, Item, ItemDetails } from '../../src/@types/main.d';
 import storage from 'electron-json-storage';
 import chokidar, { FSWatcher } from 'chokidar';
 import { getHolyGrailSeedData } from './holyGrailSeedData';
@@ -28,6 +28,7 @@ class ItemsStore {
   constructor() {
     this.currentData = {
       items: {},
+      ethItems: {},
       stats: {},
       availableRunes: {},
     };
@@ -45,13 +46,17 @@ class ItemsStore {
   loadManualItems = () => {
     const data = (storage.getSync('manualItems') as FileReaderResponse);
     if (!data.items) {
-      storage.set('manualItems', { items: {}, stats: {} }, (err) => {
+      storage.set('manualItems', { items: {}, ethItems: {}, stats: {} }, (err) => {
         if (err) {
           console.log(err);
         }
       });
-      this.currentData = { items: {}, stats: {}, availableRunes: {} }
+      this.currentData = { items: {}, ethItems: {}, stats: {}, availableRunes: {} }
     } else {
+      // for compatibility with older manual items format
+      if (!data.ethItems) {
+        data.ethItems = {};
+      }
       this.currentData = data;
     }
   }
@@ -61,6 +66,19 @@ class ItemsStore {
       this.currentData.items[itemId] = <Item>{};
     } else if (this.currentData.items[itemId]) {
       delete (this.currentData.items[itemId]);
+    }
+    storage.set('manualItems', this.currentData, (err) => {
+      if (err) {
+        console.log(err);
+      }
+    });
+  }
+  
+  saveManualEthItem = (itemId: string, isFound: boolean) => {
+    if (isFound) {
+      this.currentData.ethItems[itemId] = <Item>{};
+    } else if (this.currentData.ethItems[itemId]) {
+      delete (this.currentData.ethItems[itemId]);
     }
     storage.set('manualItems', this.currentData, (err) => {
       if (err) {
@@ -99,9 +117,10 @@ class ItemsStore {
     return resolved.substring(0, 1) + resolved.substring(1).split(sep).join('/') + '/*.{d2s,sss,d2x,d2i}';
   }
 
-  parseSaves = async (event: IpcMainEvent, path: string, userRequested: boolean) => {
+  parseSaves = async (event: IpcMainEvent, path: string, userRequested: boolean, playSounds: boolean = false) => {
     const results: FileReaderResponse = {
       items: {},
+      ethItems: {},
       stats: {},
       availableRunes: {}
     };
@@ -169,18 +188,19 @@ class ItemsStore {
               ilevel: item.level,
               socketed: !!item.socketed,
             }
-            if (results.items[name]) {
-              if (!results.items[name].inSaves[saveName]) {
-                results.items[name].inSaves[saveName] = [];
+            let key: 'items' | 'ethItems' = settings.grailType === GrailType.Each &&   savedItem.ethereal ? 'ethItems' : 'items';
+            if (results[key][name]) {
+              if (!results[key][name].inSaves[saveName]) {
+                results[key][name].inSaves[saveName] = [];
               }
-              results.items[name].inSaves[saveName].push(savedItem);
+              results[key][name].inSaves[saveName].push(savedItem);
             } else {
-              results.items[name] = {
+              results[key][name] = {
                 name,
                 inSaves: {},
                 type: item.type,
               }
-              results.items[name].inSaves[saveName] = [ savedItem ];
+              results[key][name].inSaves[saveName] = [ savedItem ];
             }
             results.stats[saveName] = (results.stats[saveName] || 0) + 1;
           });
@@ -292,7 +312,7 @@ class ItemsStore {
       console.log('re-reading files!');
       this.readingFiles = true;
       this.filesChanged = false;
-      await this.parseSaves(eventToReply, this.watchPath, false);
+      await this.parseSaves(eventToReply, this.watchPath, false, true);
       this.readingFiles = false;
     }
   }

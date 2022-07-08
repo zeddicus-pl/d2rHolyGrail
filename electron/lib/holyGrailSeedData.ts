@@ -4,14 +4,14 @@ import { simplifyItemName } from '../../src/utils/objects';
 import { runesMapping } from './runesMapping';
 import { runewordsMapping } from './runewordsMapping';
 
-const runesSeed: {[runeId: string]: {}} = {};
-Object.values(runesMapping).forEach(rune => {
-  runesSeed[rune.name.toLowerCase()] = {}
+export const runesSeed: {[runeId: string]: string} = {};
+Object.keys(runesMapping).forEach(runeId => {
+  runesSeed[runesMapping[runeId].name.toLowerCase()] = runeId;
 })
 
-const runewordsSeed: {[runewordId: string]: {}} = {};
+export const runewordsSeed: {[runewordId: string]: string} = {};
 Object.keys(runewordsMapping).forEach(runewordName => {
-  runewordsSeed['runeword' + simplifyItemName(runewordName)] = {}
+  runewordsSeed['runeword' + simplifyItemName(runewordName)] = runewordName;
 })
 
 export const getHolyGrailSeedData = (settings: Settings | null): HolyGrailSeed => {

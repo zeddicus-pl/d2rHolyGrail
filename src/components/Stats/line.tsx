@@ -5,13 +5,18 @@ type StatisticsLineProps = {
   title: string,
   stats: Stats,
   bold?: boolean,
+  bolder?: boolean,
 }
 
-export function StatisticsLine({ title, stats, bold }: StatisticsLineProps) {
+export function StatisticsLine({ title, stats, bold, bolder }: StatisticsLineProps) {
   return (
     <TableRow
       sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-      style={ bold ? { background: '#222', fontWeight: 'bold' } : {}}
+      style={Object.assign(
+        {},
+        bold ? { background: '#222', fontWeight: 'bold' } : {},
+        bolder ? { background: '#333' } : {}
+      )}
     >
       <TableCell>{title}</TableCell>
       <TableCell>{stats.exists}</TableCell>

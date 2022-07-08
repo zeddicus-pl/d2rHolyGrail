@@ -125,6 +125,12 @@ async function registerListeners () {
     event.reply('openFolder', itemsDatabase.getItems());
     updateDataToListeners();
   });
+  ipcMain.on('saveManualEthItem', (event, itemId, isFound) => {
+    eventToReply = event;
+    itemsDatabase.saveManualEthItem(itemId, isFound);
+    event.reply('openFolder', itemsDatabase.getItems());
+    updateDataToListeners();
+  });
   ipcMain.on('getAllDropRates', (event) => {
     eventToReply = event;
     getAllDropRates();

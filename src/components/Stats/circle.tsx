@@ -3,6 +3,7 @@ import { CircularProgressbarWithChildren, buildStyles } from 'react-circular-pro
 import { useTranslation } from 'react-i18next';
 import { ProgressProvider } from "./animation";
 import 'react-circular-progressbar/dist/styles.css';
+import { CirclePercent, CircleSub, CircleSubNormal, CircleSubOther } from "./styles";
 
 type Props = {
     animated?: boolean,
@@ -25,7 +26,11 @@ const Circle = ({ animated, owned, total, percent, subOwned, subTotal }: Props) 
                 trailColor: '#333',
             })}
         >
-            <div>{percent}%</div>
+            <CirclePercent>{percent}%</CirclePercent>
+            <CircleSub>
+                <CircleSubNormal>{owned} / {total}</CircleSubNormal>
+                {subTotal && <CircleSubOther>{subOwned} / {subTotal}</CircleSubOther>}
+            </CircleSub>
         </CircularProgressbarWithChildren>
     );
     return (

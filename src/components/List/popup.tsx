@@ -32,10 +32,19 @@ type PopupProps = {
   itemType: string,
   children: ReactChild,
   saveFiles: {[saveName: string]: ItemDetails[]},
+  ethSaveFiles: {[saveName: string]: ItemDetails[]},
   appSettings: Settings,
 }
 
-export default function Popup({ itemType, itemName, fullItemName, saveFiles, children, appSettings }: PopupProps) {
+export default function Popup({
+  itemType,
+  itemName,
+  fullItemName,
+  saveFiles,
+  children,
+  appSettings,
+  ethSaveFiles
+}: PopupProps) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [drop, setDrop] = useState<ReactChild | null>(null);
@@ -84,7 +93,7 @@ export default function Popup({ itemType, itemName, fullItemName, saveFiles, chi
         fullWidth
       >
         <DialogTitle sx={{ m: 0, p: 2 }}>
-          <Typography variant="h4">{t(fullItemName)}</Typography>
+          <Typography variant="h4">{fullItemName}</Typography>
           <IconButton
               aria-label="close"
               onClick={handleClose}
@@ -100,14 +109,33 @@ export default function Popup({ itemType, itemName, fullItemName, saveFiles, chi
             {saveFiles && Object.keys(saveFiles).length ?
               <small style={{ fontSize: '11pt', fontWeight: 'normal' }}>
                 {Object.keys(saveFiles).map(saveFile => <Chip
-                    key={saveFile}
-                    label={saveFiles[saveFile].length > 1 ? saveFile + ' x' + saveFiles[saveFile].length : saveFile}
+                  key={saveFile}
+                  label={
+                    saveFiles[saveFile].length > 1
+                      ? <>{saveFile}<sub>&nbsp;x{saveFiles[saveFile].length}</sub></>
+                      : saveFile
+                  }
+                  style={{ marginRight: 5 }}
+                />)}
+              </small>
+            : null}
+            {ethSaveFiles && Object.keys(ethSaveFiles).length ?
+              <small style={{ fontSize: '11pt', fontWeight: 'normal' }}>
+                {Object.keys(ethSaveFiles).map(saveFile => <Chip
+                  variant='outlined'
+                  key={saveFile}
+                  label={
+                    ethSaveFiles[saveFile].length > 1
+                    ? <>{saveFile}<sub>&nbsp;x{ethSaveFiles[saveFile].length}</sub></>
+                      : saveFile
+                  }
+                  style={{ marginRight: 5 }}
                 />)}
               </small>
             : null}
         </DialogTitle>
         <DialogContent dividers>
-          <h4 style={{ marginBottom: 20 }}>
+          <div style={{ marginBottom: 20 }}>
             {t('Item info on Diablo2.io')}
             <Typography variant="subtitle2">
               <a
@@ -120,23 +148,21 @@ export default function Popup({ itemType, itemName, fullItemName, saveFiles, chi
                 {diablo2ioUrl}
               </a>
             </Typography>
-          </h4>
+          </div>
           <Grid container spacing={0}>
             <Grid item xs={6}>
-              <h4>
-                {t('Silospen.com drop calculator')}
-                <Typography variant="subtitle2">
-                  <a
-                    href="#"
-                    onClick={() => { window.Main.openUrl('https://dropcalc.silospen.com/') }}
-                    style={{
-                      fontSize: '10pt',
-                    }}
-                  >
-                    https://dropcalc.silospen.com/
-                  </a>
-                </Typography>
-              </h4>
+              {t('Silospen.com drop calculator')}
+              <Typography variant="subtitle2">
+                <a
+                  href="#"
+                  onClick={() => { window.Main.openUrl('https://dropcalc.silospen.com/') }}
+                  style={{
+                    fontSize: '10pt',
+                  }}
+                >
+                  https://dropcalc.silospen.com/
+                </a>
+              </Typography>
             </Grid>
             <Grid item xs={6}>
               <Grid container spacing={0} alignItems="center">

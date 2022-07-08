@@ -4,11 +4,8 @@ import { FileReaderResponse, Settings } from '../@types/main.d';
 import { useTranslation } from 'react-i18next';
 import { Grid, createTheme } from '@mui/material';
 import { getHolyGrailSeedData } from '../../electron/lib/holyGrailSeedData';
-import { CircularProgressbarWithChildren, buildStyles } from 'react-circular-progressbar';
-import { ProgressProvider } from '../components/Stats/animation';
 import { ThemeProvider } from '@mui/system';
 import { GlobalStyle } from '../styles/GlobalStyle';
-import { Win } from '../components/Stats/win';
 import { computeStats } from '../utils/objects';
 
 import { Header, Container } from './styles';
@@ -17,8 +14,8 @@ import { Statistics } from '../components/Stats';
 
 export default function StreamApp() {
   const [settings, setSettings] = useState<Settings>({} as Settings);
-  const [data, setData] = useState<FileReaderResponse>({ items: {}, stats: {}, availableRunes: {} });
-  const totalStats = useMemo(() => computeStats(data.items, getHolyGrailSeedData(settings), settings), [data, settings]);
+  const [data, setData] = useState<FileReaderResponse>({ items: {}, ethItems: {}, stats: {}, availableRunes: {} });
+  const totalStats = useMemo(() => computeStats(data.items, data.ethItems, getHolyGrailSeedData(settings), settings), [data, settings]);
   const { t, i18n } = useTranslation();
 
   useEffect(() => {

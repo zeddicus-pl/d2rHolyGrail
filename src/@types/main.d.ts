@@ -29,6 +29,14 @@ export type SavesHistory = {
 
 export type FileReaderResponse = {
   items: ItemsInSaves,
+  ethItems: ItemsInSaves,
+  stats: SaveFileStats,
+  availableRunes: {[runeType: string]: Item}
+}
+
+export type ParsedFileReaderResponse = {
+  items: ItemsInSaves,
+  ethItems: ItemsInSaves,
   stats: SaveFileStats,
   availableRunes: {[runeType: string]: Item}
 }
@@ -74,11 +82,12 @@ export type Settings = {
   grailRunes: boolean,
   grailRunewords: boolean,
   gameVersion: GameVersion,
+  onlyMissing: boolean,
 }
 
 export type HolyGrailSeed = IHolyGrailData & {
-  runes?: {[runeId: string]: {}},
-  runewords?: {[runewordId: string]: {}},
+  runes?: {[runeId: string]: string},
+  runewords?: {[runewordId: string]: string},
 }
 
 export type HolyGrailStats = {

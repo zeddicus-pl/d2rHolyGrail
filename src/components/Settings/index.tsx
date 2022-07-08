@@ -238,10 +238,10 @@ export default function SettingsPanel({ appSettings }: SettingsPanelProps) {
               <Typography>{t("Streaming tools")}</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Typography>{t("To add a progress overlay into your stream, add a Browser source in your OBS, and point it to the below address. Set it to 300x300 width and heigth.")}</Typography>
+              <Typography>{t("To add a progress overlay into your stream, add a Browser source in your OBS, and point it to the below address. Set it to 300x400 width and heigth.")}</Typography>
               <Typography><a onClick={() => { window.Main.openUrl("http://localhost:"+streamPort+"/") }}>http://localhost:{streamPort}/</a></Typography>
               <div style={{ paddingTop: 15 }}>
-                <iframe ref={iframeRef} style={{ width: 300, height: 300, background: '#000', border: 0 }} />
+                <iframe ref={iframeRef} style={{ width: 300, height: 400, background: '#000', border: 0 }} />
               </div>
             </AccordionDetails>
           </Accordion>

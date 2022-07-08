@@ -35,7 +35,7 @@ export function Statistics({ stats, noAnimation, appSettings, holyGrailStats, on
   let owned: number = 0;
   let total: number = 0;
   
-  const grandOwned = holyGrailStats.normal.total.owned + holyGrailStats.ethereal.total.owned;
+  const grandOwned = holyGrailStats.normal.total.owned + holyGrailStats.ethereal.total.owned
     + (appSettings.grailRunes ? holyGrailStats.runes.owned : 0)
     + (appSettings.grailRunewords ? holyGrailStats.runewords.owned : 0);
   const grandExists = holyGrailStats.normal.total.exists + holyGrailStats.ethereal.total.exists
@@ -120,19 +120,20 @@ export function Statistics({ stats, noAnimation, appSettings, holyGrailStats, on
               </TableHead>
               <TableBody>
                 {showNormal && <StatisticsLine title={t("Unique armor")} stats={holyGrailStats.normal.armor} />}
-                {showEthereal && <StatisticsLine title={t("Ethereal unique armor")} stats={holyGrailStats.ethereal.armor} />}
                 {showNormal && <StatisticsLine title={t("Unique weapons")} stats={holyGrailStats.normal.weapon} />}
-                {showEthereal && <StatisticsLine title={t("Ethereal unique weapons")} stats={holyGrailStats.ethereal.weapon} />}
                 {showNormal && <StatisticsLine title={t("Unique other")} stats={holyGrailStats.normal.other} />}
-                {showEthereal && <StatisticsLine title={t("Ethereal unique other")} stats={holyGrailStats.ethereal.other} />}
                 {showNormal && <StatisticsLine title={t("Sets")} stats={holyGrailStats.normal.sets} />}
+                {showEthereal && <StatisticsLine title={t("Ethereal unique armor")} stats={holyGrailStats.ethereal.armor} />}
+                {showEthereal && <StatisticsLine title={t("Ethereal unique weapons")} stats={holyGrailStats.ethereal.weapon} />}
+                {showEthereal && <StatisticsLine title={t("Ethereal unique other")} stats={holyGrailStats.ethereal.other} />}
                 {showEthereal && <StatisticsLine title={t("Ethereal sets")} stats={holyGrailStats.ethereal.sets} />}
-                {appSettings.grailRunes && <StatisticsLine title={t("Runes")} stats={holyGrailStats.runes} />}
-                {appSettings.grailRunewords && <StatisticsLine title={t("Runewords")} stats={holyGrailStats.runewords} />}
-                {showNormal && appSettings.grailType !== GrailType.Each && <StatisticsLine bold title={t("Total")} stats={holyGrailStats.normal.total} />}
+                {appSettings.grailRunes && <StatisticsLine title={t("Runes")} bold stats={holyGrailStats.runes} />}
+                {appSettings.grailRunewords && <StatisticsLine title={t("Runewords")} bold stats={holyGrailStats.runewords} />}
+                {showNormal && appSettings.grailType !== GrailType.Each && <StatisticsLine bolder title={t("Total")} stats={grandTotal} />}
                 {showNormal && appSettings.grailType === GrailType.Each && <StatisticsLine bold title={t("Total normal")} stats={holyGrailStats.normal.total} />}
-                {showEthereal && <StatisticsLine bold title={t("Total ethereal")} stats={holyGrailStats.ethereal.total} />}
-                {appSettings.grailType === GrailType.Each && <StatisticsLine bold title={t("Total")} stats={grandTotal} />}
+                {showEthereal && appSettings.grailType === GrailType.Each && <StatisticsLine bold title={t("Total ethereal")} stats={holyGrailStats.ethereal.total} />}
+                {showEthereal && appSettings.grailType !== GrailType.Each && <StatisticsLine bolder title={t("Total")} stats={grandTotal} />}
+                {appSettings.grailType === GrailType.Each && <StatisticsLine bolder title={t("Total")} stats={grandTotal} />}
               </TableBody>
             </Table>
           </TableContainer>

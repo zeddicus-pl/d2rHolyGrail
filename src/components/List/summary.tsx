@@ -32,7 +32,7 @@ export function Summary({ fileReaderResponse, appSettings, holyGrailStats }: Lis
   const [ working, setWorking ] = useState(false);
   const [ rendering, setRendering ] = useState(false);
   const [ mode, setMode ] = useState('');
-  const { items, stats } = fileReaderResponse;
+  const { items, ethItems, stats } = fileReaderResponse;
 
   const copyToClip: MouseEventHandler<HTMLButtonElement> = () => {
     setMode('copy');
@@ -158,6 +158,7 @@ export function Summary({ fileReaderResponse, appSettings, holyGrailStats }: Lis
                   value={TabState.Statistics}
                   index={TabState.Statistics}
                   player={items}
+                  ethPlayer={ethItems}
                   stats={stats}
                   search=""
                   noFileSummary
@@ -169,6 +170,7 @@ export function Summary({ fileReaderResponse, appSettings, holyGrailStats }: Lis
                   value={TabState.UniqueArmor}
                   index={TabState.UniqueArmor}
                   items={holyGrailSeedData.uniques.armor}
+                  ethPlayer={ethItems}
                   player={items}
                   search=" "
                   appSettings={appSettings}
@@ -179,6 +181,7 @@ export function Summary({ fileReaderResponse, appSettings, holyGrailStats }: Lis
                   index={TabState.UniqueWeapons}
                   items={holyGrailSeedData.uniques.weapons}
                   player={items}
+                  ethPlayer={ethItems}
                   search=" "
                   appSettings={appSettings}
                   holyGrailStats={holyGrailStats}
@@ -188,6 +191,7 @@ export function Summary({ fileReaderResponse, appSettings, holyGrailStats }: Lis
                   index={TabState.UniqueOther}
                   items={holyGrailSeedData.uniques.other}
                   player={items}
+                  ethPlayer={ethItems}
                   search=" "
                   appSettings={appSettings}
                   holyGrailStats={holyGrailStats}
@@ -197,6 +201,28 @@ export function Summary({ fileReaderResponse, appSettings, holyGrailStats }: Lis
                   index={TabState.Sets}
                   sets={holyGrailSeedData.sets}
                   player={items}
+                  ethPlayer={ethItems}
+                  search=" "
+                  appSettings={appSettings}
+                  holyGrailStats={holyGrailStats}
+                />
+                <TabPanel
+                  value={TabState.Runes}
+                  index={TabState.Runes}
+                  runes={holyGrailSeedData.runes}
+                  player={items}
+                  ethPlayer={ethItems}
+                  search=" "
+                  appSettings={appSettings}
+                  holyGrailStats={holyGrailStats}
+                />
+                <TabPanel
+                  value={TabState.Runewords}
+                  index={TabState.Runewords}
+                  runewords={holyGrailSeedData.runewords}
+                  runes={holyGrailSeedData.runes}
+                  player={items}
+                  ethPlayer={ethItems}
                   search=" "
                   appSettings={appSettings}
                   holyGrailStats={holyGrailStats}

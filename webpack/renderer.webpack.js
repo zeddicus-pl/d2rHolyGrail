@@ -15,6 +15,7 @@ module.exports = {
         // By outputing it to ""./stream" it outputs to root of "stream" public files and to "/stream" in "main_window"
         // public files
         { context: "./public/fonts", from: "*.woff2", to: "./stream" },
+        { context: "./public/fonts", from: "*.ttf", to: "./stream" },
       ],
     }),
   ],

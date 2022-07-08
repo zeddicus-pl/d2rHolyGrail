@@ -48,3 +48,56 @@ export const CountLabel = styled.div`
   color: rgb(97, 97, 97);
   font-size: 8.5pt;
 `
+
+export const Rune = styled.div`
+  position: relative;
+  width: 40px;
+  height: 40px;
+  font-size: 30px;
+  text-align: center;
+  display: inline-block;
+  margin-right: 10px;
+  vertical-align: middle;
+  cursor: pointer;
+`
+
+export const RuneBg = styled.img`
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+`
+
+export const RuneIcon = styled.div`
+  z-index: 2;
+  position: relative;
+  background: none;
+  color: #333;
+  display: inline-block;
+  font-family: "D2Runes";
+`
+
+export const RuneList = styled.div`
+  padding-top: 5px;
+  > div {
+    width: 24px;
+    height: 24px;
+    font-size: 17px;
+    margin-bottom: 23px;
+  }
+`
+
+export const RuneName = styled.div`
+  font-variant: all-small-caps;
+  position: absolute;
+  left: 50%;
+  display: inline-block;
+  bottom: -21px;
+  transform: translateX(-50%);
+`
+
+export const MissingOnlySwitch = styled.div`
+  text-align: right;
+`

@@ -5,11 +5,9 @@
   "description": "Scan your Diablo 2 Resurrected saves to check your Holy Grail progress",
   "main": "./.webpack/main",
   "scripts": {
-    "start": "ELECTRON_ENV=development electron-forge start",
-    "start-win": "set ELECTRON_ENV=development&&electron-forge start",
+    "start": "set ELECTRON_ENV=development&&electron-forge start",
     "package": "electron-forge package",
-    "build": "yarn run package && yarn run build-mac && yarn run build-win && rm -rf out",
-    "build-mac": "electron-builder build -m",
+    "build": "yarn run package && yarn run build-win && rm -rf out",
     "build-win": "electron-builder build -w",
     "make": "electron-forge make",
     "release": "electron-forge publish",
