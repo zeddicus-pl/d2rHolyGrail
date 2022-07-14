@@ -101,3 +101,30 @@ export const RuneName = styled.div`
 export const MissingOnlySwitch = styled.div`
   text-align: right;
 `
+
+export const CheckboxCounter = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  font-size: 12px;
+`
+
+export const CheckboxCounterButtons = styled.div`
+  position: absolute;
+  left: -6px;
+  top: -9px;
+  width: 31px;
+  height: 59px;
+
+  > button {
+    padding: 0;
+    min-width: 30px;
+    line-height: 19px;
+    z-index: 100;
+  }
+
+  > button:nth-child(2) {
+    top: 21px;
+  }
+`

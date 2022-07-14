@@ -15,7 +15,10 @@ import { Statistics } from '../components/Stats';
 export default function StreamApp() {
   const [settings, setSettings] = useState<Settings>({} as Settings);
   const [data, setData] = useState<FileReaderResponse>({ items: {}, ethItems: {}, stats: {}, availableRunes: {} });
-  const totalStats = useMemo(() => computeStats(data.items, data.ethItems, getHolyGrailSeedData(settings), settings), [data, settings]);
+  const totalStats = useMemo(
+    () => computeStats(data.items, data.ethItems, getHolyGrailSeedData(settings, false), getHolyGrailSeedData(settings, true), settings),
+    [data, settings]
+  );
   const { t, i18n } = useTranslation();
 
   useEffect(() => {

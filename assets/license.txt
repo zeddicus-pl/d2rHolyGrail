@@ -1,7 +1,16 @@
+CHANGELOG:
+v.2.1.0
+  - fixed number of items to complete in Ethereal Holy Grail
+  - removed 4 always-ethereal items from the "normal" list when in "normal" and "separetely counted" Grail mode
+  - fixed the "ding" sound not to play when changing settings
+  - fixed missing items display in manual mode
+
+LICENCE:
+
 I created this software just because I love crafting things, especially
 if someone else find it helpful and fun to use. This is just a side project
 for me, therefore I give it to you "as is". Feel free to use, distribute
-and modify it, like the licence below says:
+and modify it, like the licence below says.
 
 ---
 

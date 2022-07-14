@@ -21,7 +21,8 @@ type StatsProps = {
 }
 
 export function Statistics({ stats, noAnimation, appSettings, holyGrailStats, onlyCircle }: StatsProps) {
-  const holyGrailSeedData = getHolyGrailSeedData(appSettings)
+  const holyGrailSeedData = getHolyGrailSeedData(appSettings, false)
+  const ethGrailSeedData = getHolyGrailSeedData(appSettings, true)
   const { t } = useTranslation();
 
   const showNormal = appSettings.grailType !== GrailType.Ethereal;
@@ -126,7 +127,6 @@ export function Statistics({ stats, noAnimation, appSettings, holyGrailStats, on
                 {showEthereal && <StatisticsLine title={t("Ethereal unique armor")} stats={holyGrailStats.ethereal.armor} />}
                 {showEthereal && <StatisticsLine title={t("Ethereal unique weapons")} stats={holyGrailStats.ethereal.weapon} />}
                 {showEthereal && <StatisticsLine title={t("Ethereal unique other")} stats={holyGrailStats.ethereal.other} />}
-                {showEthereal && <StatisticsLine title={t("Ethereal sets")} stats={holyGrailStats.ethereal.sets} />}
                 {appSettings.grailRunes && <StatisticsLine title={t("Runes")} bold stats={holyGrailStats.runes} />}
                 {appSettings.grailRunewords && <StatisticsLine title={t("Runewords")} bold stats={holyGrailStats.runewords} />}
                 {showNormal && appSettings.grailType !== GrailType.Each && <StatisticsLine bolder title={t("Total")} stats={grandTotal} />}

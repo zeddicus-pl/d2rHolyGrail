@@ -10,7 +10,7 @@ import { FileReaderResponse, GameMode, GrailType, Item, ItemDetails } from '../.
 import storage from 'electron-json-storage';
 import chokidar, { FSWatcher } from 'chokidar';
 import { getHolyGrailSeedData } from './holyGrailSeedData';
-import { flattenObject, isRune, simplifyItemName } from '../../src/utils/objects';
+import { buildFlattenObjectCacheKey, flattenObject, isRune, simplifyItemName } from '../../src/utils/objects';
 import { eventToReply, setEventToReply } from '../main';
 import settingsStore from './settings';
 import { updateDataToListeners } from './stream';
@@ -24,6 +24,7 @@ class ItemsStore {
   watchPath: string | null;
   filesChanged: boolean;
   readingFiles: boolean;
+  itemNotes: {[itemName: string]: string};
 
   constructor() {
     this.currentData = {
@@ -36,6 +37,7 @@ class ItemsStore {
     this.watchPath = null;
     this.filesChanged = false;
     this.readingFiles = false;
+    this.itemNotes = {};
     setInterval(this.tickReader, 500);
   }
 
@@ -61,9 +63,15 @@ class ItemsStore {
     }
   }
 
-  saveManualItem = (itemId: string, isFound: boolean) => {
-    if (isFound) {
-      this.currentData.items[itemId] = <Item>{};
+  saveManualItem = (itemId: string, count: number) => {
+    if (count > 0) {
+      this.currentData.items[itemId] = <Item>{
+        inSaves: {
+          "Manual entry": new Array(count).fill(<ItemDetails>{}),
+        },
+        name: '',
+        type: '',
+      };
     } else if (this.currentData.items[itemId]) {
       delete (this.currentData.items[itemId]);
     }
@@ -74,9 +82,15 @@ class ItemsStore {
     });
   }
   
-  saveManualEthItem = (itemId: string, isFound: boolean) => {
-    if (isFound) {
-      this.currentData.ethItems[itemId] = <Item>{};
+  saveManualEthItem = (itemId: string, count: number) => {
+    if (count > 0) {
+      this.currentData.ethItems[itemId] = <Item>{
+        inSaves: {
+          "Manual entry": new Array(count).fill(<ItemDetails>{}),
+        },
+        name: '',
+        type: '',
+      };
     } else if (this.currentData.ethItems[itemId]) {
       delete (this.currentData.ethItems[itemId]);
     }
@@ -151,7 +165,8 @@ class ItemsStore {
 
     // prepare item list
     const settings = settingsStore.getSettings();
-    const flatItems = flattenObject(getHolyGrailSeedData(settings));
+    const flatItems = flattenObject(getHolyGrailSeedData(settings, false), buildFlattenObjectCacheKey('all', settings));
+    const ethFlatItems = flattenObject(getHolyGrailSeedData(settings, true), 'ethall');
 
     const promises = files.map((file) => {
       const saveName = basename(file).replace(".d2s", "").replace(".sss", "").replace(".d2x", "").replace(".d2i", "");
@@ -178,7 +193,7 @@ class ItemsStore {
               name = runesMapping[item.type].name.toLowerCase();
             } else if (item.type === 'runeword') {
               name = item.runeword_name;
-            } else if (!flatItems[name]) {
+            } else if (!flatItems[name] || (item.ethereal && !ethFlatItems[name])) {
               return;
             } else if (name === '') {
               return;

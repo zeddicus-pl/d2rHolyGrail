@@ -4,7 +4,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import { Container, Image, Logo } from './styles';
 import { TabPanel } from './tab';
 import { useTranslation } from 'react-i18next';
-import { FileReaderResponse, HolyGrailStats, Settings } from '../../@types/main.d';
+import { FileReaderResponse, GameMode, GrailType, HolyGrailStats, Settings } from '../../@types/main.d';
 import { toast } from 'material-react-toastify';
 import html2canvas from 'html2canvas';
 import CloseIcon from '@mui/icons-material/Close';
@@ -99,7 +99,8 @@ export function Summary({ fileReaderResponse, appSettings, holyGrailStats }: Lis
     }, 500);
   }
  
-  const holyGrailSeedData = getHolyGrailSeedData(appSettings);
+  const holyGrailSeedData = getHolyGrailSeedData(appSettings, false);
+  const ethGrailSeedData = getHolyGrailSeedData(appSettings, true);
  
   return (
     <>
@@ -169,6 +170,7 @@ export function Summary({ fileReaderResponse, appSettings, holyGrailStats }: Lis
                 <TabPanel
                   value={TabState.UniqueArmor}
                   index={TabState.UniqueArmor}
+                  ethItems={ethGrailSeedData.uniques.armor}
                   items={holyGrailSeedData.uniques.armor}
                   ethPlayer={ethItems}
                   player={items}
@@ -179,6 +181,7 @@ export function Summary({ fileReaderResponse, appSettings, holyGrailStats }: Lis
                 <TabPanel
                   value={TabState.UniqueWeapons}
                   index={TabState.UniqueWeapons}
+                  ethItems={ethGrailSeedData.uniques.weapons}
                   items={holyGrailSeedData.uniques.weapons}
                   player={items}
                   ethPlayer={ethItems}
@@ -189,6 +192,7 @@ export function Summary({ fileReaderResponse, appSettings, holyGrailStats }: Lis
                 <TabPanel
                   value={TabState.UniqueOther}
                   index={TabState.UniqueOther}
+                  ethItems={ethGrailSeedData.uniques.other}
                   items={holyGrailSeedData.uniques.other}
                   player={items}
                   ethPlayer={ethItems}
@@ -196,37 +200,41 @@ export function Summary({ fileReaderResponse, appSettings, holyGrailStats }: Lis
                   appSettings={appSettings}
                   holyGrailStats={holyGrailStats}
                 />
-                <TabPanel
-                  value={TabState.Sets}
-                  index={TabState.Sets}
-                  sets={holyGrailSeedData.sets}
-                  player={items}
-                  ethPlayer={ethItems}
-                  search=" "
-                  appSettings={appSettings}
-                  holyGrailStats={holyGrailStats}
-                />
-                <TabPanel
-                  value={TabState.Runes}
-                  index={TabState.Runes}
-                  runes={holyGrailSeedData.runes}
-                  player={items}
-                  ethPlayer={ethItems}
-                  search=" "
-                  appSettings={appSettings}
-                  holyGrailStats={holyGrailStats}
-                />
-                <TabPanel
-                  value={TabState.Runewords}
-                  index={TabState.Runewords}
-                  runewords={holyGrailSeedData.runewords}
-                  runes={holyGrailSeedData.runes}
-                  player={items}
-                  ethPlayer={ethItems}
-                  search=" "
-                  appSettings={appSettings}
-                  holyGrailStats={holyGrailStats}
-                />
+                {appSettings.grailType !== GrailType.Ethereal &&
+                  <>
+                    <TabPanel
+                      value={TabState.Sets}
+                      index={TabState.Sets}
+                      sets={holyGrailSeedData.sets}
+                      player={items}
+                      ethPlayer={{}}
+                      search=" "
+                      appSettings={appSettings}
+                      holyGrailStats={holyGrailStats}
+                    />
+                    <TabPanel
+                      value={TabState.Runes}
+                      index={TabState.Runes}
+                      runes={holyGrailSeedData.runes}
+                      player={items}
+                      ethPlayer={{}}
+                      search=" "
+                      appSettings={appSettings}
+                      holyGrailStats={holyGrailStats}
+                    />
+                    <TabPanel
+                      value={TabState.Runewords}
+                      index={TabState.Runewords}
+                      runewords={holyGrailSeedData.runewords}
+                      runes={holyGrailSeedData.runes}
+                      player={items}
+                      ethPlayer={{}}
+                      search=" "
+                      appSettings={appSettings}
+                      holyGrailStats={holyGrailStats}
+                    />
+                  </>
+                }
               </Container>
             </div>
           }

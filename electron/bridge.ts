@@ -29,18 +29,14 @@ export const api = {
   loadManualItems: () => {
     ipcRenderer.send('loadManualItems');
   },
-  saveManualItem: (itemName: string, isFound: boolean) => {
-    ipcRenderer.send('saveManualItem', itemName, isFound);
+  saveManualItem: (itemName: string, count: number) => {
+    ipcRenderer.send('saveManualItem', itemName, count);
   },
-  saveManualEthItem: (itemName: string, isFound: boolean) => {
-    ipcRenderer.send('saveManualEthItem', itemName, isFound);
+  saveManualEthItem: (itemName: string, count: number) => {
+    ipcRenderer.send('saveManualEthItem', itemName, count);
   },
   getAllDropRates: () => {
     ipcRenderer.send('getAllDropRates');
-  },
-  on: (channel: string, callback: Function) => {
-    ipcRenderer.removeAllListeners(channel);
-    ipcRenderer.on(channel, (_, data) => callback(data))
   },
   isWindows: () => {
     return process.platform.includes('win');
@@ -53,7 +49,17 @@ export const api = {
   },
   getStreamPort: () => {
     return ipcRenderer.sendSync('getStreamPort');
-  }
+  },
+  getItemNote: (itemName: string) => {
+    return ipcRenderer.sendSync('getItemNote', itemName);
+  },
+  setItemNote: (itemName: string, note: string) => {
+    ipcRenderer.send('setItemNode', itemName, note);
+  },
+  on: (channel: string, callback: Function) => {
+    ipcRenderer.removeAllListeners(channel);
+    ipcRenderer.on(channel, (_, data) => callback(data))
+  },
 }
 
 contextBridge.exposeInMainWorld('Main', api)

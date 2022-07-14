@@ -119,15 +119,15 @@ async function registerListeners () {
     event.reply('openFolder', itemsDatabase.getItems());
     updateDataToListeners();
   });
-  ipcMain.on('saveManualItem', (event, itemId, isFound) => {
+  ipcMain.on('saveManualItem', (event, itemId, count) => {
     eventToReply = event;
-    itemsDatabase.saveManualItem(itemId, isFound);
+    itemsDatabase.saveManualItem(itemId, count);
     event.reply('openFolder', itemsDatabase.getItems());
     updateDataToListeners();
   });
-  ipcMain.on('saveManualEthItem', (event, itemId, isFound) => {
+  ipcMain.on('saveManualEthItem', (event, itemId, count) => {
     eventToReply = event;
-    itemsDatabase.saveManualEthItem(itemId, isFound);
+    itemsDatabase.saveManualEthItem(itemId, count);
     event.reply('openFolder', itemsDatabase.getItems());
     updateDataToListeners();
   });

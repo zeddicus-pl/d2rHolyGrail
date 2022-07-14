@@ -1,6 +1,6 @@
 import { IItem } from '@dschu012/d2s/lib/d2/types';
+import { IEthGrailData, IEthUniqueArmors, IEthUniqueOther, IEthUniqueWeapons } from 'd2-holy-grail/client/src/common/definitions/union/IEthGrailData';
 import { ISetItems, IUniqueArmors, IUniqueOther, IUniqueWeapons } from 'd2-holy-grail/client/src/common/definitions/union/IHolyGrailData';
-import { RefObject } from 'react';
 import { runesSeed, runewordsSeed } from '../../electron/lib/holyGrailSeedData';
 import { runewordsMapping } from '../../electron/lib/runewordsMapping';
 import { GameMode, GameVersion, GrailType, HolyGrailSeed, HolyGrailStats, Item, ItemsInSaves, Settings, Stats } from '../@types/main.d';
@@ -9,14 +9,27 @@ export const simplifyItemName = (name: string): string => name.replace(/[^a-z0-9
 export const isRune = (item: Item | IItem): boolean => !!item.type && !!item.type.match(/^r[0-3][0-9]$/);
 
 export type ItemNames = {[itemId: string]: {}};
-type FlatItemsCache = {
+export type FlatItemsCache = {
   runes: ItemNames,
   runewords: ItemNames,
   armor: ItemNames,
   weapon: ItemNames,
   other: ItemNames,
+  weaponE: ItemNames,
+  otherE: ItemNames,
   sets: ItemNames,
   all: ItemNames,
+  allR: ItemNames,
+  allW: ItemNames,
+  allRW: ItemNames,
+  allE: ItemNames,
+  allRE: ItemNames,
+  allWE: ItemNames,
+  allRWE: ItemNames,
+  ethall: ItemNames,
+  etharmor: ItemNames,
+  ethweapon: ItemNames,
+  ethother: ItemNames,
 }
 const flatItemsCache: FlatItemsCache = {
   runes: {},
@@ -24,9 +37,27 @@ const flatItemsCache: FlatItemsCache = {
   armor: {},
   weapon: {},
   other: {},
+  weaponE: {},
+  otherE: {},
   sets: {},
   all: {},
+  allR: {},
+  allW: {},
+  allRW: {},
+  allE: {},
+  allRE: {},
+  allWE: {},
+  allRWE: {},
+  etharmor: {},
+  ethweapon: {},
+  ethother: {},
+  ethall: {},
 };
+
+export const buildFlattenObjectCacheKey = (cacheKey: keyof FlatItemsCache, settings: Settings): keyof FlatItemsCache => {
+  const shouldHideNormalEthItems = settings.grailType === GrailType.Each || settings.grailType === GrailType.Normal;
+  return `${cacheKey}${settings.grailRunes ? 'R' : ''}${settings.grailRunewords ? 'W' : ''}${shouldHideNormalEthItems ? 'E' : ''}` as keyof FlatItemsCache;
+}
 
 // Flattens an object recursively, taking only the key names
 export const flattenObject = (
@@ -68,11 +99,18 @@ type StatsColl = {
 export const computeSubStats = (
   items: ItemsInSaves,
   ethItems: ItemsInSaves,
-  template: {[itemId: string]: {}} | IUniqueArmors | IUniqueWeapons | IUniqueOther | ISetItems,
+  template: {[itemId: string]: {}} | IUniqueArmors | IUniqueWeapons | IUniqueOther | ISetItems | null,
+  ethTemplate: {[itemId: string]: {}} | IEthUniqueArmors | IEthUniqueWeapons | IEthUniqueOther | null,
   settings: Settings,
   cacheKey: keyof FlatItemsCache | null,
 ): StatsColl => {
-  const flat = flattenObject(template, cacheKey);
+  const normalFlat = template ? flattenObject(template, cacheKey) : {};
+  /* @ts-ignore */
+  const ethFlat = ethTemplate ? flattenObject(ethTemplate, 'eth' + cacheKey) : {};
+  const flat = {
+    ...normalFlat,
+    ...ethFlat,
+  }
 
   let runesCount = 0;
   const runesFound: {[runeId: string]: boolean} = {};
@@ -133,9 +171,9 @@ export const computeSubStats = (
   const runewordsExists = settings.grailRunewords
     ? settings.gameVersion === GameVersion.Resurrected ? 85 : 78
     : 0;
-  const normalExists = settings.grailType !== GrailType.Ethereal ? Object.keys(flat).length : 0;
+  const normalExists = settings.grailType !== GrailType.Ethereal ? Object.keys(normalFlat).length : 0;
   const etherealExists = settings.grailType === GrailType.Ethereal || settings.grailType === GrailType.Each
-    ? Object.keys(flat).length
+    ? Object.keys(ethFlat).length
     : 0;
 
   const runesPercent = !runesExists ? 0 : (runesCount / runesExists) * 100;
@@ -179,23 +217,29 @@ export const computeSubStats = (
 
 let prevUniqItemsFound: string[] = [];
 let prevSoundTimestamp = Date.now();
+export const clearPrevUniqItemsFound = () => {
+  prevUniqItemsFound = [];
+  prevSoundTimestamp = Date.now();
+}
 export const computeStats = (
   items: ItemsInSaves,
   ethItems: ItemsInSaves,
   template: HolyGrailSeed,
+  ethTemplate: IEthGrailData,
   settings: Settings,
   playSound: null | Function = null,
 ): HolyGrailStats => {
-  const runesStats = computeSubStats(items, ethItems, template.runes || {}, settings, 'runes');
-  const runewordsStats = computeSubStats(items, ethItems, template.runewords || {}, settings, 'runewords');
-  const armorStats = computeSubStats(items, ethItems, template.uniques.armor, settings, 'armor');
-  const weaponStats = computeSubStats(items, ethItems, template.uniques.weapons, settings, 'weapon');
-  const otherStats = computeSubStats(items, ethItems, template.uniques.other, settings, 'other');
-  const setsStats = computeSubStats(items, ethItems, template.sets, settings, 'sets');
+  const shouldHideNormalEthItems = settings.grailType === GrailType.Each || settings.grailType === GrailType.Normal;
+  const runesStats =  computeSubStats(items, ethItems, template.runes || null, null, settings, 'runes');
+  const runewordsStats = computeSubStats(items, ethItems, template.runewords || null, null, settings, 'runewords');
+  const armorStats = computeSubStats(items, ethItems, template.uniques.armor, ethTemplate.uniques.armor, settings, 'armor');
+  const weaponStats = computeSubStats(items, ethItems, template.uniques.weapons, ethTemplate.uniques.weapons, settings, `weapon${shouldHideNormalEthItems ? 'E' : ''}`);
+  const otherStats = computeSubStats(items, ethItems, template.uniques.other, ethTemplate.uniques.other, settings, `other${shouldHideNormalEthItems ? 'E' : ''}`);
+  const setsStats = computeSubStats(items, ethItems, template.sets, null, settings, 'sets');
   const normalExists = armorStats.normal.exists + weaponStats.normal.exists + otherStats.normal.exists + setsStats.normal.exists;
-  const etherealExists = armorStats.ethereal.exists + weaponStats.ethereal.exists + otherStats.ethereal.exists + setsStats.ethereal.exists;
+  const etherealExists = armorStats.ethereal.exists + weaponStats.ethereal.exists + otherStats.ethereal.exists;
   const normalOwned = armorStats.normal.owned + weaponStats.normal.owned + otherStats.normal.owned + setsStats.normal.owned;
-  const etherealOwned = armorStats.ethereal.owned + weaponStats.ethereal.owned + otherStats.ethereal.owned + setsStats.ethereal.owned;
+  const etherealOwned = armorStats.ethereal.owned + weaponStats.ethereal.owned + otherStats.ethereal.owned;
   const normalPercent = !normalExists ? 0 : (normalOwned / normalExists) * 100;
   const etherealPercent = !etherealExists ? 0 : (etherealOwned / etherealExists) * 100;
 
@@ -209,10 +253,12 @@ export const computeStats = (
   if (settings.gameMode !== GameMode.Manual && playSound && Date.now() - prevSoundTimestamp > 1000) {
     prevSoundTimestamp = Date.now();
     // play sound if new item is found
-    for (const itemId of uniqiItemsFound) {
-      if (!prevUniqItemsFound.includes(itemId)) {
-        playSound();
-        break;
+    if (prevUniqItemsFound.length) {
+      for (const itemId of uniqiItemsFound) {
+        if (!prevUniqItemsFound.includes(itemId)) {
+          playSound();
+          break;
+        }
       }
     }
   }

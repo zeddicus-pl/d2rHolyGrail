@@ -4,7 +4,7 @@ import { Container, Image, Logo, ButtonPanel, MissingOnlySwitch } from './styles
 import { TabPanel } from './tab';
 import SettingsPanel from '../Settings'
 import { Trans, useTranslation } from 'react-i18next';
-import { FileReaderResponse, Settings } from '../../@types/main.d';
+import { FileReaderResponse, GrailType, Settings } from '../../@types/main.d';
 import { Search } from '../Search';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';import DoneIcon from '@mui/icons-material/Done';
@@ -62,15 +62,20 @@ export function List({ fileReaderResponse, appSettings }: ListProps) {
 
   const { items, ethItems, stats } = fileReaderResponse;
   const holyGrailSeedData = useMemo(
-    () => getHolyGrailSeedData(appSettings),
+    () => getHolyGrailSeedData(appSettings, false),
     [
       appSettings.grailRunes,
       appSettings.grailRunewords,
+      appSettings.grailType,
     ]
+  );
+  const ethGrailSeedData = useMemo(
+    () => getHolyGrailSeedData(appSettings, true),
+    []
   );
 
   const holyGrailStats = useMemo(
-    () => computeStats(items, ethItems, holyGrailSeedData, appSettings, playSound),
+    () => computeStats(items, ethItems, holyGrailSeedData, ethGrailSeedData, appSettings, playSound),
     [
       items,
       ethItems,
@@ -128,9 +133,13 @@ export function List({ fileReaderResponse, appSettings }: ListProps) {
             <Tab label={t("Unique armor")} />
             <Tab label={t("Unique weapons")} />
             <Tab label={t("Unique other")} />
-            <Tab label={t("Sets")} />
-            {appSettings.grailRunes && <Tab label={t("Runes")} />} 
-            {appSettings.grailRunewords && <Tab label={t("Runeswords")} />}
+            {appSettings.grailType !== GrailType.Ethereal &&
+              [
+                <Tab label={t("Sets")} />,
+                appSettings.grailRunes && <Tab label={t("Runes")} />,
+                appSettings.grailRunewords && <Tab label={t("Runeswords")} />,
+              ]
+            }
           </Tabs> 
         : null}
       </Box>
@@ -141,7 +150,7 @@ export function List({ fileReaderResponse, appSettings }: ListProps) {
           label={<small><Trans>Only missing items</Trans></small>}
         />
       </MissingOnlySwitch>}
-      <TabPanel
+      {(search.length || tab === TabState.Statistics) && <TabPanel
         value={search.length ? TabState.None : tab}
         index={TabState.Statistics}
         player={items}
@@ -150,68 +159,75 @@ export function List({ fileReaderResponse, appSettings }: ListProps) {
         search=""
         appSettings={appSettings}
         holyGrailStats={holyGrailStats}
-      />
-      <TabPanel
+      />}
+      {(search.length || tab === TabState.UniqueArmor) && <TabPanel
         value={search.length ? TabState.UniqueArmor : tab}
         index={TabState.UniqueArmor}
+        ethItems={ethGrailSeedData.uniques.armor}
         items={holyGrailSeedData.uniques.armor}
         player={items}
         ethPlayer={ethItems}
         search={search}
         appSettings={appSettings}
         holyGrailStats={holyGrailStats}
-      />
-      <TabPanel
+      />}
+      {(search.length || tab === TabState.UniqueWeapons) && <TabPanel
         value={search.length ? TabState.UniqueWeapons : tab}
         index={TabState.UniqueWeapons}
+        ethItems={ethGrailSeedData.uniques.weapons}
         items={holyGrailSeedData.uniques.weapons}
         player={items}
         ethPlayer={ethItems}
         search={search}
         appSettings={appSettings}
         holyGrailStats={holyGrailStats}
-      />
-      <TabPanel
+      />}
+      {(search.length || tab === TabState.UniqueOther) && <TabPanel
         value={search.length ? TabState.UniqueOther : tab}
         index={TabState.UniqueOther}
+        ethItems={ethGrailSeedData.uniques.other}
         items={holyGrailSeedData.uniques.other}
         player={items}
         ethPlayer={ethItems}
         search={search}
         appSettings={appSettings}
         holyGrailStats={holyGrailStats}
-      />
-      <TabPanel
-        value={search.length ? TabState.Sets : tab}
-        index={TabState.Sets}
-        sets={holyGrailSeedData.sets}
-        player={items}
-        ethPlayer={ethItems}
-        search={search}
-        appSettings={appSettings}
-        holyGrailStats={holyGrailStats}
-      />
-      <TabPanel
-        value={search.length ? TabState.Runes : tab}
-        index={TabState.Runes}
-        runes={holyGrailSeedData.runes}
-        player={items}
-        ethPlayer={ethItems}
-        search={search}
-        appSettings={appSettings}
-        holyGrailStats={holyGrailStats}
-      />
-      <TabPanel
-        value={search.length ? TabState.Runewords : tab}
-        index={TabState.Runewords}
-        runewords={holyGrailSeedData.runewords}
-        runes={holyGrailSeedData.runes}
-        player={items}
-        ethPlayer={ethItems}
-        search={search}
-        appSettings={appSettings}
-        holyGrailStats={holyGrailStats}
-      />
+      />}
+      {appSettings.grailType !== GrailType.Ethereal &&
+        <>
+          {(search.length || tab === TabState.Sets) && <TabPanel
+            value={search.length ? TabState.Sets : tab}
+            index={TabState.Sets}
+            sets={holyGrailSeedData.sets}
+            player={items}
+            ethPlayer={{}}
+            search={search}
+            appSettings={appSettings}
+            holyGrailStats={holyGrailStats}
+          />}
+          {(search.length || tab === TabState.Runes) && <TabPanel
+            value={search.length ? TabState.Runes : tab}
+            index={TabState.Runes}
+            runes={holyGrailSeedData.runes}
+            player={items}
+            ethPlayer={{}}
+            search={search}
+            appSettings={appSettings}
+            holyGrailStats={holyGrailStats}
+          />}
+          {(search.length || tab === TabState.Runewords) && <TabPanel
+            value={search.length ? TabState.Runewords : tab}
+            index={TabState.Runewords}
+            runewords={holyGrailSeedData.runewords}
+            runes={holyGrailSeedData.runes}
+            player={items}
+            ethPlayer={{}}
+            search={search}
+            appSettings={appSettings}
+            holyGrailStats={holyGrailStats}
+          />}
+        </>
+      }
       {(tab == TabState.Runes || tab == TabState.Runewords) && <div style={{ opacity: 0.3, paddingTop: 20 }}>
         <a href="http://creativecommons.org/licenses/by/3.0/" style={{ color: '#eee' }}>
           <img src={cc} alt="" style={{ width: 20, verticalAlign: "bottom"}} />

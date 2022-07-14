@@ -1,8 +1,10 @@
 import { holyGrailSeedData as original } from 'd2-holy-grail/client/src/common/seeds/HolyGrailSeedData';
-import { HolyGrailSeed, Settings } from '../../src/@types/main';
+import { ethGrailSeedData } from 'd2-holy-grail/client/src/common/seeds/EthGrailSeedData';
+import { GrailType, HolyGrailSeed, Settings } from '../../src/@types/main';
 import { simplifyItemName } from '../../src/utils/objects';
 import { runesMapping } from './runesMapping';
 import { runewordsMapping } from './runewordsMapping';
+import { IEthGrailData } from 'd2-holy-grail/client/src/common/definitions/union/IEthGrailData';
 
 export const runesSeed: {[runeId: string]: string} = {};
 Object.keys(runesMapping).forEach(runeId => {
@@ -14,7 +16,12 @@ Object.keys(runewordsMapping).forEach(runewordName => {
   runewordsSeed['runeword' + simplifyItemName(runewordName)] = runewordName;
 })
 
-export const getHolyGrailSeedData = (settings: Settings | null): HolyGrailSeed => {
+export function getHolyGrailSeedData(settings: Settings | null, ethereal: false): HolyGrailSeed;
+export function getHolyGrailSeedData(settings: Settings | null, ethereal: true): IEthGrailData;
+export function getHolyGrailSeedData(settings: Settings | null, ethereal: boolean): HolyGrailSeed | IEthGrailData {
+  if (ethereal === true) {
+    return ethGrailSeedData;
+  }
   const holyGrailSeedData: HolyGrailSeed = {
     ...original,
     uniques: {
@@ -51,6 +58,12 @@ export const getHolyGrailSeedData = (settings: Settings | null): HolyGrailSeed =
         },
       }
     },
+  }
+  if (settings && (settings.grailType === GrailType.Each || settings.grailType === GrailType.Normal)) {
+    holyGrailSeedData.uniques.weapons.throwing.elite && delete(holyGrailSeedData.uniques.weapons.throwing.elite['Wraith Flight']);
+    holyGrailSeedData.uniques.weapons['axe (2-h)'].elite && delete(holyGrailSeedData.uniques.weapons['axe (2-h)'].elite['Ethereal Edge']);
+    holyGrailSeedData.uniques.weapons.dagger.elite && delete(holyGrailSeedData.uniques.weapons.dagger.elite['Ghostflame']);
+    holyGrailSeedData.uniques.other.classes.assasin && delete(holyGrailSeedData.uniques.other.classes.assasin['Shadow Killer']);
   }
   if (settings && settings.grailRunes) {
     holyGrailSeedData['runes'] = runesSeed;

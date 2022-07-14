@@ -1,4 +1,3 @@
-import * as d2s from '@dschu012/d2s';
 import { IHolyGrailData } from 'd2-holy-grail/client/src/common/definitions/union/IHolyGrailData';
 
 export type SaveFileStats = {

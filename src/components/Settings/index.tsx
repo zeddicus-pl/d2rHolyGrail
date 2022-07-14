@@ -26,6 +26,7 @@ import packageJson from '../../../package.json';
 import i18n from '../../i18n';
 import { settingsKeys } from '../../utils/defaultSettings';
 import cc from '../../../assets/cc.svg';
+import { clearPrevUniqItemsFound } from '../../utils/objects';
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -65,23 +66,31 @@ export default function SettingsPanel({ appSettings }: SettingsPanelProps) {
     setOpen(false);
   };
 
+  const handleOpenFolder = () => {
+    window.Main.openFolder();
+  };
+
   const handleGameMode = (event: SelectChangeEvent) => {
     const gameMode = (event.target.value as GameMode);
+    clearPrevUniqItemsFound();
     window.Main.saveSetting(settingsKeys.gameMode, gameMode);
   };
 
   const handleGrailType = (event: SelectChangeEvent) => {
     const grailType = (event.target.value as GrailType);
+    clearPrevUniqItemsFound();
     window.Main.saveSetting(settingsKeys.grailType, grailType);
   };
 
   const handleRunes = (event: React.ChangeEvent<HTMLInputElement>) => {
     const runes = event.target.checked;
+    clearPrevUniqItemsFound();
     window.Main.saveSetting(settingsKeys.grailRunes, runes);
   };
 
   const handleRunewords = (event: React.ChangeEvent<HTMLInputElement>) => {
     const runewords = event.target.checked;
+    clearPrevUniqItemsFound();
     window.Main.saveSetting(settingsKeys.grailRunewords, runewords);
   };
 
@@ -143,7 +152,7 @@ export default function SettingsPanel({ appSettings }: SettingsPanelProps) {
             <ListItemText
               primary={t("Saved games folder")}
               secondary={appSettings.saveDir || ''}
-              onClick={() => { window.Main.openFolder() }}
+              onClick={handleOpenFolder}
             />
           </ListItem>
           <Divider />

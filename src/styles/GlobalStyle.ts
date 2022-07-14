@@ -166,4 +166,7 @@ export const GlobalStyle = createGlobalStyle`
     fill: none;
     stroke-width: 1;
   }
+
+  .checkboxWithButtons button { display: none }
+  .checkboxWithButtons:hover button { display: block }
 `

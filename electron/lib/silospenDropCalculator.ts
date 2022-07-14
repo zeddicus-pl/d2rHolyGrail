@@ -5,7 +5,7 @@ import fetch, { Response } from 'node-fetch';
 import { silospenMapping } from './silospenMapping';
 import { getHolyGrailSeedData } from './holyGrailSeedData';
 import { execute, versions } from 'njar';
-import { SilospenItem, AllSilospenItems } from '../../src/@types/main.d';
+import { SilospenItem } from '../../src/@types/main.d';
 import https from 'https';
 import settingsStore from './settings';
 import { flattenObject } from '../../src/utils/objects';
@@ -101,7 +101,7 @@ export async function runSilospenServer() {
   }
 }
 
-const sets = flattenObject(getHolyGrailSeedData(null).sets, 'sets');
+const sets = flattenObject(getHolyGrailSeedData(null, false).sets, 'sets');
 
 export async function getAllDropRates() {
   const keys = Object.keys(silospenMapping);
