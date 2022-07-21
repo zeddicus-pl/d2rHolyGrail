@@ -1,4 +1,4 @@
-import { Box, Typography, Grid, List, ListItem, ListItemIcon, ListItemText, ListItemButton, Checkbox } from '@mui/material';
+import { Box, Typography, Grid, List, ListItem, ListItemIcon, ListItemText, ListItemButton, Checkbox, Icon, IconButton, Tooltip } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import { Trans, useTranslation } from 'react-i18next';
 import DoneIcon from '@mui/icons-material/Done';
@@ -6,7 +6,7 @@ import merge from "ts-deepmerge";
 
 import { IUniqueArmors, IUniqueWeapons, IUniqueOther, ISetItems } from 'd2-holy-grail/client/src/common/definitions/union/IHolyGrailData';
 import { IEthUniqueArmors, IEthUniqueOther, IEthUniqueWeapons } from 'd2-holy-grail/client/src/common/definitions/union/IEthGrailData';
-import { GameMode, GrailType, HolyGrailStats, ItemsInSaves, SaveFileStats, Settings } from '../../@types/main.d';
+import { AvailableRunes, GameMode, GrailType, HolyGrailStats, ItemNotes, ItemsInSaves, SaveFileStats, Settings } from '../../@types/main.d';
 
 import runeBgImg from '../../../assets/rune.svg';
 
@@ -14,12 +14,13 @@ import { TabState, title } from '.';
 import Popup from './popup';
 import { Statistics } from '../Stats';
 import { ChangeEvent, MouseEvent } from 'react';
-import { FlatItemsCache, flattenObject, simplifyItemName } from '../../utils/objects';
-import { CountLabel, CountLabelContainer, Rune, RuneBg, RuneIcon, RuneList, RuneName } from './styles';
+import { countInSaves, FlatItemsCache, flattenObject, getRuneRecipe, simplifyItemName } from '../../utils/objects';
+import { AvailableRunesLine, CountLabel, CountLabelContainer, Rune, RuneBg, RuneIcon, RuneList, RuneName } from './styles';
 import { runesMapping } from '../../../electron/lib/runesMapping';
 import { runewordsMapping } from '../../../electron/lib/runewordsMapping';
 import RunePopup from './runePopup';
 import ManualControl from './manualControl';
+import { Comment, Info, InfoOutlined } from '@mui/icons-material';
 
 type TabPanelProps = {
   index: number,
@@ -37,6 +38,8 @@ type TabPanelProps = {
   noAnimation?: boolean,
   appSettings: Settings,
   holyGrailStats: HolyGrailStats,
+  itemNotes?: ItemNotes,
+  availableRunes?: AvailableRunes,
 };
 
 const getRuneIcon = (runeType: string): string => {
@@ -77,7 +80,8 @@ const getCacheKey = (tabIndex: TabState, ethereal: boolean, grailType: GrailType
 }
 
 export function TabPanel(props: TabPanelProps) {
-  const { value, index, items, ethItems, sets, runes, runewords, player, ethPlayer, stats, search, noFileSummary, noAnimation, appSettings, holyGrailStats } = props;
+  const { value, index, items, ethItems, sets, runes, runewords, player, ethPlayer, stats, search,
+    noFileSummary, noAnimation, appSettings, holyGrailStats, itemNotes = {}, availableRunes = {} } = props;
   const { gameMode, grailType } = appSettings;
   const { t } = useTranslation();
 
@@ -137,7 +141,7 @@ export function TabPanel(props: TabPanelProps) {
             const simplified = simplifyItemName(key);
             if ((flatItems[simplified] && !player[simplified])
             || (ethFlatItems[simplified] && !ethPlayer[simplified])
-            || (runewords && !player['runeword' + simplified])) {
+            || (runewords && !player[simplified])) {
               out[key] = object[key];
             }
           }
@@ -148,8 +152,6 @@ export function TabPanel(props: TabPanelProps) {
       itemList = filterWithOnlyMissing(runewords || runes || itemList);
     }
   }
-
-  console.log('itemList', itemList);
 
   const handleStatusChange = (event: ChangeEvent<HTMLInputElement>, itemName: string) => {
     event.stopPropagation();
@@ -189,12 +191,12 @@ export function TabPanel(props: TabPanelProps) {
       {value === index && items && (
         <Box sx={{ p: 3, pt: 0 }}>
           {Object.keys((itemList as any)).map((type) => {
-            return <div key={type}>
+            return <div key={type+index}>
               <Typography variant="h6" gutterBottom mt={2} component="div">{t(title(type))}</Typography>
               {
                   <Grid container spacing={2}>
                   {Object.keys((itemList as any)[type]).map((dif) =>
-                    <Grid item md={4} key={dif}>
+                    <Grid item md={4} key={type+dif+index}>
                       <Typography variant="subtitle1" gutterBottom component="div">{t(title(dif))}</Typography>
                       <List
                         sx={{ width: '100%', bgcolor: 'background.paper' }}
@@ -207,12 +209,19 @@ export function TabPanel(props: TabPanelProps) {
                               itemName={itemName}
                               fullItemName={t(itemFullName)}
                               itemType="UNIQUE"
-                              key={itemName}
+                              key={index+type+dif+itemName}
                               saveFiles={player[itemName] ? player[itemName].inSaves : {}}
                               ethSaveFiles={ethPlayer[itemName] ? ethPlayer[itemName].inSaves : {}}
                               appSettings={appSettings}
+                              itemNote={itemNotes[itemName]}
                             >
-                              <ListItem disablePadding style={{color: player[itemName] || ethPlayer[itemName] ? grey[400] : grey[700]}}>
+                              <ListItem
+                                disablePadding
+                                style={{color: player[itemName] || ethPlayer[itemName] ? grey[400] : grey[700]}}
+                                secondaryAction={itemNotes[itemName] ? <Tooltip title={itemNotes[itemName]}>
+                                  <InfoOutlined fontSize='small' color='disabled' />
+                                </Tooltip> : null}
+                              >
                                 <ListItemButton>
                                   {gameMode !== GameMode.Manual && <>
                                     {ethPlayer[itemName] ? (
@@ -223,12 +232,7 @@ export function TabPanel(props: TabPanelProps) {
                                         {
                                           ethPlayer[itemName] &&
                                           Object.keys(ethPlayer[itemName].inSaves).length > 1 &&
-                                          <CountLabel className="countLabel">x{
-                                            Object.values(ethPlayer[itemName].inSaves).reduce(
-                                              (count, items) => count + items.length,
-                                              0
-                                            )
-                                          }</CountLabel>
+                                          <CountLabel className="countLabel">x{countInSaves(ethPlayer[itemName])}</CountLabel>
                                         }
                                       </CountLabelContainer>
                                     ) : <div style={{ width: 32, display: 'inline-block' }}></div>}
@@ -240,12 +244,7 @@ export function TabPanel(props: TabPanelProps) {
                                         {
                                           player[itemName] &&
                                           Object.keys(player[itemName].inSaves).length > 1 &&
-                                          <CountLabel className="countLabel">x{
-                                            Object.values(player[itemName].inSaves).reduce(
-                                              (count, items) => count + items.length,
-                                              0
-                                            )
-                                          }</CountLabel>
+                                          <CountLabel className="countLabel">x{countInSaves(player[itemName])}</CountLabel>
                                         }
                                       </CountLabelContainer>
                                     ) : <div style={{ width: 56, display: 'inline-block' }}></div>}
@@ -288,7 +287,7 @@ export function TabPanel(props: TabPanelProps) {
         {
             <Grid container spacing={2}>
             {Object.keys((itemList as any)).map((set) =>
-              <Grid item md={4} key={set}>
+              <Grid item md={4} key={index+set}>
                 <Typography variant="h6" gutterBottom mt={2} component="div">{t(title(set))}</Typography>
                 <List
                   sx={{ width: '100%', bgcolor: 'background.paper' }}
@@ -301,47 +300,46 @@ export function TabPanel(props: TabPanelProps) {
                         itemName={itemName}
                         fullItemName={t(itemFullName)}
                         itemType="SET"
-                        key={itemName}
+                        key={index+set+itemName}
                         saveFiles={player[itemName] ? player[itemName].inSaves : {}}
                         ethSaveFiles={ethPlayer[itemName] ? ethPlayer[itemName].inSaves : {}}
                         appSettings={appSettings}
+                        itemNote={itemNotes[itemName]}
                       >
-                        <ListItem disablePadding key={itemName} style={{color: player[itemName] || ethPlayer[itemName] ? grey[400] : grey[700]}}>
+                        <ListItem
+                          disablePadding
+                          style={{color: player[itemName] || ethPlayer[itemName] ? grey[400] : grey[700]}}
+                          secondaryAction={itemNotes[itemName] ? <Tooltip title={itemNotes[itemName]}>
+                            <InfoOutlined fontSize='small' color='disabled' />
+                          </Tooltip> : null}
+                        >
                           <ListItemButton>
-                            {gameMode !== GameMode.Manual && ethPlayer[itemName] ? (
-                              <CountLabelContainer>
-                                <ListItemIcon className="ethCheckbox" style={{ minWidth: 32 }}>
-                                  <DoneIcon />
-                                </ListItemIcon>
-                                {
-                                  ethPlayer[itemName] &&
-                                  Object.keys(ethPlayer[itemName].inSaves).length > 1 &&
-                                  <CountLabel className="countLabel">x{
-                                    Object.values(ethPlayer[itemName].inSaves).reduce(
-                                      (count, items) => count + items.length,
-                                      0
-                                    )
-                                  }</CountLabel>
-                                }
-                              </CountLabelContainer>
-                            ) : <div style={{ width: 32, display: 'inline-block' }}></div>}
-                            {gameMode !== GameMode.Manual && player[itemName] ? (
-                              <CountLabelContainer>
-                                <ListItemIcon>
-                                  <DoneIcon />
-                                </ListItemIcon>
-                                {
-                                  player[itemName] &&
-                                  Object.keys(player[itemName].inSaves).length > 1 &&
-                                  <CountLabel className="countLabel">x{
-                                    Object.values(player[itemName].inSaves).reduce(
-                                      (count, items) => count + items.length,
-                                      0
-                                    )
-                                  }</CountLabel>
-                                }
-                              </CountLabelContainer>
-                            ) : <div style={{ width: 56, display: 'inline-block' }}></div>}
+                            {gameMode !== GameMode.Manual && <>
+                              {ethPlayer[itemName] ? (
+                                <CountLabelContainer>
+                                  <ListItemIcon className="ethCheckbox" style={{ minWidth: 32 }}>
+                                    <DoneIcon />
+                                  </ListItemIcon>
+                                  {
+                                    ethPlayer[itemName] &&
+                                    Object.keys(ethPlayer[itemName].inSaves).length > 1 &&
+                                    <CountLabel className="countLabel">x{countInSaves(ethPlayer[itemName])}</CountLabel>
+                                  }
+                                </CountLabelContainer>
+                              ) : <div style={{ width: 32, display: 'inline-block' }}></div>}
+                              {player[itemName] ? (
+                                <CountLabelContainer>
+                                  <ListItemIcon>
+                                    <DoneIcon />
+                                  </ListItemIcon>
+                                  {
+                                    player[itemName] &&
+                                    Object.keys(player[itemName].inSaves).length > 1 &&
+                                    <CountLabel className="countLabel">x{countInSaves(player[itemName])}</CountLabel>
+                                  }
+                                </CountLabelContainer>
+                              ) : <div style={{ width: 56, display: 'inline-block' }}></div>}
+                            </>}
                             {gameMode === GameMode.Manual && (
                               <ListItemIcon>
                                 <ManualControl
@@ -381,17 +379,23 @@ export function TabPanel(props: TabPanelProps) {
               const runeId = (itemList as any)[itemName];
               if (!runeId) return;
               const rune = runesMapping[runeId];
-              return <Grid item md={3} sm={4} xs={6} key={itemName}>
+              return <Grid item sm={4} xs={6} key={index+itemName}>
                 <RunePopup
                   itemName={itemName}
                   fullItemName={rune.name}
                   itemType={runeId}
-                  key={itemName}
                   saveFiles={player[itemName] ? player[itemName].inSaves : {}}
                   appSettings={appSettings}
                   disabled={!player[itemName]}
+                  itemNote={itemNotes[itemName]}
                 >
-                  <ListItem disablePadding key={itemName} style={{color: player[itemName] ? grey[400] : grey[700]}}>
+                  <ListItem
+                    disablePadding
+                    style={{color: player[itemName] ? grey[400] : grey[700]}}
+                    secondaryAction={itemNotes[itemName] ? <Tooltip title={itemNotes[itemName]}>
+                      <InfoOutlined fontSize='small' color='disabled' />
+                    </Tooltip> : null}
+                  >
                     <ListItemButton>
                       {gameMode !== GameMode.Manual && player[itemName] ? (
                         <CountLabelContainer>
@@ -401,12 +405,7 @@ export function TabPanel(props: TabPanelProps) {
                           {
                             player[itemName] &&
                             Object.keys(player[itemName].inSaves).length > 1 &&
-                            <CountLabel className="countLabel">x{
-                              Object.values(player[itemName].inSaves).reduce(
-                                (count, items) => count + items.length,
-                                0
-                              )
-                            }</CountLabel>
+                            <CountLabel className="countLabel">x{countInSaves(player[itemName])}</CountLabel>
                           }
                         </CountLabelContainer>
                       ) : <div style={{ width: 56, display: 'inline-block' }}></div>}
@@ -421,13 +420,22 @@ export function TabPanel(props: TabPanelProps) {
                         </ListItemIcon>
                       )}
                       <ListItemText
-                        primary={<>
+                        primary={<div style={{ display: "flex" }}>
                           <Rune style={{ opacity: player[itemName] ? 1 : 0.5 }}>
                             <RuneBg src={runeBgImg} />
                             <RuneIcon>{getRuneIcon(runeId)}</RuneIcon>
                           </Rune>
-                          {rune.name}
-                        </>}
+                          <div>
+                            <div>{rune.name}</div>
+                            {(availableRunes && availableRunes[itemName] && availableRunes[itemName])
+                              ? <AvailableRunesLine>{countInSaves(availableRunes[itemName])} <Trans>unused</Trans></AvailableRunesLine>
+                              : <button
+                                onClick={() => {
+                                  console.log(getRuneRecipe(itemName, availableRunes));
+                                }}
+                              >test</button>}
+                          </div>
+                        </div>}
                       />
                     </ListItemButton>
                   </ListItem>
@@ -447,17 +455,23 @@ export function TabPanel(props: TabPanelProps) {
               const runewordId = (itemList as any)[itemName];
               if (!runewordId) return;
               const runeword = runewordsMapping[runewordId];
-              return <Grid item md={4} xs={6} key={itemName}>
+              return <Grid item md={4} xs={6} key={index+itemName}>
                 <RunePopup
                   itemName={itemName}
                   fullItemName={t(runeword.name)}
                   itemType={'RUNEWORD'}
-                  key={itemName}
                   saveFiles={player[itemName] ? player[itemName].inSaves : {}}
                   appSettings={appSettings}
                   disabled={!player[itemName]}
+                  itemNote={itemNotes[itemName]}
                 >
-                  <ListItem disablePadding key={itemName} style={{color: player[itemName] ? grey[400] : grey[700]}}>
+                  <ListItem
+                    disablePadding
+                    style={{color: player[itemName] ? grey[400] : grey[700]}}
+                    secondaryAction={itemNotes[itemName] ? <Tooltip title={itemNotes[itemName]}>
+                      <InfoOutlined fontSize='small' color='disabled' />
+                    </Tooltip> : null}
+                  >
                     <ListItemButton>
                       {gameMode !== GameMode.Manual && player[itemName] ? (
                         <CountLabelContainer>
@@ -467,12 +481,7 @@ export function TabPanel(props: TabPanelProps) {
                           {
                             player[itemName] &&
                             Object.keys(player[itemName].inSaves).length > 1 &&
-                            <CountLabel className="countLabel">x{
-                              Object.values(player[itemName].inSaves).reduce(
-                                (count, items) => count + items.length,
-                                0
-                              )
-                            }</CountLabel>
+                            <CountLabel className="countLabel">x{countInSaves(player[itemName])}</CountLabel>
                           }
                         </CountLabelContainer>
                       ) : <div style={{ width: 56, display: 'inline-block' }}></div>}

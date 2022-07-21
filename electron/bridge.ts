@@ -50,11 +50,11 @@ export const api = {
   getStreamPort: () => {
     return ipcRenderer.sendSync('getStreamPort');
   },
-  getItemNote: (itemName: string) => {
-    return ipcRenderer.sendSync('getItemNote', itemName);
+  getItemNotes: () => {
+    ipcRenderer.send('getItemNotes');
   },
   setItemNote: (itemName: string, note: string) => {
-    ipcRenderer.send('setItemNode', itemName, note);
+    ipcRenderer.send('setItemNote', itemName, note);
   },
   on: (channel: string, callback: Function) => {
     ipcRenderer.removeAllListeners(channel);

@@ -3,7 +3,7 @@ import { IEthGrailData, IEthUniqueArmors, IEthUniqueOther, IEthUniqueWeapons } f
 import { ISetItems, IUniqueArmors, IUniqueOther, IUniqueWeapons } from 'd2-holy-grail/client/src/common/definitions/union/IHolyGrailData';
 import { runesSeed, runewordsSeed } from '../../electron/lib/holyGrailSeedData';
 import { runewordsMapping } from '../../electron/lib/runewordsMapping';
-import { GameMode, GameVersion, GrailType, HolyGrailSeed, HolyGrailStats, Item, ItemsInSaves, Settings, Stats } from '../@types/main.d';
+import { AvailableRunes, GameMode, GameVersion, GrailType, HolyGrailSeed, HolyGrailStats, Item, ItemsInSaves, Settings, Stats } from '../@types/main.d';
 
 export const simplifyItemName = (name: string): string => name.replace(/[^a-z0-9]/gi, '').toLowerCase();
 export const isRune = (item: Item | IItem): boolean => !!item.type && !!item.type.match(/^r[0-3][0-9]$/);
@@ -292,4 +292,48 @@ export const computeStats = (
     runes: runesStats.runes,
     runewords: runewordsStats.runewords,
   };
+}
+
+export const countInSaves = (item: Item) => {
+  if (!item.inSaves) return 0;
+  return Object.values(item.inSaves).reduce(
+    (acc, itemsInSave) => acc + itemsInSave.length,
+    0
+  );
+}
+
+// export const getRuneRecipe = (targetRune: string, availableRunes: AvailableRunes) => {
+//   if (Object.keys(runesSeed).indexOf(targetRune) === 0) {
+//     return null;
+//   }
+//   const smallerRune = Object.keys(runesSeed)[Object.keys(runesSeed).indexOf(targetRune) - 1];
+//   console.log(smallerRune);
+//   const holders = getRuneHolders(smallerRune, availableRunes);
+//   const picked = pickRunesFromHolders(smallerRune, holders);
+//   if (picked < 0) {
+//     getRuneRecipe(smallerRune, availableRunes);
+//   }
+// }
+
+// const pickRunesFromHolders = (targetRune: string, runeHolders: RuneHolders) => {
+
+// }
+
+// rune holders ordered from saves with most runes of given type
+type RuneHolders = {[saveName: string]: number};
+const getRuneHolders = (targetRune: string, availableRunes: AvailableRunes): RuneHolders => {
+  if (!availableRunes[targetRune]) {
+    return {};
+  }
+  let runeHolders: RuneHolders = {};
+  Object.entries(availableRunes[targetRune].inSaves).forEach(([saveName, itemsInSave]) => {
+    if (!runeHolders[saveName]) {
+      runeHolders[saveName] = 0;
+    }
+    runeHolders[saveName] += itemsInSave.length;
+  });
+  runeHolders = Object.fromEntries(
+    Object.entries(runeHolders).sort(([,a],[,b]) => b-a)
+  );
+  return runeHolders;
 }

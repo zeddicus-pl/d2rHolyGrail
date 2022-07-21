@@ -30,8 +30,10 @@ export type FileReaderResponse = {
   items: ItemsInSaves,
   ethItems: ItemsInSaves,
   stats: SaveFileStats,
-  availableRunes: {[runeType: string]: Item}
+  availableRunes: AvailableRunes,
 }
+
+export type AvailableRunes = {[runeType: string]: Item};
 
 export type ParsedFileReaderResponse = {
   items: ItemsInSaves,
@@ -110,4 +112,16 @@ export type SubStats = {
   other: Stats,
   sets: Stats,
   total: Stats,
+}
+
+export type ItemNotes = {[itemName: string]: string};
+
+export type RuneRecipe = {
+  steps: RuneRecipeStep[];
+}
+
+export type RuneRecipeStep = {
+  targetRune: string,
+  sourceRune: string,
+  inSaves: string[],
 }

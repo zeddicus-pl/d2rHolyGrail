@@ -5,8 +5,9 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import { Button, Chip, Grid, Typography } from '@mui/material';
-import { ItemDetails, Settings, SilospenItem } from '../../@types/main.d';
+import EditIcon from '@mui/icons-material/Edit';
+import { Button, Card, CardContent, Chip, DialogActions, Grid, TextField, Tooltip, Typography } from '@mui/material';
+import { GameMode, ItemDetails, Settings, SilospenItem } from '../../@types/main.d';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -14,8 +15,9 @@ import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import { diablo2ioMapping } from '../../../electron/lib/diablo2ioMapping';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import DropCalcSettings from '../Settings/dropCalcSettings';
+import { PopupTitle } from './styles';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -34,6 +36,7 @@ type PopupProps = {
   saveFiles: {[saveName: string]: ItemDetails[]},
   ethSaveFiles: {[saveName: string]: ItemDetails[]},
   appSettings: Settings,
+  itemNote: string,
 }
 
 export default function Popup({
@@ -43,10 +46,13 @@ export default function Popup({
   saveFiles,
   children,
   appSettings,
-  ethSaveFiles
+  ethSaveFiles,
+  itemNote,
 }: PopupProps) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
+  const [noteOpen, setNoteOpen] = useState(false);
+  const [note, setNote] = useState('');
   const [drop, setDrop] = useState<ReactChild | null>(null);
 
   const diablo2ioUrl = diablo2ioMapping[itemName] || 'https://diablo2.io/';
@@ -80,6 +86,16 @@ export default function Popup({
     setOpen(false);
   };
 
+  const handleNotes = () => {
+    setNote(itemNote);
+    setNoteOpen(true);
+  };
+
+  const handleNoteChanged = () => {
+    window.Main.setItemNote(itemName, note);
+    setNoteOpen(false);
+  }
+
   return (
     <>
       <div onClick={handleClickOpen} style={{ position: 'relative' }}>
@@ -93,7 +109,7 @@ export default function Popup({
         fullWidth
       >
         <DialogTitle sx={{ m: 0, p: 2 }}>
-          <Typography variant="h4">{fullItemName}</Typography>
+          <PopupTitle>{fullItemName}</PopupTitle>
           <IconButton
               aria-label="close"
               onClick={handleClose}
@@ -104,37 +120,61 @@ export default function Popup({
                 color: (theme) => theme.palette.grey[500],
               }}
             >
-              <CloseIcon />
+            <CloseIcon />
+          </IconButton>
+          {appSettings.gameMode !== GameMode.Manual && saveFiles && Object.keys(saveFiles).length ?
+            <small style={{ fontSize: '11pt', fontWeight: 'normal' }}>
+              {Object.keys(saveFiles).map(saveFile => <Chip
+                key={saveFile}
+                label={
+                  saveFiles[saveFile].length > 1
+                    ? <>{saveFile}<sub>&nbsp;x{saveFiles[saveFile].length}</sub></>
+                    : saveFile
+                }
+                style={{ marginRight: 5 }}
+              />)}
+            </small>
+          : null}
+          {appSettings.gameMode !== GameMode.Manual && ethSaveFiles && Object.keys(ethSaveFiles).length ?
+            <small style={{ fontSize: '11pt', fontWeight: 'normal' }}>
+              {Object.keys(ethSaveFiles).map(saveFile => <Chip
+                variant='outlined'
+                key={saveFile}
+                label={
+                  ethSaveFiles[saveFile].length > 1
+                  ? <>{saveFile}<sub>&nbsp;x{ethSaveFiles[saveFile].length}</sub></>
+                    : saveFile
+                }
+                style={{ marginRight: 5 }}
+              />)}
+            </small>
+          : null}
+          <Tooltip title={<Trans>Edit notes</Trans>}>
+            <IconButton
+                aria-label="notes"
+                onClick={handleNotes}
+                sx={{
+                  position: 'absolute',
+                  right: 8,
+                  top: 48,
+                  color: (theme) => theme.palette.grey[500],
+                }}
+            >
+              <EditIcon />
             </IconButton>
-            {saveFiles && Object.keys(saveFiles).length ?
-              <small style={{ fontSize: '11pt', fontWeight: 'normal' }}>
-                {Object.keys(saveFiles).map(saveFile => <Chip
-                  key={saveFile}
-                  label={
-                    saveFiles[saveFile].length > 1
-                      ? <>{saveFile}<sub>&nbsp;x{saveFiles[saveFile].length}</sub></>
-                      : saveFile
-                  }
-                  style={{ marginRight: 5 }}
-                />)}
-              </small>
-            : null}
-            {ethSaveFiles && Object.keys(ethSaveFiles).length ?
-              <small style={{ fontSize: '11pt', fontWeight: 'normal' }}>
-                {Object.keys(ethSaveFiles).map(saveFile => <Chip
-                  variant='outlined'
-                  key={saveFile}
-                  label={
-                    ethSaveFiles[saveFile].length > 1
-                    ? <>{saveFile}<sub>&nbsp;x{ethSaveFiles[saveFile].length}</sub></>
-                      : saveFile
-                  }
-                  style={{ marginRight: 5 }}
-                />)}
-              </small>
-            : null}
+          </Tooltip>
         </DialogTitle>
         <DialogContent dividers>
+          {itemNote && itemNote !== '' && 
+            <Typography
+              variant="body1"
+              style={{
+                whiteSpace: 'pre',
+                paddingBottom: 15,
+                borderBottom: "1px solid #4f4f4f",
+                marginBottom: 15
+            }}>{itemNote}</Typography>
+          }
           <div style={{ marginBottom: 20 }}>
             {t('Item info on Diablo2.io')}
             <Typography variant="subtitle2">
@@ -180,6 +220,25 @@ export default function Popup({
           </div>
         </DialogContent>
       </BootstrapDialog>
+      <Dialog open={noteOpen} fullWidth onClose={() => setNoteOpen(false)}>
+        <DialogTitle>{fullItemName}</DialogTitle>
+        <DialogContent>
+          <TextField
+            multiline
+            autoFocus
+            margin="dense"
+            id="name"
+            rows={10}
+            fullWidth
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setNoteOpen(false)}><Trans>Cancel</Trans></Button>
+          <Button onClick={handleNoteChanged}><Trans>Save</Trans></Button>
+        </DialogActions>
+      </Dialog>
     </>  
   );
 }

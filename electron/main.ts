@@ -122,6 +122,7 @@ async function registerListeners () {
   ipcMain.on('saveManualItem', (event, itemId, count) => {
     eventToReply = event;
     itemsDatabase.saveManualItem(itemId, count);
+    itemsDatabase.fillInAvailableRunes();
     event.reply('openFolder', itemsDatabase.getItems());
     updateDataToListeners();
   });
@@ -138,6 +139,14 @@ async function registerListeners () {
   ipcMain.on('getStreamPort', (event) => {
     eventToReply = event;
     event.returnValue = streamPort;
+  });
+  ipcMain.on('getItemNotes', (event) => {
+    eventToReply = event;
+    itemsDatabase.getItemNotes().then((items) => event.reply('getItemNotes', items))
+  });
+  ipcMain.on('setItemNote', (event, itemName, note) => {
+    eventToReply = event;
+    itemsDatabase.setItemNote(itemName, note).then((items) => event.reply('getItemNotes', items))
   });
 }
 

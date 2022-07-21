@@ -4,6 +4,7 @@ import { ItemsInSaves } from "../../@types/main";
 /* @ts-ignore */
 import CheckBoxOutlineBlank from '@mui/material/internal/svg-icons/CheckBoxOutlineBlank';
 import { CheckboxCounter, CheckboxCounterButtons } from "./styles";
+import { countInSaves } from "../../utils/objects";
 
 type ManualControlProps = {
     isPlaceholder?: boolean,
@@ -20,10 +21,7 @@ const ManualControl = ({ isPlaceholder, items, itemName, className, onChange, on
     let count = 0;
 
     if (items[itemName] && items[itemName].inSaves) {
-        count = Object.values(items[itemName].inSaves).reduce(
-            (acc, itemsInSave) => acc + itemsInSave.length,
-            0
-        );
+        count = countInSaves(items[itemName]);
     }
 
     // previous manual items save format does not store the "inSaves" so we assume that's 1 item

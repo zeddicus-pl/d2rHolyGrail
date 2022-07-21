@@ -89,7 +89,6 @@ const VersionCheck = () => {
             .catch((e) => console.log('Could not check for new version'));
         
         window.Main.on('downloadProgress', (progress: Progress) => {
-            console.log('progress', toastId.current);
             if(toastId.current !== null) {
                 toast.update(toastId.current, {
                     hideProgressBar: false,

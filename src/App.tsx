@@ -8,7 +8,7 @@ import { ThemeProvider } from '@mui/system';
 import { createTheme } from '@mui/material';
 import { ToastContainer } from 'material-react-toastify';
 import 'material-react-toastify/dist/ReactToastify.css';
-import { FileReaderResponse, GameMode, Settings } from './@types/main.d';
+import { FileReaderResponse, GameMode, ItemNotes, Settings } from './@types/main.d';
 import defaultSettings from './utils/defaultSettings';
 import VersionCheck from './components/Settings/VersionCheck';
 
@@ -25,6 +25,7 @@ export enum UiState {
 export function App() {
   const [fileReaderResponse, setFileReaderResponse] = useState<FileReaderResponse | null>(null);
   const [uiState, setUiState] = useState(UiState.Loading);
+  const [itemNotes, setItemNotes] = useState({});
   const appSettings = useRef(defaultSettings);
 
   const updateSettings = (settings: Settings) => {
@@ -115,10 +116,14 @@ export function App() {
         setUiState(UiState.List);
       }, 500);
     });
+    window.Main.on('getItemNotes', (itemNotes: ItemNotes) => {
+      setItemNotes(itemNotes);
+    })
 
     const settings = window.Main.getSettings();
     updateSettings(settings);
     readData(settings);
+    window.Main.getItemNotes();
 
     const auxclickHandler: MouseEventHandler<HTMLAnchorElement> = (event) => {
       event.preventDefault();
@@ -138,6 +143,7 @@ export function App() {
             <List
               fileReaderResponse={fileReaderResponse}
               appSettings={appSettings.current}
+              itemNotes={itemNotes}
             />
           }
           <ToastContainer

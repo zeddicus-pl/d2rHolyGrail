@@ -4,7 +4,7 @@ import { Container, Image, Logo, ButtonPanel, MissingOnlySwitch } from './styles
 import { TabPanel } from './tab';
 import SettingsPanel from '../Settings'
 import { Trans, useTranslation } from 'react-i18next';
-import { FileReaderResponse, GrailType, Settings } from '../../@types/main.d';
+import { FileReaderResponse, GrailType, ItemNotes, Settings } from '../../@types/main.d';
 import { Search } from '../Search';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';import DoneIcon from '@mui/icons-material/Done';
@@ -40,9 +40,10 @@ export const title = (str: string): string => {
 type ListProps = {
   fileReaderResponse: FileReaderResponse | null,
   appSettings: Settings,
+  itemNotes: ItemNotes,
 }
 
-export function List({ fileReaderResponse, appSettings }: ListProps) {
+export function List({ fileReaderResponse, appSettings, itemNotes }: ListProps) {
   const [tab, setTab] = useState(TabState.Statistics);
   const [search, setSearch] = useState<string>('');
   const { t } = useTranslation();
@@ -60,7 +61,9 @@ export function List({ fileReaderResponse, appSettings }: ListProps) {
     dingPlayer.current?.play();
   };
 
-  const { items, ethItems, stats } = fileReaderResponse;
+  const { items, ethItems, stats, availableRunes } = fileReaderResponse;
+  console.log(availableRunes);
+
   const holyGrailSeedData = useMemo(
     () => getHolyGrailSeedData(appSettings, false),
     [
@@ -105,6 +108,7 @@ export function List({ fileReaderResponse, appSettings }: ListProps) {
             fileReaderResponse={fileReaderResponse}
             appSettings={appSettings}
             holyGrailStats={holyGrailStats}
+            itemNotes={itemNotes}
           />
           <Language />
           <SettingsPanel appSettings={appSettings} />
@@ -135,9 +139,9 @@ export function List({ fileReaderResponse, appSettings }: ListProps) {
             <Tab label={t("Unique other")} />
             {appSettings.grailType !== GrailType.Ethereal &&
               [
-                <Tab label={t("Sets")} />,
-                appSettings.grailRunes && <Tab label={t("Runes")} />,
-                appSettings.grailRunewords && <Tab label={t("Runeswords")} />,
+                <Tab label={t("Sets")} key="sets" />,
+                appSettings.grailRunes && <Tab label={t("Runes")}  key="runes" />,
+                appSettings.grailRunewords && <Tab label={t("Runeswords")}  key="runewords" />,
               ]
             }
           </Tabs> 
@@ -170,6 +174,7 @@ export function List({ fileReaderResponse, appSettings }: ListProps) {
         search={search}
         appSettings={appSettings}
         holyGrailStats={holyGrailStats}
+        itemNotes={itemNotes}
       />}
       {(search.length || tab === TabState.UniqueWeapons) && <TabPanel
         value={search.length ? TabState.UniqueWeapons : tab}
@@ -181,6 +186,7 @@ export function List({ fileReaderResponse, appSettings }: ListProps) {
         search={search}
         appSettings={appSettings}
         holyGrailStats={holyGrailStats}
+        itemNotes={itemNotes}
       />}
       {(search.length || tab === TabState.UniqueOther) && <TabPanel
         value={search.length ? TabState.UniqueOther : tab}
@@ -192,6 +198,7 @@ export function List({ fileReaderResponse, appSettings }: ListProps) {
         search={search}
         appSettings={appSettings}
         holyGrailStats={holyGrailStats}
+        itemNotes={itemNotes}
       />}
       {appSettings.grailType !== GrailType.Ethereal &&
         <>
@@ -204,6 +211,7 @@ export function List({ fileReaderResponse, appSettings }: ListProps) {
             search={search}
             appSettings={appSettings}
             holyGrailStats={holyGrailStats}
+            itemNotes={itemNotes}
           />}
           {(search.length || tab === TabState.Runes) && <TabPanel
             value={search.length ? TabState.Runes : tab}
@@ -214,6 +222,8 @@ export function List({ fileReaderResponse, appSettings }: ListProps) {
             search={search}
             appSettings={appSettings}
             holyGrailStats={holyGrailStats}
+            itemNotes={itemNotes}
+            availableRunes={availableRunes}
           />}
           {(search.length || tab === TabState.Runewords) && <TabPanel
             value={search.length ? TabState.Runewords : tab}
@@ -225,6 +235,7 @@ export function List({ fileReaderResponse, appSettings }: ListProps) {
             search={search}
             appSettings={appSettings}
             holyGrailStats={holyGrailStats}
+            itemNotes={itemNotes}
           />}
         </>
       }

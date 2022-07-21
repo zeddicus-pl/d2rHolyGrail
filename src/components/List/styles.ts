@@ -128,3 +128,15 @@ export const CheckboxCounterButtons = styled.div`
     top: 21px;
   }
 `
+
+export const PopupTitle = styled.div`
+  font-size: 32px;
+  padding-bottom: 10px;
+`
+
+export const AvailableRunesLine = styled.div`
+  display: inline-block;
+  font-size: 12px;
+  color: #777777;
+  white-space: nowrap;
+`

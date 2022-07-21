@@ -6,10 +6,10 @@ import { existsSync, promises } from 'fs';
 import { basename, extname, join, resolve, sep } from 'path';
 import { IpcMainEvent } from 'electron/renderer';
 import { readdirSync } from 'original-fs';
-import { FileReaderResponse, GameMode, GrailType, Item, ItemDetails } from '../../src/@types/main.d';
+import { AvailableRunes, FileReaderResponse, GameMode, GrailType, Item, ItemDetails, ItemNotes } from '../../src/@types/main.d';
 import storage from 'electron-json-storage';
 import chokidar, { FSWatcher } from 'chokidar';
-import { getHolyGrailSeedData } from './holyGrailSeedData';
+import { getHolyGrailSeedData, runesSeed } from './holyGrailSeedData';
 import { buildFlattenObjectCacheKey, flattenObject, isRune, simplifyItemName } from '../../src/utils/objects';
 import { eventToReply, setEventToReply } from '../main';
 import settingsStore from './settings';
@@ -24,7 +24,7 @@ class ItemsStore {
   watchPath: string | null;
   filesChanged: boolean;
   readingFiles: boolean;
-  itemNotes: {[itemName: string]: string};
+  itemNotes: ItemNotes | null;
 
   constructor() {
     this.currentData = {
@@ -37,12 +37,27 @@ class ItemsStore {
     this.watchPath = null;
     this.filesChanged = false;
     this.readingFiles = false;
-    this.itemNotes = {};
+    this.itemNotes = null;
     setInterval(this.tickReader, 500);
   }
 
   getItems = () => {
     return this.currentData;
+  }
+
+  // used only in manual selection mode
+  fillInAvailableRunes = () => {
+    // filling in all the runes into the "available runes"
+    this.currentData.availableRunes = Object.keys(this.currentData.items).reduce(
+      (acc: AvailableRunes, itemKey: string) => {
+        const item = this.currentData.items[itemKey];
+        if (runesSeed[itemKey]) {
+          acc[itemKey] = item;
+        }
+        return acc;
+      },
+      {} as AvailableRunes
+    );
   }
 
   loadManualItems = () => {
@@ -59,19 +74,26 @@ class ItemsStore {
       if (!data.ethItems) {
         data.ethItems = {};
       }
+      // filling in the "inSaves" information that is missing in older format
+      Object.keys(this.currentData.items).forEach((key) => {
+        if (!this.currentData.items[key].inSaves) {
+          this.currentData.items[key] = this.createManualItem(1);
+        }
+      })
+      Object.keys(this.currentData.ethItems).forEach((key) => {
+        if (!this.currentData.ethItems[key].inSaves) {
+          this.currentData.ethItems[key] = this.createManualItem(1);
+        }
+      })
+
       this.currentData = data;
+      this.fillInAvailableRunes();
     }
   }
 
   saveManualItem = (itemId: string, count: number) => {
     if (count > 0) {
-      this.currentData.items[itemId] = <Item>{
-        inSaves: {
-          "Manual entry": new Array(count).fill(<ItemDetails>{}),
-        },
-        name: '',
-        type: '',
-      };
+      this.currentData.items[itemId] = this.createManualItem(count);
     } else if (this.currentData.items[itemId]) {
       delete (this.currentData.items[itemId]);
     }
@@ -84,13 +106,7 @@ class ItemsStore {
   
   saveManualEthItem = (itemId: string, count: number) => {
     if (count > 0) {
-      this.currentData.ethItems[itemId] = <Item>{
-        inSaves: {
-          "Manual entry": new Array(count).fill(<ItemDetails>{}),
-        },
-        name: '',
-        type: '',
-      };
+      this.currentData.ethItems[itemId] = this.createManualItem(count);
     } else if (this.currentData.ethItems[itemId]) {
       delete (this.currentData.ethItems[itemId]);
     }
@@ -99,6 +115,44 @@ class ItemsStore {
         console.log(err);
       }
     });
+  }
+
+  createManualItem = (count: number) => {
+    return <Item>{
+      inSaves: {
+        "Manual entry": new Array(count).fill(<ItemDetails>{}),
+      },
+      name: '',
+      type: '',
+    };
+  }
+
+  getItemNotes = async (): Promise<ItemNotes> => {
+    if (!!this.itemNotes) {
+      return this.itemNotes;
+    }
+    this.itemNotes = await new Promise((resolve, reject) => {
+      storage.get('itemNotes', (err, data) => {
+        if (err) reject(err);
+        resolve(data as ItemNotes);
+      });
+    });
+    return this.itemNotes || {};
+  }
+
+  setItemNote = async (itemName: string, note: string): Promise<ItemNotes> => {
+    if (!this.itemNotes) {
+      await this.getItemNotes();
+    }
+    if (this.itemNotes) {
+      this.itemNotes[itemName] = note;
+      storage.set('itemNotes', this.itemNotes, (err) => {
+        if (err) {
+          console.log(err);
+        }
+      });
+    }
+    return this.itemNotes || {};
   }
 
   openAndParseSaves = (event: IpcMainEvent) => {
@@ -216,6 +270,21 @@ class ItemsStore {
                 type: item.type,
               }
               results[key][name].inSaves[saveName] = [ savedItem ];
+            }
+            if (isRune(item) && !item.socketed) {
+              if (results.availableRunes[name]) {
+                if (!results.availableRunes[name].inSaves[saveName]) {
+                  results.availableRunes[name].inSaves[saveName] = [];
+                }
+                results.availableRunes[name].inSaves[saveName].push(savedItem);
+              } else {
+                results.availableRunes[name] = {
+                  name,
+                  inSaves: {},
+                  type: item.type,
+                }
+                results.availableRunes[name].inSaves[saveName] = [ savedItem ];
+              }
             }
             results.stats[saveName] = (results.stats[saveName] || 0) + 1;
           });

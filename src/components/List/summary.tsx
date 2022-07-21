@@ -4,7 +4,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import { Container, Image, Logo } from './styles';
 import { TabPanel } from './tab';
 import { useTranslation } from 'react-i18next';
-import { FileReaderResponse, GameMode, GrailType, HolyGrailStats, Settings } from '../../@types/main.d';
+import { FileReaderResponse, GameMode, GrailType, HolyGrailStats, ItemNotes, Settings } from '../../@types/main.d';
 import { toast } from 'material-react-toastify';
 import html2canvas from 'html2canvas';
 import CloseIcon from '@mui/icons-material/Close';
@@ -19,9 +19,10 @@ type ListProps = {
   fileReaderResponse: FileReaderResponse | null,
   appSettings: Settings,
   holyGrailStats: HolyGrailStats,
+  itemNotes: ItemNotes,
 }
 
-export function Summary({ fileReaderResponse, appSettings, holyGrailStats }: ListProps) {
+export function Summary({ fileReaderResponse, appSettings, holyGrailStats, itemNotes }: ListProps) {
   const { t } = useTranslation();
 
   if (fileReaderResponse === null) {
@@ -177,6 +178,7 @@ export function Summary({ fileReaderResponse, appSettings, holyGrailStats }: Lis
                   search=" "
                   appSettings={appSettings}
                   holyGrailStats={holyGrailStats}
+                  itemNotes={itemNotes}
                 />
                 <TabPanel
                   value={TabState.UniqueWeapons}
@@ -188,6 +190,7 @@ export function Summary({ fileReaderResponse, appSettings, holyGrailStats }: Lis
                   search=" "
                   appSettings={appSettings}
                   holyGrailStats={holyGrailStats}
+                  itemNotes={itemNotes}
                 />
                 <TabPanel
                   value={TabState.UniqueOther}
@@ -199,6 +202,7 @@ export function Summary({ fileReaderResponse, appSettings, holyGrailStats }: Lis
                   search=" "
                   appSettings={appSettings}
                   holyGrailStats={holyGrailStats}
+                  itemNotes={itemNotes}
                 />
                 {appSettings.grailType !== GrailType.Ethereal &&
                   <>
@@ -211,6 +215,7 @@ export function Summary({ fileReaderResponse, appSettings, holyGrailStats }: Lis
                       search=" "
                       appSettings={appSettings}
                       holyGrailStats={holyGrailStats}
+                      itemNotes={itemNotes}
                     />
                     <TabPanel
                       value={TabState.Runes}
@@ -221,6 +226,7 @@ export function Summary({ fileReaderResponse, appSettings, holyGrailStats }: Lis
                       search=" "
                       appSettings={appSettings}
                       holyGrailStats={holyGrailStats}
+                      itemNotes={itemNotes}
                     />
                     <TabPanel
                       value={TabState.Runewords}
@@ -232,6 +238,7 @@ export function Summary({ fileReaderResponse, appSettings, holyGrailStats }: Lis
                       search=" "
                       appSettings={appSettings}
                       holyGrailStats={holyGrailStats}
+                      itemNotes={itemNotes}
                     />
                   </>
                 }
