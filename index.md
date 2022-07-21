@@ -17,6 +17,12 @@ I created this application for my favourite streamer [NadinWins](https://www.twi
 
 ## Changelog
 
+### v2.2.0
+  - Fixed missing items switch
+  - Added ability to add notes on items
+  - Manual selection mode: you can now specify how many of each items you have
+  - Displaying how many of each rune is unused (not socketed)
+
 ### v2.0.1
 - Items from D2R Shared Stash are included in the count
 - You can select from 4 main types of grail:
