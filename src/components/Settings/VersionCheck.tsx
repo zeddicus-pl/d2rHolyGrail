@@ -17,15 +17,15 @@ type GitHubRelease = {
 
 const isNewVersionAvailable = (currentVersion:string, candidateVersion: string): boolean => {
     if (currentVersion === candidateVersion) return false;
-    const candidate = candidateVersion.split('.');
-    const current = currentVersion.split('.');
+    const candidate = candidateVersion.replace('v', '').split('.');
+    const current = currentVersion.replace('v', '').split('.');
     for (let i = 0; i < current.length; i++) {
         const a = current[i] ? parseInt(current[i]) : 0;
         const b = candidate[i] ? parseInt(candidate[i]) : 0;
         if (a > b) return false;
         if (a < b) return true;
     }
-    return true;
+    return false;
 }
 
 const VersionCheck = () => {

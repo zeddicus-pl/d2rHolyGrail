@@ -27,7 +27,7 @@ const Circle = ({ animated, owned, total, percent, subOwned, subTotal }: Props) 
             })}
         >
             <CirclePercent>{percent}%</CirclePercent>
-            <CircleSub>
+            <CircleSub style={{ fontSize: subTotal ? 34 : 40, position: 'relative', top: subTotal ? -5 : -10 }}>
                 <CircleSubNormal>{owned} / {total}</CircleSubNormal>
                 {subTotal && <CircleSubOther>{subOwned} / {subTotal}</CircleSubOther>}
             </CircleSub>

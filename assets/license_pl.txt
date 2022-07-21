@@ -1,4 +1,12 @@
 LISTA ZMIAN:
+
+v2.2.0
+  - Naprawiono przełącznik "tylko brakujących" przedmiotów
+  - Dodano możliwość dodawania notatek na przedmiotach
+  - Tryb ręczny: Możesz teraz określić ile sztuk przedmiotu posiadasz
+  - Wyświetlanie ilości nieużywanych run (nie umieszczonych w sockecie)
+
+
 v.2.1.0
   - poprawiono ilość przedmiotów do skompletowania w Eterycznym Holy Grailu
   - usunięto 4 zawsze-eteryczne przedmioty z listy "normalnych" przedmiotów w trybie Graila "normalnym" i "liczonym osobno"

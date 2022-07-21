@@ -62,7 +62,6 @@ export function List({ fileReaderResponse, appSettings, itemNotes }: ListProps) 
   };
 
   const { items, ethItems, stats, availableRunes } = fileReaderResponse;
-  console.log(availableRunes);
 
   const holyGrailSeedData = useMemo(
     () => getHolyGrailSeedData(appSettings, false),

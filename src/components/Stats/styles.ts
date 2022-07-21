@@ -36,7 +36,6 @@ export const CirclePercent = styled.div`
 `
 
 export const CircleSub = styled.div`
-  font-size: 30px;
 `
 
 export const CircleSubNormal = styled.div`

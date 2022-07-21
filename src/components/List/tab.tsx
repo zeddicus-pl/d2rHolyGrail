@@ -14,13 +14,13 @@ import { TabState, title } from '.';
 import Popup from './popup';
 import { Statistics } from '../Stats';
 import { ChangeEvent, MouseEvent } from 'react';
-import { countInSaves, FlatItemsCache, flattenObject, getRuneRecipe, simplifyItemName } from '../../utils/objects';
+import { countInSaves, FlatItemsCache, flattenObject, simplifyItemName } from '../../utils/objects';
 import { AvailableRunesLine, CountLabel, CountLabelContainer, Rune, RuneBg, RuneIcon, RuneList, RuneName } from './styles';
 import { runesMapping } from '../../../electron/lib/runesMapping';
 import { runewordsMapping } from '../../../electron/lib/runewordsMapping';
 import RunePopup from './runePopup';
 import ManualControl from './manualControl';
-import { Comment, Info, InfoOutlined } from '@mui/icons-material';
+import { InfoOutlined } from '@mui/icons-material';
 
 type TabPanelProps = {
   index: number,
@@ -139,8 +139,8 @@ export function TabPanel(props: TabPanelProps) {
             }
           } else {
             const simplified = simplifyItemName(key);
-            if ((flatItems[simplified] && !player[simplified])
-            || (ethFlatItems[simplified] && !ethPlayer[simplified])
+            if (((appSettings.grailType !== GrailType.Ethereal) && flatItems[simplified] && !player[simplified])
+            || ((appSettings.grailType === GrailType.Each || appSettings.grailType === GrailType.Ethereal) && ethFlatItems[simplified] && !ethPlayer[simplified])
             || (runewords && !player[simplified])) {
               out[key] = object[key];
             }
@@ -183,7 +183,7 @@ export function TabPanel(props: TabPanelProps) {
       aria-labelledby={`simple-tab-${index}`}
       style={{ height: '100%' }}
     >
-      {itemList && !search && appSettings.onlyMissing && Object.keys(itemList).length === 0 && (
+      {index !== TabState.Statistics && itemList && !search && appSettings.onlyMissing && Object.keys(itemList).length === 0 && (
         <Box sx={{ p: 3, pt: 5 }}>
           <Trans>No missing items</Trans>
         </Box>
@@ -429,11 +429,8 @@ export function TabPanel(props: TabPanelProps) {
                             <div>{rune.name}</div>
                             {(availableRunes && availableRunes[itemName] && availableRunes[itemName])
                               ? <AvailableRunesLine>{countInSaves(availableRunes[itemName])} <Trans>unused</Trans></AvailableRunesLine>
-                              : <button
-                                onClick={() => {
-                                  console.log(getRuneRecipe(itemName, availableRunes));
-                                }}
-                              >test</button>}
+                              : null
+                            }
                           </div>
                         </div>}
                       />
