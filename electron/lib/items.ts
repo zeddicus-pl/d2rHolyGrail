@@ -357,10 +357,10 @@ class ItemsStore {
 
     const parseStash = (response: d2s.types.IStash) => {
       const settings = settingsStore.getSettings()
-      if (settings.gameMode === GameMode.Softcore && response.hardcore === true) {
+      if (settings.gameMode === GameMode.Softcore && saveName.toLowerCase().includes('hardcore')) {
         return [];
       }
-      if (settings.gameMode === GameMode.Hardcore && response.hardcore === false) {
+      if (settings.gameMode === GameMode.Hardcore && saveName.toLowerCase().includes('softcore')) {
         return [];
       }
       response.pages.forEach(page => {
