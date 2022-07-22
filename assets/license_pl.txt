@@ -1,5 +1,8 @@
 LISTA ZMIAN:
 
+v2.2.1
+  - Poprawiono czytanie shared stasha w trybie "Tylko hardkor"
+
 v2.2.0
   - Naprawiono przełącznik "tylko brakujących" przedmiotów
   - Dodano możliwość dodawania notatek na przedmiotach
