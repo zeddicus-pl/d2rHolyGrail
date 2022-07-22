@@ -17,6 +17,9 @@ I created this application for my favourite streamer [NadinWins](https://www.twi
 
 ## Changelog
 
+### v2.2.1
+  - Fixed reading shared stash in "Only hardcore" mode
+
 ### v2.2.0
   - Fixed missing items switch
   - Added ability to add notes on items
