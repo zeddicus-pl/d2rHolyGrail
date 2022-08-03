@@ -1,5 +1,10 @@
 CHANGELOG:
 
+v2.2.2
+  - Fixed always-ethereal items not visible
+  - Fixed runes count in statistics in manual mode
+  - Added ctrl + f hotkey to open search
+
 v2.2.1
   - Fixed reading shared stash in "Only hardcore" mode
 

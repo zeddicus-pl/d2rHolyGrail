@@ -129,7 +129,7 @@ export const computeSubStats = (
     }
 
     // runes
-    if (item && item.type && runesSeed[itemId] && settings.grailRunes && !runesFound[itemId]) {
+    if (item && runesSeed[itemId] && settings.grailRunes && !runesFound[itemId]) {
       runesCount++;
       runesFound[itemId] = true;
       return;

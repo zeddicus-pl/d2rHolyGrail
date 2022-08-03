@@ -1,5 +1,10 @@
 LISTA ZMIAN:
 
+v2.2.2
+  - Naprawiono odjandywanie zawsze-eterycznych przedmiotow
+  - Naprawiono licznik run w trybie manualnym
+  - Dodano skrót klawiszowy ctrl + f otwierający wyszukiwanie
+
 v2.2.1
   - Poprawiono czytanie shared stasha w trybie "Tylko hardkor"
 

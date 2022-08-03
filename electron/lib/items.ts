@@ -247,7 +247,7 @@ class ItemsStore {
               name = runesMapping[item.type].name.toLowerCase();
             } else if (item.type === 'runeword') {
               name = item.runeword_name;
-            } else if (!flatItems[name] || (item.ethereal && !ethFlatItems[name])) {
+            } else if (!flatItems[name] && (item.ethereal && !ethFlatItems[name])) {
               return;
             } else if (name === '') {
               return;
