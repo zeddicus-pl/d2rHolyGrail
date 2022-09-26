@@ -1,5 +1,8 @@
 CHANGELOG:
 
+v2.2.3
+  - Patch 2.5 save reading fixes
+
 v2.2.2
   - Fixed always-ethereal items not visible
   - Fixed runes count in statistics in manual mode

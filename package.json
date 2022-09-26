@@ -1,7 +1,7 @@
 {
   "name": "d2rholygrail",
   "author": "Kamil Tunkiewicz <kamil.tunkiewicz(at)gmail.com>",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "Scan your Diablo 2 Resurrected saves to check your Holy Grail progress",
   "main": "./.webpack/main",
   "scripts": {
@@ -16,7 +16,7 @@
   "keywords": [],
   "license": "ISC",
   "dependencies": {
-    "@dschu012/d2s": "^2.0.18",
+    "@dschu012/d2s": "https://github.com/zeddicus-pl/d2s.git",
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
     "@mui/icons-material": "^5.4.2",
@@ -87,9 +87,8 @@
     "cross-env": "7.0.3",
     "electron": "16.0.9",
     "electron-builder": "^23.0.3",
-    "eslint": "8.9.0",
+    "eslint": "8.13.0",
     "eslint-config-prettier": "8.3.0",
-    "eslint-config-standard": "16.0.3",
     "eslint-plugin-import": "2.25.4",
     "eslint-plugin-node": "11.1.0",
     "eslint-plugin-prettier": "4.0.0",

@@ -1,7 +1,10 @@
 LISTA ZMIAN:
 
+v2.2.3
+  - Poprawione odczytywanie sejvów z patcha 2.5
+
 v2.2.2
-  - Naprawiono odjandywanie zawsze-eterycznych przedmiotow
+  - Naprawiono odnajdywanie zawsze-eterycznych przedmiotow
   - Naprawiono licznik run w trybie manualnym
   - Dodano skrót klawiszowy ctrl + f otwierający wyszukiwanie
 
