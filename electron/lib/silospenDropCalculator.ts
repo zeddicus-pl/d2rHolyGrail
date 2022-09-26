@@ -4,7 +4,8 @@ import { IpcMainEvent } from 'electron/renderer';
 import fetch, { Response } from 'node-fetch';
 import { silospenMapping } from './silospenMapping';
 import { getHolyGrailSeedData } from './holyGrailSeedData';
-import { execute, versions } from 'njar';
+import { versions, which } from 'njar';
+import { spawn } from 'child_process'
 import { SilospenItem } from '../../src/@types/main.d';
 import https from 'https';
 import settingsStore from './settings';
@@ -72,7 +73,15 @@ export async function runSilospenServer() {
   try {
     const versionList = await versions();
     if (versionList && versionList.length) {
-      execute(jarPath, [ '--server.port=' + silospenPort ]); // executing async, not waiting to finish, because the process is meant to run in the background
+      const javaPath = await which();
+      // executing async, not waiting to finish, because the process is meant to run in the background
+      const output = spawn(javaPath, ['-jar', jarPath, '--server.port=' + silospenPort]);
+      output.stdout.on('data', (data) => {
+        console.log(data.toString());
+      })
+      output.stderr.on('data', (data) => {
+        console.log(data.toString());
+      })
       setTimeout(() => {
         try {
           fetch('http://localhost:' + silospenPort)
@@ -90,7 +99,7 @@ export async function runSilospenServer() {
           console.log('FAILED to run silospen drop calculator server (fetch failed)', e);
           silospenFallback = true;
         }
-      }, 6000); // it starts up in around 3-4 seconds for me
+      }, 6000); // it starts up in around 3-4 seconds for here
     } else {
       console.log('NO JAVA FOUND IN SYSTEM');
       silospenFallback = true;

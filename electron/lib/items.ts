@@ -15,7 +15,7 @@ import { eventToReply, setEventToReply } from '../main';
 import settingsStore from './settings';
 import { updateDataToListeners } from './stream';
 import { runesMapping } from './runesMapping';
-import getPath from 'platform-folders';
+import { getSaveGamesFolder } from 'platform-folders';
 const { readFile } = promises;
 
 class ItemsStore {
@@ -157,7 +157,7 @@ class ItemsStore {
 
   openAndParseSaves = (event: IpcMainEvent) => {
     return dialog.showOpenDialog({
-      defaultPath: getPath('savegames'),
+      defaultPath: getSaveGamesFolder(),
       title: "Select Diablo 2 / Diablo 2 Resurrected save folder",
       message: "Select Diablo 2 / Diablo 2 Resurrected save folder",
       properties: ['openDirectory', 'openFile'],
@@ -221,6 +221,7 @@ class ItemsStore {
     const settings = settingsStore.getSettings();
     const flatItems = flattenObject(getHolyGrailSeedData(settings, false), buildFlattenObjectCacheKey('all', settings));
     const ethFlatItems = flattenObject(getHolyGrailSeedData(settings, true), 'ethall');
+    const erroringSaves: string[] = [];
 
     const promises = files.map((file) => {
       const saveName = basename(file).replace(".d2s", "").replace(".sss", "").replace(".d2x", "").replace(".d2i", "");
@@ -291,12 +292,16 @@ class ItemsStore {
         })
         .catch((e) => {
           console.log("ERROR", e);
+          erroringSaves.push(saveName);
           results.stats[saveName] = null;
         })
     });
     return Promise.all(promises).then(() => {
       if (userRequested && path && path !== '') {
         settingsStore.saveSetting('saveDir', path);
+      }
+      if (erroringSaves.length) {
+        event.reply('errorReadingSaveFile', erroringSaves);
       }
       event.reply('openFolder', results);
       this.currentData = results;
@@ -371,13 +376,13 @@ class ItemsStore {
     switch (extension) {
       case '.sss':
       case '.d2x':
-        await d2stash.read(content, constants, 0x60).then((response) => {
+        await d2stash.read(content, constants, null).then((response) => {
           response.hardcore === saveName.toLowerCase().includes('hardcore');
           parseStash(response);
         });
         break;
       case '.d2i':
-        await d2stash.read(content, constants, 0x62).then(parseStash);
+        await d2stash.read(content, constants, null).then(parseStash);
         break;
       default:
         await d2s.read(content, constants).then(parseD2S);

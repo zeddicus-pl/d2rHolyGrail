@@ -1,5 +1,9 @@
 CHANGELOG:
 
+v2.2.4
+  - More Patch 2.5 fixes
+  - Adding error message when any save file fails to read
+
 v2.2.3
   - Patch 2.5 save reading fixes
 

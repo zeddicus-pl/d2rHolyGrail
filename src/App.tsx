@@ -6,11 +6,12 @@ import { List } from './components/List'
 import { useState, useEffect, MouseEventHandler, useRef, createRef } from 'react';
 import { ThemeProvider } from '@mui/system';
 import { createTheme } from '@mui/material';
-import { ToastContainer } from 'material-react-toastify';
+import { toast, ToastContainer } from 'material-react-toastify';
 import 'material-react-toastify/dist/ReactToastify.css';
 import { FileReaderResponse, GameMode, ItemNotes, Settings } from './@types/main.d';
 import defaultSettings from './utils/defaultSettings';
 import VersionCheck from './components/Settings/VersionCheck';
+import { useTranslation } from 'react-i18next';
 
 /* eslint-disable no-unused-vars */
 export enum UiState {
@@ -27,6 +28,7 @@ export function App() {
   const [uiState, setUiState] = useState(UiState.Loading);
   const [itemNotes, setItemNotes] = useState({});
   const appSettings = useRef(defaultSettings);
+  const { t } = useTranslation();
 
   const updateSettings = (settings: Settings) => {
     // @ts-ignore
@@ -99,6 +101,9 @@ export function App() {
     });
     window.Main.on('openFolderWorking', () => {
       setUiState(UiState.Reading);
+    });
+    window.Main.on('errorReadingSaveFile', (saveFiles: string[]) => {
+      toast.error(t('Some save files could not be read: ' + saveFiles.join(', ')))
     });
     window.Main.on('openFolder', (fileReaderResponse: FileReaderResponse) => {
       if (fileReaderResponse === null) {
