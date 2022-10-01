@@ -1,5 +1,8 @@
 LISTA ZMIAN:
 
+v2.2.5
+  - Kolejny fix do patcha 2.5, mam nadzieję że ostatni
+
 v2.2.4
   - Więcej fixów do patcha 2.5
   - Dodano powiadomienie o problemach z odczytem sejwów
