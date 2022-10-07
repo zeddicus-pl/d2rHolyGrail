@@ -16,6 +16,26 @@ I created this application for my favourite streamer [NadinWins](https://www.twi
 <iframe src="https://clips.twitch.tv/embed?clip=DreamyPlacidScallionPeoplesChamp-QfdXJQ9MKHuO9owj&parent=holygrail.link" style="margin:auto; width: 640px; height: 480px; border: 0px; max-width: 100%"></iframe>
 
 ## Changelog
+### v.2.3.0
+ - Added integration with runewords calculator
+ - Added description of runes and runewords
+ - Rebuilt DropCalc internal library to run with Java 8 (makes drop rates show faster if you have Java in your system)
+ - Updated to latest D2S save reading library
+
+### v2.2.5
+ - More Patch 2.5 fixes, hopefully last one
+
+### v2.2.4
+  - More Patch 2.5 fixes
+  - Adding error message when any save file fails to read
+
+### v2.2.3
+  - Patch 2.5 save reading fixes
+
+### v2.2.2
+  - Fixed always-ethereal items not visible
+  - Fixed runes count in statistics in manual mode
+  - Added ctrl + f hotkey to open search
 
 ### v2.2.1
   - Fixed reading shared stash in "Only hardcore" mode
