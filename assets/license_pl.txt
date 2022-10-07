@@ -1,5 +1,11 @@
 LISTA ZMIAN:
 
+v.2.3.0
+ - Dodano integrację z Kalkulatorem Słów Runicznych
+ - Dodano opisy run i słów runicznych
+ - Przebudowana biblioteka DropCalc, tak by działała z Java 8 (tabela drop otwiera się szybciej jeśli masz w systemie Javę)
+ - Uaktualniono do nowszej wersji biblioteki D2S
+
 v2.2.5
   - Kolejny fix do patcha 2.5, mam nadzieję że ostatni
 

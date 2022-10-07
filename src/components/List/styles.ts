@@ -79,6 +79,30 @@ export const RuneIcon = styled.div`
   font-family: "D2Runes";
 `
 
+export const RuneListBig = styled.div`
+  padding-top: 5px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  > div {
+    font-size: 28px;
+    margin-bottom: 23px;
+  }
+  > div div:last-child {
+    bottom: -38px;
+  }
+`
+
+export const TooltipTitlePill = styled.div`
+  font-size: 18px;
+  margin-top: 18px;
+  float: left;
+  margin-right: 20px;
+  border: 1px solid #666;
+  padding: 5px 10px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.1);
+`
+
 export const RuneList = styled.div`
   padding-top: 5px;
   > div {

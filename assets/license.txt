@@ -1,5 +1,11 @@
 CHANGELOG:
 
+v.2.3.0
+ - Added integration with runewords calculator
+ - Added description of runes and runewords
+ - Rebuilt DropCalc internal library to run with Java 8 (makes drop rates show faster if you have Java in your system)
+ - Updated to latest D2S save reading library
+
 v2.2.5
  - More Patch 2.5 fixes, hopefully last one
 

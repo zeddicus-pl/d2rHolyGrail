@@ -1,4 +1,4 @@
-import { Box, Typography, Grid, List, ListItem, ListItemIcon, ListItemText, ListItemButton, Checkbox, Icon, IconButton, Tooltip } from '@mui/material';
+import { Box, Typography, Grid, List, ListItem, ListItemIcon, ListItemText, ListItemButton, Checkbox, Icon, IconButton, Tooltip, Button } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import { Trans, useTranslation } from 'react-i18next';
 import DoneIcon from '@mui/icons-material/Done';
@@ -6,7 +6,7 @@ import merge from "ts-deepmerge";
 
 import { IUniqueArmors, IUniqueWeapons, IUniqueOther, ISetItems } from 'd2-holy-grail/client/src/common/definitions/union/IHolyGrailData';
 import { IEthUniqueArmors, IEthUniqueOther, IEthUniqueWeapons } from 'd2-holy-grail/client/src/common/definitions/union/IEthGrailData';
-import { AvailableRunes, GameMode, GrailType, HolyGrailStats, ItemNotes, ItemsInSaves, SaveFileStats, Settings } from '../../@types/main.d';
+import { AvailableRunes, GameMode, GameVersion, GrailType, HolyGrailStats, ItemNotes, ItemsInSaves, RuneType, SaveFileStats, Settings } from '../../@types/main.d';
 
 import runeBgImg from '../../../assets/rune.svg';
 
@@ -20,7 +20,7 @@ import { runesMapping } from '../../../electron/lib/runesMapping';
 import { runewordsMapping } from '../../../electron/lib/runewordsMapping';
 import RunePopup from './runePopup';
 import ManualControl from './manualControl';
-import { InfoOutlined } from '@mui/icons-material';
+import { Calculate, InfoOutlined } from '@mui/icons-material';
 
 type TabPanelProps = {
   index: number,
@@ -42,7 +42,7 @@ type TabPanelProps = {
   availableRunes?: AvailableRunes,
 };
 
-const getRuneIcon = (runeType: string): string => {
+export const getRuneIcon = (runeType: string): string => {
   const runeNo = parseInt(runeType.replace("r", ""));
   return "123456789ABCDEFGHIJKLMNOPQRSTUVWX".charAt(runeNo - 1);
 }
@@ -87,6 +87,15 @@ export function TabPanel(props: TabPanelProps) {
 
   let flatItems: {[k: string]: {}} = {};
   let ethFlatItems: {[k: string]: {}} = {};
+
+  const calculatorRunes = Object.keys(availableRunes).reduce((acc, runeName) => {
+    // @ts-ignore
+    acc[runeName] = countInSaves(availableRunes[runeName]);
+    return acc;
+  }, {});
+  const calculatorLink = "https://d2runewizard.com/runeword-calculator?isIncludeLadderOnly=true&isLodOnly="
+    + (appSettings.gameVersion === GameVersion.Classic ? "true" : "false")
+    + "&canCube=true&allowedMissingRunes=0&selected=" + btoa(JSON.stringify(calculatorRunes));
 
   let itemList = sets || runewords || runes || merge(items || {}, ethItems || {});
   if (value === index) {
@@ -372,147 +381,181 @@ export function TabPanel(props: TabPanelProps) {
         </Box>
       )}
       {value === index && runes && !runewords && (
-        <Box sx={{ p: 3 }}>
-        {
-            <Grid container spacing={2}>
-            {Object.keys((runes as any)).map((itemName: string) => {
-              const runeId = (itemList as any)[itemName];
-              if (!runeId) return;
-              const rune = runesMapping[runeId];
-              return <Grid item sm={4} xs={6} key={index+itemName}>
-                <RunePopup
-                  itemName={itemName}
-                  fullItemName={rune.name}
-                  itemType={runeId}
-                  saveFiles={player[itemName] ? player[itemName].inSaves : {}}
-                  appSettings={appSettings}
-                  disabled={!player[itemName]}
-                  itemNote={itemNotes[itemName]}
-                >
-                  <ListItem
-                    disablePadding
-                    style={{color: player[itemName] ? grey[400] : grey[700]}}
-                    secondaryAction={itemNotes[itemName] ? <Tooltip title={itemNotes[itemName]}>
-                      <InfoOutlined fontSize='small' color='disabled' />
-                    </Tooltip> : null}
+        <>
+          <Box sx={{ p: 3 }}>
+          {
+              <Grid container spacing={2}>
+              {Object.keys(runes as any).map((itemName: string) => {
+                const runeId: RuneType = (itemList as any)[itemName];
+                if (!runeId) return;
+                const rune = runesMapping[runeId];
+                return <Grid item sm={4} xs={6} key={index+itemName}>
+                  <RunePopup
+                    itemName={itemName}
+                    fullItemName={rune.name}
+                    itemType={runeId}
+                    view="RUNE"
+                    saveFiles={player[itemName] ? player[itemName].inSaves : {}}
+                    appSettings={appSettings}
+                    itemNote={itemNotes[itemName]}
                   >
-                    <ListItemButton>
-                      {gameMode !== GameMode.Manual && player[itemName] ? (
-                        <CountLabelContainer>
-                          <ListItemIcon>
-                            <DoneIcon />
-                          </ListItemIcon>
-                          {
-                            player[itemName] &&
-                            Object.keys(player[itemName].inSaves).length > 1 &&
-                            <CountLabel className="countLabel">x{countInSaves(player[itemName])}</CountLabel>
-                          }
-                        </CountLabelContainer>
-                      ) : <div style={{ width: 56, display: 'inline-block' }}></div>}
-                      {gameMode === GameMode.Manual && (
-                        <ListItemIcon>
-                          <ManualControl
-                            items={player}
-                            itemName={itemName}
-                            onChange={handleStatusChange}
-                            onNumberChange={handleNumberChange}
-                          />
-                        </ListItemIcon>
-                      )}
-                      <ListItemText
-                        primary={<div style={{ display: "flex" }}>
-                          <Rune style={{ opacity: player[itemName] ? 1 : 0.5 }}>
-                            <RuneBg src={runeBgImg} />
-                            <RuneIcon>{getRuneIcon(runeId)}</RuneIcon>
-                          </Rune>
-                          <div>
-                            <div>{rune.name}</div>
-                            {(availableRunes && availableRunes[itemName] && availableRunes[itemName])
-                              ? <AvailableRunesLine>{countInSaves(availableRunes[itemName])} <Trans>unused</Trans></AvailableRunesLine>
-                              : null
+                    <ListItem
+                      disablePadding
+                      style={{color: player[itemName] ? grey[400] : grey[700]}}
+                      secondaryAction={itemNotes[itemName] ? <Tooltip title={itemNotes[itemName]}>
+                        <InfoOutlined fontSize='small' color='disabled' />
+                      </Tooltip> : null}
+                    >
+                      <ListItemButton>
+                        {gameMode !== GameMode.Manual && player[itemName] ? (
+                          <CountLabelContainer>
+                            <ListItemIcon>
+                              <DoneIcon />
+                            </ListItemIcon>
+                            {
+                              player[itemName] &&
+                              Object.keys(player[itemName].inSaves).length > 1 &&
+                              <CountLabel className="countLabel">x{countInSaves(player[itemName])}</CountLabel>
                             }
-                          </div>
-                        </div>}
-                      />
-                    </ListItemButton>
-                  </ListItem>
-                </RunePopup>
-              </Grid>
-            }
-          )}
-          </Grid>
-        }
-        </Box>
+                          </CountLabelContainer>
+                        ) : <div style={{ width: 56, display: 'inline-block' }}></div>}
+                        {gameMode === GameMode.Manual && (
+                          <ListItemIcon>
+                            <ManualControl
+                              items={player}
+                              itemName={itemName}
+                              onChange={handleStatusChange}
+                              onNumberChange={handleNumberChange}
+                            />
+                          </ListItemIcon>
+                        )}
+                        <ListItemText
+                          primary={<div style={{ display: "flex" }}>
+                            <Rune style={{ opacity: player[itemName] ? 1 : 0.5 }}>
+                              <RuneBg src={runeBgImg} />
+                              <RuneIcon>{getRuneIcon(runeId)}</RuneIcon>
+                            </Rune>
+                            <div>
+                              <div>{rune.name}</div>
+                              {(availableRunes && availableRunes[itemName] && availableRunes[itemName])
+                                ? <AvailableRunesLine>{countInSaves(availableRunes[itemName])} <Trans>unused</Trans></AvailableRunesLine>
+                                : null
+                              }
+                            </div>
+                          </div>}
+                        />
+                      </ListItemButton>
+                    </ListItem>
+                  </RunePopup>
+                </Grid>
+              }
+            )}
+            </Grid>
+          }
+          </Box>
+          <div style={{ paddingLeft: 20 }}>
+            <Button
+              variant="text"
+              onClick={() => window.Main.openUrl(calculatorLink)}
+              style={{
+                display: "block",
+                textAlign: "left",
+                paddingLeft: 50,
+              }}
+            >
+              <Calculate style={{ position: 'absolute', left: 10, top: 12, fontSize: 32 }} />
+              <Trans>Open Runewords Calculator</Trans>
+              <small style={{ fontSize: 12, color: '#555', display: 'block' }}><Trans>The calculator will be automatically populated with your available runes.</Trans></small>
+            </Button>
+          </div>
+        </>
       )}
       {value === index && runewords && (
-        <Box sx={{ p: 3 }}>
-        {
-            <Grid container spacing={0}>
-            {Object.keys((runewords as any)).map((itemName: string) => {
-              const runewordId = (itemList as any)[itemName];
-              if (!runewordId) return;
-              const runeword = runewordsMapping[runewordId];
-              return <Grid item md={4} xs={6} key={index+itemName}>
-                <RunePopup
-                  itemName={itemName}
-                  fullItemName={t(runeword.name)}
-                  itemType={'RUNEWORD'}
-                  saveFiles={player[itemName] ? player[itemName].inSaves : {}}
-                  appSettings={appSettings}
-                  disabled={!player[itemName]}
-                  itemNote={itemNotes[itemName]}
-                >
-                  <ListItem
-                    disablePadding
-                    style={{color: player[itemName] ? grey[400] : grey[700]}}
-                    secondaryAction={itemNotes[itemName] ? <Tooltip title={itemNotes[itemName]}>
-                      <InfoOutlined fontSize='small' color='disabled' />
-                    </Tooltip> : null}
+        <>
+          <Box sx={{ p: 3 }}>
+          {
+              <Grid container spacing={0}>
+              {Object.keys((runewords as any)).map((itemName: string) => {
+                const runewordId = (itemList as any)[itemName];
+                if (!runewordId) return;
+                const runeword = runewordsMapping[runewordId];
+                return <Grid item md={4} xs={6} key={index+itemName}>
+                  <RunePopup
+                    itemName={itemName}
+                    fullItemName={t(runeword.name)}
+                    itemType={runeword.name}
+                    view="RUNEWORD"
+                    saveFiles={player[itemName] ? player[itemName].inSaves : {}}
+                    appSettings={appSettings}
+                    itemNote={itemNotes[itemName]}
                   >
-                    <ListItemButton>
-                      {gameMode !== GameMode.Manual && player[itemName] ? (
-                        <CountLabelContainer>
+                    <ListItem
+                      disablePadding
+                      style={{color: player[itemName] ? grey[400] : grey[700]}}
+                      secondaryAction={itemNotes[itemName] ? <Tooltip title={itemNotes[itemName]}>
+                        <InfoOutlined fontSize='small' color='disabled' />
+                      </Tooltip> : null}
+                    >
+                      <ListItemButton>
+                        {gameMode !== GameMode.Manual && player[itemName] ? (
+                          <CountLabelContainer>
+                            <ListItemIcon>
+                              <DoneIcon />
+                            </ListItemIcon>
+                            {
+                              player[itemName] &&
+                              Object.keys(player[itemName].inSaves).length > 1 &&
+                              <CountLabel className="countLabel">x{countInSaves(player[itemName])}</CountLabel>
+                            }
+                          </CountLabelContainer>
+                        ) : <div style={{ width: 56, display: 'inline-block' }}></div>}
+                        {gameMode === GameMode.Manual && (
                           <ListItemIcon>
-                            <DoneIcon />
+                            <ManualControl
+                              items={player}
+                              itemName={itemName}
+                              onChange={handleStatusChange}
+                              onNumberChange={handleNumberChange}
+                            />
                           </ListItemIcon>
-                          {
-                            player[itemName] &&
-                            Object.keys(player[itemName].inSaves).length > 1 &&
-                            <CountLabel className="countLabel">x{countInSaves(player[itemName])}</CountLabel>
-                          }
-                        </CountLabelContainer>
-                      ) : <div style={{ width: 56, display: 'inline-block' }}></div>}
-                      {gameMode === GameMode.Manual && (
-                        <ListItemIcon>
-                          <ManualControl
-                            items={player}
-                            itemName={itemName}
-                            onChange={handleStatusChange}
-                            onNumberChange={handleNumberChange}
-                          />
-                        </ListItemIcon>
-                      )}
-                      <ListItemText
-                        primary={<h3>{t(runeword.name)}</h3>}
-                        secondary={<RuneList>{runeword.runes.map(runeName => {
-                          const rune = runes && runes[runeName] && runesMapping[runes[runeName]];
-                          if (!rune) return;
-                          return <Rune style={{ opacity: player[itemName] ? 1 : 0.5 }}>
-                            <RuneBg src={runeBgImg} />
-                            <RuneIcon>{getRuneIcon(runes[runeName])}</RuneIcon>
-                            <RuneName>{rune.name}</RuneName>
-                          </Rune>;
-                        })}</RuneList>}
-                      />
-                    </ListItemButton>
-                  </ListItem>
-                </RunePopup>
-              </Grid>
-            }
-          )}
-          </Grid>
-        }
-        </Box>
+                        )}
+                        <ListItemText
+                          primary={<h3>{t(runeword.name)}</h3>}
+                          secondary={<RuneList>{runeword.runes.map(runeName => {
+                            const rune = runes && runes[runeName] && runesMapping[runes[runeName] as RuneType];
+                            if (!rune) return;
+                            return <Rune style={{ opacity: player[itemName] ? 1 : 0.5 }}>
+                              <RuneBg src={runeBgImg} />
+                              <RuneIcon>{getRuneIcon(runes[runeName])}</RuneIcon>
+                              <RuneName>{rune.name}</RuneName>
+                            </Rune>;
+                          })}</RuneList>}
+                        />
+                      </ListItemButton>
+                    </ListItem>
+                  </RunePopup>
+                </Grid>
+              }
+            )}
+            </Grid>
+          }
+          </Box>
+          <div style={{ paddingLeft: 20 }}>
+            <Button
+              variant="text"
+              onClick={() => window.Main.openUrl(calculatorLink)}
+              style={{
+                display: "block",
+                textAlign: "left",
+                paddingLeft: 50,
+              }}
+            >
+              <Calculate style={{ position: 'absolute', left: 10, top: 12, fontSize: 32 }} />
+              <Trans>Open Runewords Calculator</Trans>
+              <small style={{ fontSize: 12, color: '#555', display: 'block' }}><Trans>The calculator will be automatically populated with your available runes.</Trans></small>
+            </Button>
+          </div>
+        </>
       )}
       {value === index && !sets && !items && stats && (
         <Statistics

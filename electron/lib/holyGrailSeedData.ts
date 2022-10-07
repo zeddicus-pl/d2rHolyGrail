@@ -1,14 +1,14 @@
 import { holyGrailSeedData as original } from 'd2-holy-grail/client/src/common/seeds/HolyGrailSeedData';
 import { ethGrailSeedData } from 'd2-holy-grail/client/src/common/seeds/EthGrailSeedData';
-import { GrailType, HolyGrailSeed, Settings } from '../../src/@types/main';
+import { GrailType, HolyGrailSeed, RuneType, Settings } from '../../src/@types/main';
 import { simplifyItemName } from '../../src/utils/objects';
 import { runesMapping } from './runesMapping';
 import { runewordsMapping } from './runewordsMapping';
 import { IEthGrailData } from 'd2-holy-grail/client/src/common/definitions/union/IEthGrailData';
 
-export const runesSeed: {[runeId: string]: string} = {};
-Object.keys(runesMapping).forEach(runeId => {
-  runesSeed[runesMapping[runeId].name.toLowerCase()] = runeId;
+export let runesSeed: Record<string, string> = {};
+Object.keys(runesMapping).forEach((runeId: string) => {
+  runesSeed[runesMapping[runeId as RuneType].name.toLowerCase()] = runeId;
 })
 
 export const runewordsSeed: {[runewordId: string]: string} = {};

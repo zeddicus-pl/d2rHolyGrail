@@ -7,11 +7,13 @@ export type Runeword = {
     tier: number,
     patch: number,
     wiki: string,
+    level: number,
 }
 export type RunewordsMapping = {[runewordName: string]: Runeword};
 
 export const runewordsMapping: RunewordsMapping = {
     "Delirium": {
+        "level": 51,
         "name": "Delirium",
         "runes": [
             "lem",
@@ -39,6 +41,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Delirium"
     },
     "Dream": {
+        "level": 65,
         "name": "Dream",
         "runes": [
             "io",
@@ -70,6 +73,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Dream"
     },
     "Flickering Flame": {
+        "level": 55,
         "name": "Flickering Flame",
         "runes": [
             "nef",
@@ -97,6 +101,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.io/runewords/flickering-flame-t775675.html"
     },
     "Lore": {
+        "level": 27,
         "name": "Lore",
         "runes": [
             "ort",
@@ -119,6 +124,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Lore"
     },
     "Nadir": {
+        "level": 13,
         "name": "Nadir",
         "runes": [
             "nef",
@@ -143,6 +149,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Nadir"
     },
     "Radiance": {
+        "level": 27,
         "name": "Radiance",
         "runes": [
             "nef",
@@ -169,6 +176,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Radiance"
     },
     "Wisdom": {
+        "level": 45,
         "name": "Wisdom",
         "runes": [
             "pul",
@@ -195,6 +203,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.io/runewords/wisdom-t785743.html"
     },
     "Bone": {
+        "level": 47,
         "name": "Bone",
         "runes": [
             "sol",
@@ -218,6 +227,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Bone"
     },
     "Bramble": {
+        "level": 61,
         "name": "Bramble",
         "runes": [
             "ral",
@@ -247,6 +257,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Bramble"
     },
     "Chains of Honor": {
+        "level": 63,
         "name": "Chains of Honor",
         "runes": [
             "dol",
@@ -275,6 +286,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Chains%20of%20Honor"
     },
     "Dragon": {
+        "level": 61,
         "name": "Dragon",
         "runes": [
             "sur",
@@ -306,6 +318,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Dragon"
     },
     "Duress": {
+        "level": 47,
         "name": "Duress",
         "runes": [
             "shael",
@@ -334,6 +347,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Duress"
     },
     "Enigma": {
+        "level": 65,
         "name": "Enigma",
         "runes": [
             "jah",
@@ -361,6 +375,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Enigma"
     },
     "Enlightenment": {
+        "level": 45,
         "name": "Enlightenment",
         "runes": [
             "pul",
@@ -385,6 +400,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Enlightenment"
     },
     "Fortitude": {
+        "level": 59,
         "name": "Fortitude",
         "runes": [
             "el",
@@ -422,6 +438,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Fortitude"
     },
     "Gloom": {
+        "level": 47,
         "name": "Gloom",
         "runes": [
             "fal",
@@ -447,6 +464,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Gloom"
     },
     "Lionheart": {
+        "level": 41,
         "name": "Lionheart",
         "runes": [
             "hel",
@@ -472,6 +490,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Lionheart"
     },
     "Myth": {
+        "level": 33,
         "name": "Myth",
         "runes": [
             "hel",
@@ -496,6 +515,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Myth"
     },
     "Peace": {
+        "level": 29,
         "name": "Peace",
         "runes": [
             "shael",
@@ -520,6 +540,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Peace"
     },
     "Principle": {
+        "level": 53,
         "name": "Principle",
         "runes": [
             "ral",
@@ -544,6 +565,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Principle"
     },
     "Prudence": {
+        "level": 49,
         "name": "Prudence",
         "runes": [
             "mal",
@@ -568,6 +590,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Prudence"
     },
     "Rain": {
+        "level": 49,
         "name": "Rain",
         "runes": [
             "ort",
@@ -592,6 +615,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Rain"
     },
     "Smoke": {
+        "level": 37,
         "name": "Smoke",
         "runes": [
             "nef",
@@ -615,6 +639,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Smoke"
     },
     "Stealth": {
+        "level": 17,
         "name": "Stealth",
         "runes": [
             "tal",
@@ -639,6 +664,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Stealth"
     },
     "Stone": {
+        "level": 47,
         "name": "Stone",
         "runes": [
             "shael",
@@ -666,6 +692,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Stone"
     },
     "Treachery": {
+        "level": 43,
         "name": "Treachery",
         "runes": [
             "shael",
@@ -690,6 +717,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Treachery"
     },
     "Wealth": {
+        "level": 43,
         "name": "Wealth",
         "runes": [
             "lem",
@@ -711,6 +739,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Wealth"
     },
     "Beast": {
+        "level": 63,
         "name": "Beast",
         "runes": [
             "ber",
@@ -744,6 +773,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Beast"
     },
     "Black": {
+        "level": 35,
         "name": "Black",
         "runes": [
             "thul",
@@ -772,6 +802,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Black"
     },
     "Brand": {
+        "level": 65,
         "name": "Brand",
         "runes": [
             "jah",
@@ -800,6 +831,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Brand"
     },
     "Breath of the Dying": {
+        "level": 69,
         "name": "Breath of the Dying",
         "runes": [
             "vex",
@@ -834,6 +866,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Breath%20of%20the%20Dying"
     },
     "Call to Arms": {
+        "level": 57,
         "name": "Call to Arms",
         "runes": [
             "amn",
@@ -864,6 +897,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Call%20to%20Arms"
     },
     "Chaos": {
+        "level": 57,
         "name": "Chaos",
         "runes": [
             "fal",
@@ -890,6 +924,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Chaos"
     },
     "Crescent Moon": {
+        "level": 47,
         "name": "Crescent Moon",
         "runes": [
             "shael",
@@ -919,6 +954,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Crescent%20Moon"
     },
     "Death": {
+        "level": 55,
         "name": "Death",
         "runes": [
             "hel",
@@ -952,6 +988,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Death"
     },
     "Destruction": {
+        "level": 65,
         "name": "Destruction",
         "runes": [
             "vex",
@@ -984,6 +1021,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Destruction"
     },
     "Doom": {
+        "level": 67,
         "name": "Doom",
         "runes": [
             "hel",
@@ -1016,6 +1054,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Doom"
     },
     "Edge": {
+        "level": 25,
         "name": "Edge",
         "runes": [
             "tir",
@@ -1043,6 +1082,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Edge"
     },
     "Eternity": {
+        "level": 63,
         "name": "Eternity",
         "runes": [
             "amn",
@@ -1073,6 +1113,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Eternity"
     },
     "Faith": {
+        "level": 65,
         "name": "Faith",
         "runes": [
             "ohm",
@@ -1102,6 +1143,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Faith"
     },
     "Famine": {
+        "level": 65,
         "name": "Famine",
         "runes": [
             "fal",
@@ -1131,6 +1173,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Famine"
     },
     "Fury": {
+        "level": 65,
         "name": "Fury",
         "runes": [
             "jah",
@@ -1158,6 +1201,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Fury"
     },
     "Grief": {
+        "level": 59,
         "name": "Grief",
         "runes": [
             "eth",
@@ -1190,6 +1234,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Grief"
     },
     "Hand of Justice": {
+        "level": 67,
         "name": "Hand of Justice",
         "runes": [
             "sur",
@@ -1219,6 +1264,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Hand%20of%20Justice"
     },
     "Harmony": {
+        "level": 39,
         "name": "Harmony",
         "runes": [
             "tir",
@@ -1250,6 +1296,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Harmony"
     },
     "Heart of the Oak": {
+        "level": 55,
         "name": "Heart of the Oak",
         "runes": [
             "ko",
@@ -1281,6 +1328,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Heart%20of%20the%20Oak"
     },
     "Holy Thunder": {
+        "level": 21,
         "name": "Holy Thunder",
         "runes": [
             "eth",
@@ -1309,6 +1357,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Holy%20Thunder"
     },
     "Honor": {
+        "level": 27,
         "name": "Honor",
         "runes": [
             "amn",
@@ -1339,6 +1388,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Honor"
     },
     "Ice": {
+        "level": 65,
         "name": "Ice",
         "runes": [
             "amn",
@@ -1368,6 +1418,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Ice"
     },
     "Infinity": {
+        "level": 63,
         "name": "Infinity",
         "runes": [
             "ber",
@@ -1397,6 +1448,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Infinity"
     },
     "Insight": {
+        "level": 27,
         "name": "Insight",
         "runes": [
             "ral",
@@ -1428,6 +1480,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Insight"
     },
     "King's Grace": {
+        "level": 25,
         "name": "King's Grace",
         "runes": [
             "amn",
@@ -1455,6 +1508,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/King's%20Grace"
     },
     "Kingslayer": {
+        "level": 53,
         "name": "Kingslayer",
         "runes": [
             "mal",
@@ -1484,6 +1538,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Kingslayer"
     },
     "Last Wish": {
+        "level": 65,
         "name": "Last Wish",
         "runes": [
             "jah",
@@ -1516,6 +1571,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Last%20Wish"
     },
     "Lawbringer": {
+        "level": 43,
         "name": "Lawbringer",
         "runes": [
             "amn",
@@ -1545,6 +1601,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Lawbringer"
     },
     "Leaf": {
+        "level": 19,
         "name": "Leaf",
         "runes": [
             "tir",
@@ -1569,6 +1626,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Leaf"
     },
     "Malice": {
+        "level": 15,
         "name": "Malice",
         "runes": [
             "ith",
@@ -1594,6 +1652,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Malice"
     },
     "Melody": {
+        "level": 39,
         "name": "Melody",
         "runes": [
             "shael",
@@ -1620,6 +1679,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Melody"
     },
     "Memory": {
+        "level": 37,
         "name": "Memory",
         "runes": [
             "lum",
@@ -1649,6 +1709,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Memory"
     },
     "Mist": {
+        "level": 67,
         "name": "Mist",
         "runes": [
             "cham",
@@ -1679,6 +1740,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.io/runewords/mist-t775678.html"
     },
     "Oath": {
+        "level": 49,
         "name": "Oath",
         "runes": [
             "shael",
@@ -1710,6 +1772,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Oath"
     },
     "Obedience": {
+        "level": 41,
         "name": "Obedience",
         "runes": [
             "hel",
@@ -1742,6 +1805,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Obedience"
     },
     "Obsession": {
+        "level": 69,
         "name": "Obsession",
         "runes": [
             "zod",
@@ -1775,6 +1839,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.io/runewords/obsession-t785744.html"
     },
     "Passion": {
+        "level": 43,
         "name": "Passion",
         "runes": [
             "dol",
@@ -1805,6 +1870,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Passion"
     },
     "Pattern": {
+        "level": 23,
         "name": "Pattern",
         "runes": [
             "tal",
@@ -1832,6 +1898,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.io/runewords/pattern-t775672.html"
     },
     "Phoenix": {
+        "level": 65,
         "name": "Phoenix",
         "runes": [
             "vex",
@@ -1866,6 +1933,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Phoenix"
     },
     "Plague": {
+        "level": 67,
         "name": "Plague",
         "runes": [
             "cham",
@@ -1895,6 +1963,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.io/runewords/plague-t775670.html"
     },
     "Pride": {
+        "level": 67,
         "name": "Pride",
         "runes": [
             "cham",
@@ -1925,6 +1994,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Pride"
     },
     "Rift": {
+        "level": 53,
         "name": "Rift",
         "runes": [
             "hel",
@@ -1955,6 +2025,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Rift"
     },
     "Silence": {
+        "level": 55,
         "name": "Silence",
         "runes": [
             "dol",
@@ -1988,6 +2059,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Silence"
     },
     "Spirit": {
+        "level": 25,
         "name": "Spirit",
         "runes": [
             "tal",
@@ -2024,6 +2096,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Spirit"
     },
     "Steel": {
+        "level": 13,
         "name": "Steel",
         "runes": [
             "tir",
@@ -2050,6 +2123,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Steel"
     },
     "Strength": {
+        "level": 25,
         "name": "Strength",
         "runes": [
             "amn",
@@ -2072,6 +2146,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Strength"
     },
     "Unbending Will": {
+        "level": 41,
         "name": "Unbending Will",
         "runes": [
             "fal",
@@ -2107,6 +2182,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.io/runewords/unbending-will-t768058.html"
     },
     "Venom": {
+        "level": 49,
         "name": "Venom",
         "runes": [
             "tal",
@@ -2131,6 +2207,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Venom"
     },
     "Voice of Reason": {
+        "level": 43,
         "name": "Voice of Reason",
         "runes": [
             "lem",
@@ -2162,6 +2239,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Voice%20of%20Reason"
     },
     "White": {
+        "level": 35,
         "name": "White",
         "runes": [
             "dol",
@@ -2187,6 +2265,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/White"
     },
     "Wind": {
+        "level": 61,
         "name": "Wind",
         "runes": [
             "sur",
@@ -2213,6 +2292,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Wind"
     },
     "Wrath": {
+        "level": 63,
         "name": "Wrath",
         "runes": [
             "pul",
@@ -2242,6 +2322,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Wrath"
     },
     "Zephyr": {
+        "level": 21,
         "name": "Zephyr",
         "runes": [
             "ort",
@@ -2266,6 +2347,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Zephyr"
     },
     "Ancient's Pledge": {
+        "level": 21,
         "name": "Ancient's Pledge",
         "runes": [
             "ral",
@@ -2289,6 +2371,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Ancient's%20Pledge"
     },
     "Exile": {
+        "level": 57,
         "name": "Exile",
         "runes": [
             "vex",
@@ -2318,6 +2401,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Exile"
     },
     "Rhyme": {
+        "level": 29,
         "name": "Rhyme",
         "runes": [
             "shael",
@@ -2341,6 +2425,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Rhyme"
     },
     "Sanctuary": {
+        "level": 49,
         "name": "Sanctuary",
         "runes": [
             "ko",
@@ -2367,6 +2452,7 @@ export const runewordsMapping: RunewordsMapping = {
         "wiki": "https://diablo2.diablowiki.net/Sanctuary"
     },
     "Splendor": {
+        "level": 37,
         "name": "Splendor",
         "runes": [
             "eth",

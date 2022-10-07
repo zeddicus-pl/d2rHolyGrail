@@ -1,12 +1,13 @@
 import { dialog } from 'electron';
 import * as d2s from '@dschu012/d2s';
 import * as d2stash from '@dschu012/d2s/lib/d2/stash';
-import { constants } from '@dschu012/d2s/lib/data/versions/96_constant_data';
+import { constants as constants96 } from '@dschu012/d2s/lib/data/versions/96_constant_data';
+import { constants as constants99 } from '@dschu012/d2s/lib/data/versions/99_constant_data';
 import { existsSync, promises } from 'fs';
 import { basename, extname, join, resolve, sep } from 'path';
 import { IpcMainEvent } from 'electron/renderer';
 import { readdirSync } from 'original-fs';
-import { AvailableRunes, FileReaderResponse, GameMode, GrailType, Item, ItemDetails, ItemNotes } from '../../src/@types/main.d';
+import { AvailableRunes, FileReaderResponse, GameMode, GrailType, Item, ItemDetails, ItemNotes, RuneType } from '../../src/@types/main.d';
 import storage from 'electron-json-storage';
 import chokidar, { FSWatcher } from 'chokidar';
 import { getHolyGrailSeedData, runesSeed } from './holyGrailSeedData';
@@ -39,6 +40,10 @@ class ItemsStore {
     this.readingFiles = false;
     this.itemNotes = null;
     setInterval(this.tickReader, 500);
+    try { d2s.getConstantData(96); } catch (e) { d2s.setConstantData(96, constants96); }
+    try { d2s.getConstantData(97); } catch (e) { d2s.setConstantData(97, constants96); }
+    try { d2s.getConstantData(98); } catch (e) { d2s.setConstantData(98, constants96); }
+    try { d2s.getConstantData(99); } catch (e) { d2s.setConstantData(99, constants99); }
   }
 
   getItems = () => {
@@ -245,7 +250,7 @@ class ItemsStore {
               })
               name = name + skill + type;
             } else if (isRune(item)) {
-              name = runesMapping[item.type].name.toLowerCase();
+              name = runesMapping[item.type as RuneType].name.toLowerCase();
             } else if (item.type === 'runeword') {
               name = item.runeword_name;
             } else if (!flatItems[name] && (item.ethereal && !ethFlatItems[name])) {
@@ -317,7 +322,7 @@ class ItemsStore {
         if (item.unique_name || item.set_name || item.rare_name || item.rare_name2) {
           items.push(item);
         }
-        if (isRune(item) && runesMapping[item.type]) {
+        if (isRune(item) && runesMapping[item.type as RuneType]) {
           if (isEmbed) {
             item.socketed = 1; // the "socketed" in Rune item types will indicated that *it* sits inside socket
           }
@@ -376,16 +381,16 @@ class ItemsStore {
     switch (extension) {
       case '.sss':
       case '.d2x':
-        await d2stash.read(content, constants, null).then((response) => {
+        await d2stash.read(content).then((response) => {
           response.hardcore === saveName.toLowerCase().includes('hardcore');
           parseStash(response);
         });
         break;
       case '.d2i':
-        await d2stash.read(content, constants, null).then(parseStash);
+        await d2stash.read(content).then(parseStash);
         break;
       default:
-        await d2s.read(content, constants).then(parseD2S);
+        await d2s.read(content).then(parseD2S);
     }
     return items;
   };

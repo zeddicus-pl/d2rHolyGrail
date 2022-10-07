@@ -1,8 +1,10 @@
+import { RuneType } from "../../src/@types/main";
+
 export type Rune = {
     name: string,
     effect: Partial<Record<'weapon' | 'armorhelmshield' | 'armorhelm' | 'armorshield' | 'shield', string>>, level: number | null,
 }
-export type RuneList = { [name: string]: Rune };
+export type RuneList = Record<RuneType, Rune>;
 
 export const runesMapping: RuneList = {
     r01: {
@@ -246,3 +248,39 @@ export const runesMapping: RuneList = {
         }, level: 69
     }
 };
+
+export const reverseRunesMap: Record<string, RuneType> = {
+    "el": "r01",
+    "eld": "r02",
+    "tir": "r03",
+    "nef": "r04",
+    "eth": "r05",
+    "ith": "r06",
+    "tal": "r07",
+    "ral": "r08",
+    "ort": "r09",
+    "thul": "r10",
+    "amn": "r11",
+    "sol": "r12",
+    "shael": "r13",
+    "dol": "r14",
+    "hel": "r15",
+    "io": "r16",
+    "lum": "r17",
+    "ko": "r18",
+    "fal": "r19",
+    "lem": "r20",
+    "pul": "r21",
+    "um": "r22",
+    "mal": "r23",
+    "ist": "r24",
+    "gul": "r25",
+    "vex": "r26",
+    "ohm": "r27",
+    "lo": "r28",
+    "sur": "r29",
+    "ber": "r30",
+    "jah": "r31",
+    "cham": "r32",
+    "zod": "r33",
+}
