@@ -38,7 +38,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 2,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Delirium"
+        "wiki": "https://d2runewizard.com/runewords/Delirium"
     },
     "Dream": {
         "level": 65,
@@ -70,7 +70,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": true,
         "tier": 2,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Dream"
+        "wiki": "https://d2runewizard.com/runewords/Dream"
     },
     "Flickering Flame": {
         "level": 55,
@@ -98,7 +98,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": true,
         "tier": 3,
         "patch": 2.4,
-        "wiki": "https://diablo2.io/runewords/flickering-flame-t775675.html"
+        "wiki": "https://d2runewizard.com/runewords/Flickering%20Flame"
     },
     "Lore": {
         "level": 27,
@@ -121,7 +121,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 2,
         "patch": 1,
-        "wiki": "https://diablo2.diablowiki.net/Lore"
+        "wiki": "https://d2runewizard.com/runewords/Lore"
     },
     "Nadir": {
         "level": 13,
@@ -146,7 +146,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 3,
         "patch": 1,
-        "wiki": "https://diablo2.diablowiki.net/Nadir"
+        "wiki": "https://d2runewizard.com/runewords/Nadir"
     },
     "Radiance": {
         "level": 27,
@@ -173,7 +173,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 4,
         "patch": 1,
-        "wiki": "https://diablo2.diablowiki.net/Radiance"
+        "wiki": "https://d2runewizard.com/runewords/Radiance"
     },
     "Wisdom": {
         "level": 45,
@@ -200,7 +200,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": true,
         "tier": 3,
         "patch": 2.4,
-        "wiki": "https://diablo2.io/runewords/wisdom-t785743.html"
+        "wiki": "https://d2runewizard.com/runewords/Wisdom"
     },
     "Bone": {
         "level": 47,
@@ -224,7 +224,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 4,
         "patch": 1.11,
-        "wiki": "https://diablo2.diablowiki.net/Bone"
+        "wiki": "https://d2runewizard.com/runewords/Bone"
     },
     "Bramble": {
         "level": 61,
@@ -254,7 +254,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 3,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Bramble"
+        "wiki": "https://d2runewizard.com/runewords/Bramble"
     },
     "Chains of Honor": {
         "level": 63,
@@ -283,7 +283,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 1,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Chains%20of%20Honor"
+        "wiki": "https://d2runewizard.com/runewords/Chains%20of%20Honor"
     },
     "Dragon": {
         "level": 61,
@@ -315,7 +315,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": true,
         "tier": 3,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Dragon"
+        "wiki": "https://d2runewizard.com/runewords/Dragon"
     },
     "Duress": {
         "level": 47,
@@ -344,7 +344,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 2,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Duress"
+        "wiki": "https://d2runewizard.com/runewords/Duress"
     },
     "Enigma": {
         "level": 65,
@@ -372,7 +372,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 1,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Enigma"
+        "wiki": "https://d2runewizard.com/runewords/Enigma"
     },
     "Enlightenment": {
         "level": 45,
@@ -397,7 +397,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 4,
         "patch": 1.11,
-        "wiki": "https://diablo2.diablowiki.net/Enlightenment"
+        "wiki": "https://d2runewizard.com/runewords/Enlightenment"
     },
     "Fortitude": {
         "level": 59,
@@ -435,7 +435,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": true,
         "tier": 1,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Fortitude"
+        "wiki": "https://d2runewizard.com/runewords/Fortitude"
     },
     "Gloom": {
         "level": 47,
@@ -461,7 +461,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 4,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Gloom"
+        "wiki": "https://d2runewizard.com/runewords/Gloom"
     },
     "Lionheart": {
         "level": 41,
@@ -487,7 +487,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 3,
         "patch": 1,
-        "wiki": "https://diablo2.diablowiki.net/Lionheart"
+        "wiki": "https://d2runewizard.com/runewords/Lionheart"
     },
     "Myth": {
         "level": 33,
@@ -512,7 +512,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 5,
         "patch": 1.11,
-        "wiki": "https://diablo2.diablowiki.net/Myth"
+        "wiki": "https://d2runewizard.com/runewords/Myth"
     },
     "Peace": {
         "level": 29,
@@ -537,7 +537,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 3,
         "patch": 1.11,
-        "wiki": "https://diablo2.diablowiki.net/Peace"
+        "wiki": "https://d2runewizard.com/runewords/Peace"
     },
     "Principle": {
         "level": 53,
@@ -562,7 +562,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 4,
         "patch": 1.11,
-        "wiki": "https://diablo2.diablowiki.net/Principle"
+        "wiki": "https://d2runewizard.com/runewords/Principle"
     },
     "Prudence": {
         "level": 49,
@@ -587,7 +587,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 3,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Prudence"
+        "wiki": "https://d2runewizard.com/runewords/Prudence"
     },
     "Rain": {
         "level": 49,
@@ -612,7 +612,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 4,
         "patch": 1.11,
-        "wiki": "https://diablo2.diablowiki.net/Rain"
+        "wiki": "https://d2runewizard.com/runewords/Rain"
     },
     "Smoke": {
         "level": 37,
@@ -636,7 +636,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 2,
         "patch": 1,
-        "wiki": "https://diablo2.diablowiki.net/Smoke"
+        "wiki": "https://d2runewizard.com/runewords/Smoke"
     },
     "Stealth": {
         "level": 17,
@@ -661,7 +661,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 1,
         "patch": 1,
-        "wiki": "https://diablo2.diablowiki.net/Stealth"
+        "wiki": "https://d2runewizard.com/runewords/Stealth"
     },
     "Stone": {
         "level": 47,
@@ -689,7 +689,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 3,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Stone"
+        "wiki": "https://d2runewizard.com/runewords/Stone"
     },
     "Treachery": {
         "level": 43,
@@ -714,7 +714,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 1,
         "patch": 1.11,
-        "wiki": "https://diablo2.diablowiki.net/Treachery"
+        "wiki": "https://d2runewizard.com/runewords/Treachery"
     },
     "Wealth": {
         "level": 43,
@@ -736,7 +736,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 3,
         "patch": 1,
-        "wiki": "https://diablo2.diablowiki.net/Wealth"
+        "wiki": "https://d2runewizard.com/runewords/Wealth"
     },
     "Beast": {
         "level": 63,
@@ -770,7 +770,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 2,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Beast"
+        "wiki": "https://d2runewizard.com/runewords/Beast"
     },
     "Black": {
         "level": 35,
@@ -799,7 +799,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 2,
         "patch": 1,
-        "wiki": "https://diablo2.diablowiki.net/Black"
+        "wiki": "https://d2runewizard.com/runewords/Black"
     },
     "Brand": {
         "level": 65,
@@ -828,7 +828,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": true,
         "tier": 3,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Brand"
+        "wiki": "https://d2runewizard.com/runewords/Brand"
     },
     "Breath of the Dying": {
         "level": 69,
@@ -863,7 +863,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 1,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Breath%20of%20the%20Dying"
+        "wiki": "https://d2runewizard.com/runewords/Breath%20of%20the%20Dying"
     },
     "Call to Arms": {
         "level": 57,
@@ -894,7 +894,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 1,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Call%20to%20Arms"
+        "wiki": "https://d2runewizard.com/runewords/Call%20to%20Arms"
     },
     "Chaos": {
         "level": 57,
@@ -921,7 +921,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 2,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Chaos"
+        "wiki": "https://d2runewizard.com/runewords/Chaos"
     },
     "Crescent Moon": {
         "level": 47,
@@ -951,7 +951,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 3,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Crescent%20Moon"
+        "wiki": "https://d2runewizard.com/runewords/Crescent%20Moon"
     },
     "Death": {
         "level": 55,
@@ -985,7 +985,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": true,
         "tier": 2,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Death"
+        "wiki": "https://d2runewizard.com/runewords/Death"
     },
     "Destruction": {
         "level": 65,
@@ -1018,7 +1018,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": true,
         "tier": 4,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Destruction"
+        "wiki": "https://d2runewizard.com/runewords/Destruction"
     },
     "Doom": {
         "level": 67,
@@ -1051,7 +1051,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 2,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Doom"
+        "wiki": "https://d2runewizard.com/runewords/Doom"
     },
     "Edge": {
         "level": 25,
@@ -1079,7 +1079,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": true,
         "tier": 3,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Edge"
+        "wiki": "https://d2runewizard.com/runewords/Edge"
     },
     "Eternity": {
         "level": 63,
@@ -1110,7 +1110,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 4,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Eternity"
+        "wiki": "https://d2runewizard.com/runewords/Eternity"
     },
     "Faith": {
         "level": 65,
@@ -1140,7 +1140,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": true,
         "tier": 1,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Faith"
+        "wiki": "https://d2runewizard.com/runewords/Faith"
     },
     "Famine": {
         "level": 65,
@@ -1170,7 +1170,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 2,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Famine"
+        "wiki": "https://d2runewizard.com/runewords/Famine"
     },
     "Fury": {
         "level": 65,
@@ -1198,7 +1198,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 3,
         "patch": 1,
-        "wiki": "https://diablo2.diablowiki.net/Fury"
+        "wiki": "https://d2runewizard.com/runewords/Fury"
     },
     "Grief": {
         "level": 59,
@@ -1231,7 +1231,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": true,
         "tier": 1,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Grief"
+        "wiki": "https://d2runewizard.com/runewords/Grief"
     },
     "Hand of Justice": {
         "level": 67,
@@ -1261,7 +1261,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 3,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Hand%20of%20Justice"
+        "wiki": "https://d2runewizard.com/runewords/Hand%20of%20Justice"
     },
     "Harmony": {
         "level": 39,
@@ -1293,7 +1293,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": true,
         "tier": 4,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Harmony"
+        "wiki": "https://d2runewizard.com/runewords/Harmony"
     },
     "Heart of the Oak": {
         "level": 55,
@@ -1325,7 +1325,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 1,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Heart%20of%20the%20Oak"
+        "wiki": "https://d2runewizard.com/runewords/Heart%20of%20the%20Oak"
     },
     "Holy Thunder": {
         "level": 21,
@@ -1354,7 +1354,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 3,
         "patch": 1,
-        "wiki": "https://diablo2.diablowiki.net/Holy%20Thunder"
+        "wiki": "https://d2runewizard.com/runewords/Holy%20Thunder"
     },
     "Honor": {
         "level": 27,
@@ -1385,7 +1385,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 2,
         "patch": 1,
-        "wiki": "https://diablo2.diablowiki.net/Honor"
+        "wiki": "https://d2runewizard.com/runewords/Honor"
     },
     "Ice": {
         "level": 65,
@@ -1415,7 +1415,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": true,
         "tier": 2,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Ice"
+        "wiki": "https://d2runewizard.com/runewords/Ice"
     },
     "Infinity": {
         "level": 63,
@@ -1445,7 +1445,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": true,
         "tier": 1,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Infinity"
+        "wiki": "https://d2runewizard.com/runewords/Infinity"
     },
     "Insight": {
         "level": 27,
@@ -1477,7 +1477,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": true,
         "tier": 1,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Insight"
+        "wiki": "https://d2runewizard.com/runewords/Insight"
     },
     "King's Grace": {
         "level": 25,
@@ -1505,7 +1505,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 3,
         "patch": 1,
-        "wiki": "https://diablo2.diablowiki.net/King's%20Grace"
+        "wiki": "https://d2runewizard.com/runewords/King's%20Grace"
     },
     "Kingslayer": {
         "level": 53,
@@ -1535,7 +1535,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 2,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Kingslayer"
+        "wiki": "https://d2runewizard.com/runewords/Kingslayer"
     },
     "Last Wish": {
         "level": 65,
@@ -1568,7 +1568,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": true,
         "tier": 1,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Last%20Wish"
+        "wiki": "https://d2runewizard.com/runewords/Last%20Wish"
     },
     "Lawbringer": {
         "level": 43,
@@ -1598,7 +1598,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": true,
         "tier": 3,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Lawbringer"
+        "wiki": "https://d2runewizard.com/runewords/Lawbringer"
     },
     "Leaf": {
         "level": 19,
@@ -1623,7 +1623,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 2,
         "patch": 1,
-        "wiki": "https://diablo2.diablowiki.net/Leaf"
+        "wiki": "https://d2runewizard.com/runewords/Leaf"
     },
     "Malice": {
         "level": 15,
@@ -1649,7 +1649,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 3,
         "patch": 1,
-        "wiki": "https://diablo2.diablowiki.net/Malice"
+        "wiki": "https://d2runewizard.com/runewords/Malice"
     },
     "Melody": {
         "level": 39,
@@ -1676,7 +1676,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 3,
         "patch": 1,
-        "wiki": "https://diablo2.diablowiki.net/Melody"
+        "wiki": "https://d2runewizard.com/runewords/Melody"
     },
     "Memory": {
         "level": 37,
@@ -1706,7 +1706,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 2,
         "patch": 1,
-        "wiki": "https://diablo2.diablowiki.net/Memory"
+        "wiki": "https://d2runewizard.com/runewords/Memory"
     },
     "Mist": {
         "level": 67,
@@ -1737,7 +1737,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": true,
         "tier": 3,
         "patch": 2.4,
-        "wiki": "https://diablo2.io/runewords/mist-t775678.html"
+        "wiki": "https://d2runewizard.com/runewords/Mist"
     },
     "Oath": {
         "level": 49,
@@ -1769,7 +1769,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": true,
         "tier": 2,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Oath"
+        "wiki": "https://d2runewizard.com/runewords/Oath"
     },
     "Obedience": {
         "level": 41,
@@ -1802,7 +1802,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": true,
         "tier": 1,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Obedience"
+        "wiki": "https://d2runewizard.com/runewords/Obedience"
     },
     "Obsession": {
         "level": 69,
@@ -1836,7 +1836,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": true,
         "tier": 3,
         "patch": 2.4,
-        "wiki": "https://diablo2.io/runewords/obsession-t785744.html"
+        "wiki": "https://d2runewizard.com/runewords/Obsession"
     },
     "Passion": {
         "level": 43,
@@ -1867,7 +1867,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 3,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Passion"
+        "wiki": "https://d2runewizard.com/runewords/Passion"
     },
     "Pattern": {
         "level": 23,
@@ -1895,7 +1895,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": true,
         "tier": 3,
         "patch": 2.4,
-        "wiki": "https://diablo2.io/runewords/pattern-t775672.html"
+        "wiki": "https://d2runewizard.com/runewords/Pattern"
     },
     "Phoenix": {
         "level": 65,
@@ -1930,7 +1930,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": true,
         "tier": 2,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Phoenix"
+        "wiki": "https://d2runewizard.com/runewords/Phoenix"
     },
     "Plague": {
         "level": 67,
@@ -1960,7 +1960,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": true,
         "tier": 3,
         "patch": 2.4,
-        "wiki": "https://diablo2.io/runewords/plague-t775670.html"
+        "wiki": "https://d2runewizard.com/runewords/Plague"
     },
     "Pride": {
         "level": 67,
@@ -1991,7 +1991,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": true,
         "tier": 2,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Pride"
+        "wiki": "https://d2runewizard.com/runewords/Pride"
     },
     "Rift": {
         "level": 53,
@@ -2022,7 +2022,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": true,
         "tier": 3,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Rift"
+        "wiki": "https://d2runewizard.com/runewords/Rift"
     },
     "Silence": {
         "level": 55,
@@ -2056,7 +2056,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 3,
         "patch": 1,
-        "wiki": "https://diablo2.diablowiki.net/Silence"
+        "wiki": "https://d2runewizard.com/runewords/Silence"
     },
     "Spirit": {
         "level": 25,
@@ -2093,7 +2093,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": true,
         "tier": 1,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Spirit"
+        "wiki": "https://d2runewizard.com/runewords/Spirit"
     },
     "Steel": {
         "level": 13,
@@ -2120,7 +2120,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 3,
         "patch": 1,
-        "wiki": "https://diablo2.diablowiki.net/Steel"
+        "wiki": "https://d2runewizard.com/runewords/Steel"
     },
     "Strength": {
         "level": 25,
@@ -2143,7 +2143,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 3,
         "patch": 1,
-        "wiki": "https://diablo2.diablowiki.net/Strength"
+        "wiki": "https://d2runewizard.com/runewords/Strength"
     },
     "Unbending Will": {
         "level": 41,
@@ -2179,7 +2179,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": true,
         "tier": 3,
         "patch": 2.4,
-        "wiki": "https://diablo2.io/runewords/unbending-will-t768058.html"
+        "wiki": "https://d2runewizard.com/runewords/Unbending%20Will"
     },
     "Venom": {
         "level": 49,
@@ -2204,7 +2204,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 5,
         "patch": 1,
-        "wiki": "https://diablo2.diablowiki.net/Venom"
+        "wiki": "https://d2runewizard.com/runewords/Venom"
     },
     "Voice of Reason": {
         "level": 43,
@@ -2236,7 +2236,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": true,
         "tier": 4,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Voice%20of%20Reason"
+        "wiki": "https://d2runewizard.com/runewords/Voice%20of%20Reason"
     },
     "White": {
         "level": 35,
@@ -2262,7 +2262,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 2,
         "patch": 1,
-        "wiki": "https://diablo2.diablowiki.net/White"
+        "wiki": "https://d2runewizard.com/runewords/White"
     },
     "Wind": {
         "level": 61,
@@ -2289,7 +2289,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 5,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Wind"
+        "wiki": "https://d2runewizard.com/runewords/Wind"
     },
     "Wrath": {
         "level": 63,
@@ -2319,7 +2319,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": true,
         "tier": 4,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Wrath"
+        "wiki": "https://d2runewizard.com/runewords/Wrath"
     },
     "Zephyr": {
         "level": 21,
@@ -2344,7 +2344,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 3,
         "patch": 1,
-        "wiki": "https://diablo2.diablowiki.net/Zephyr"
+        "wiki": "https://d2runewizard.com/runewords/Zephyr"
     },
     "Ancient's Pledge": {
         "level": 21,
@@ -2368,7 +2368,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 1,
         "patch": 1,
-        "wiki": "https://diablo2.diablowiki.net/Ancient's%20Pledge"
+        "wiki": "https://d2runewizard.com/runewords/Ancient's%20Pledge"
     },
     "Exile": {
         "level": 57,
@@ -2398,7 +2398,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 1,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Exile"
+        "wiki": "https://d2runewizard.com/runewords/Exile"
     },
     "Rhyme": {
         "level": 29,
@@ -2422,7 +2422,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 2,
         "patch": 1,
-        "wiki": "https://diablo2.diablowiki.net/Rhyme"
+        "wiki": "https://d2runewizard.com/runewords/Rhyme"
     },
     "Sanctuary": {
         "level": 49,
@@ -2449,7 +2449,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 2,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Sanctuary"
+        "wiki": "https://d2runewizard.com/runewords/Sanctuary"
     },
     "Splendor": {
         "level": 37,
@@ -2475,7 +2475,7 @@ export const runewordsMapping: RunewordsMapping = {
         "ladder": false,
         "tier": 3,
         "patch": 1.1,
-        "wiki": "https://diablo2.diablowiki.net/Splendor"
+        "wiki": "https://d2runewizard.com/runewords/Splendor"
     }
 };
 

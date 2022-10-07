@@ -214,39 +214,39 @@ export default function RunePopup({
             {runewordData.bases.map((base) => {
               switch (base) {
                 case 'helm':
-                  return <Chip key={base} label={<Trans>Helm</Trans>} />;
+                  return <Tooltip title={<Trans>Click for more information</Trans>}><Chip key={base} onClick={() => window.Main.openUrl("https://d2runewizard.com/bases/headgear")} label={<Trans>Helm</Trans>} /></Tooltip>;
                 case 'shield':
-                  return <Chip key={base} label={<Trans>Shield</Trans>} />;
+                  return <Tooltip title={<Trans>Click for more information</Trans>}><Chip key={base} onClick={() => window.Main.openUrl("https://d2runewizard.com/bases/shield")} label={<Trans>Shield</Trans>} /></Tooltip>;
                 case 'body armor':
-                  return <Chip key={base} label={<Trans>Body Armor</Trans>} />;
+                  return <Tooltip title={<Trans>Click for more information</Trans>}><Chip key={base} onClick={() => window.Main.openUrl("https://d2runewizard.com/bases/body-armor")} label={<Trans>Body Armor</Trans>} /></Tooltip>;
                 case 'weapon':
-                  return <Chip key={base} label={<Trans>Weapon</Trans>} />;
+                  return <Tooltip title={<Trans>Click for more information</Trans>}><Chip key={base} onClick={() => window.Main.openUrl("https://d2runewizard.com/bases/weapon")} label={<Trans>Weapon</Trans>} /></Tooltip>;
                 case 'axe':
-                  return <Chip key={base} label={<Trans>Axe</Trans>} />;
+                  return <Tooltip title={<Trans>Click for more information</Trans>}><Chip key={base} onClick={() => window.Main.openUrl("https://d2runewizard.com/bases/axe")} label={<Trans>Axe</Trans>} /></Tooltip>;
                 case 'hammer':
-                  return <Chip key={base} label={<Trans>Hammer</Trans>} />;
+                  return <Tooltip title={<Trans>Click for more information</Trans>}><Chip key={base} onClick={() => window.Main.openUrl("https://d2runewizard.com/bases/hammer")} label={<Trans>Hammer</Trans>} /></Tooltip>;
                 case 'scepter':
-                  return <Chip key={base} label={<Trans>Scepter</Trans>} />;
+                  return <Tooltip title={<Trans>Click for more information</Trans>}><Chip key={base} onClick={() => window.Main.openUrl("https://d2runewizard.com/bases/scepter")} label={<Trans>Scepter</Trans>} /></Tooltip>;
                 case 'club':
-                  return <Chip key={base} label={<Trans>Club</Trans>} />;
+                  return <Tooltip title={<Trans>Click for more information</Trans>}><Chip key={base} onClick={() => window.Main.openUrl("https://d2runewizard.com/bases/club")} label={<Trans>Club</Trans>} /></Tooltip>;
                 case 'mace':
-                  return <Chip key={base} label={<Trans>Mace</Trans>} />;
+                  return <Tooltip title={<Trans>Click for more information</Trans>}><Chip key={base} onClick={() => window.Main.openUrl("https://d2runewizard.com/bases/mace")} label={<Trans>Mace</Trans>} /></Tooltip>;
                 case 'missile weapon':
-                  return <Chip key={base} label={<Trans>Missile Weapon</Trans>} />;
+                  return <Tooltip title={<Trans>Click for more information</Trans>}><Chip key={base} onClick={() => window.Main.openUrl("https://d2runewizard.com/bases/missile-weapon")} label={<Trans>Missile Weapon</Trans>} /></Tooltip>;
                 case 'claw':
-                  return <Chip key={base} label={<Trans>Claw</Trans>} />;
+                  return <Tooltip title={<Trans>Click for more information</Trans>}><Chip key={base} onClick={() => window.Main.openUrl("https://d2runewizard.com/bases/claw")} label={<Trans>Claw</Trans>} /></Tooltip>;
                 case 'polearm':
-                  return <Chip key={base} label={<Trans>Polearm</Trans>} />;
+                  return <Tooltip title={<Trans>Click for more information</Trans>}><Chip key={base} onClick={() => window.Main.openUrl("https://d2runewizard.com/bases/polearm")} label={<Trans>Polearm</Trans>} /></Tooltip>;
                 case 'melee weapon':
-                  return <Chip key={base} label={<Trans>Melee Weapon</Trans>} />;
+                  return <Tooltip title={<Trans>Click for more information</Trans>}><Chip key={base} onClick={() => window.Main.openUrl("https://d2runewizard.com/bases/melee-weapon")} label={<Trans>Melee Weapon</Trans>} /></Tooltip>;
                 case 'staff':
-                  return <Chip key={base} label={<Trans>Staff</Trans>} />;
-                case 'scepter':
-                  return <Chip key={base} label={<Trans>Scepter</Trans>} />;
+                  return <Tooltip title={<Trans>Click for more information</Trans>}><Chip key={base} onClick={() => window.Main.openUrl("https://d2runewizard.com/bases/staff")} label={<Trans>Staff</Trans>} /></Tooltip>;
                 case 'spear':
-                  return <Chip key={base} label={<Trans>Spear</Trans>} />;
+                  return <Tooltip title={<Trans>Click for more information</Trans>}><Chip key={base} onClick={() => window.Main.openUrl("https://d2runewizard.com/bases/spear")} label={<Trans>Spear</Trans>} /></Tooltip>;
                 case 'dagger':
-                  return <Chip key={base} label={<Trans>Dagger</Trans>} />;
+                  return <Tooltip title={<Trans>Click for more information</Trans>}><Chip key={base} onClick={() => window.Main.openUrl("https://d2runewizard.com/bases/dagger")} label={<Trans>Dagger</Trans>} /></Tooltip>;
+                case 'sword':
+                  return <Tooltip title={<Trans>Click for more information</Trans>}><Chip key={base} onClick={() => window.Main.openUrl("https://d2runewizard.com/bases/sword")} label={<Trans>Sword</Trans>} /></Tooltip>;
                 default:
                   return <Chip key={base} label={base.charAt(0).toUpperCase() + base.substring(1)} />;
               }
