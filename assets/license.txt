@@ -1,5 +1,8 @@
 CHANGELOG:
 
+v.2.3.1
+ - Corrections for Plugy stash reading
+
 v.2.3.0
  - Added integration with runewords calculator
  - Added description of runes and runewords

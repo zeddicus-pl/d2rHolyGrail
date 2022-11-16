@@ -44,6 +44,8 @@ class ItemsStore {
     try { d2s.getConstantData(97); } catch (e) { d2s.setConstantData(97, constants96); }
     try { d2s.getConstantData(98); } catch (e) { d2s.setConstantData(98, constants96); }
     try { d2s.getConstantData(99); } catch (e) { d2s.setConstantData(99, constants99); }
+    try { d2s.getConstantData(0); } catch (e) { d2s.setConstantData(0, constants96); }
+    try { d2s.getConstantData(1); } catch (e) { d2s.setConstantData(1, constants96); }
   }
 
   getItems = () => {

@@ -1,5 +1,8 @@
 LISTA ZMIAN:
 
+v.2.3.1
+ - Poprawka odczytywania skrzynek Plugy
+
 v.2.3.0
  - Dodano integrację z Kalkulatorem Słów Runicznych
  - Dodano opisy run i słów runicznych
