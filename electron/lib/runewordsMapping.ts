@@ -2476,6 +2476,227 @@ export const runewordsMapping: RunewordsMapping = {
         "tier": 3,
         "patch": 1.1,
         "wiki": "https://d2runewizard.com/runewords/Splendor"
+    },
+    "Bulwark": {
+      "level": 35,
+      "name": "Bulwark",
+      "runes": [
+          "shael",
+          "io",
+          "sol"
+      ],
+      "bases": [
+        "helm"
+      ],
+      "attributes": [
+          "+20% Faster Hit Recovery",
+          "+4-6% Life stolen per hit",
+          "+75-100% Enhanced Defense",
+          "+10 to Vitality",
+          "Increase Maximum Life 5%",
+          "Replenish Life +30",
+          "Damage Reduced by 7",
+          "Physical Damage Received Reduced by 10-15%"
+      ],
+      "ladder": true,
+      "tier": 2,
+      "patch": 2.6,
+      "wiki": "https://d2runewizard.com/runewords/Bulwark"
+    },
+    "Cure": {
+      "level": 35,
+      "name": "Cure",
+      "runes": [
+          "shael",
+          "io",
+          "tal"
+      ],
+      "bases": [
+        "helm"
+      ],
+      "attributes": [
+          "Level 1 Cleansing Aura when Equipped",
+          "+20% Faster Hit Recovery",
+          "+75-100% Enhanced Defense",
+          "+10 to Vitality",
+          "Increase Maximum Life 5%",
+          "Poison Resist +40-60%",
+          "Poison Length Reduced by 50%"
+      ],
+      "ladder": true,
+      "tier": 2,
+      "patch": 2.6,
+      "wiki": "https://d2runewizard.com/runewords/Cure"
+    },
+    "Ground": {
+      "level": 35,
+      "name": "Ground",
+      "runes": [
+          "shael",
+          "io",
+          "ort"
+      ],
+      "bases": [
+        "helm"
+      ],
+      "attributes": [
+          "+20% Faster Hit Recovery",
+          "+75-100% Enhanced Defense",
+          "+10 to Vitality",
+          "Increase Maximum Life 5%",
+          "Lightning Resist +40-60%",
+          "Lightning Absorb +10-15%"
+      ],
+      "ladder": true,
+      "tier": 2,
+      "patch": 2.6,
+      "wiki": "https://d2runewizard.com/runewords/Ground"
+    },
+    "Hearth": {
+      "level": 35,
+      "name": "Hearth",
+      "runes": [
+          "shael",
+          "io",
+          "thul"
+      ],
+      "bases": [
+        "helm"
+      ],
+      "attributes": [
+          "+20% Faster Hit Recovery",
+          "+75-100% Enhanced Defense",
+          "+10 to Vitality",
+          "Increase Maximum Life 5%",
+          "Cold Resist +40-60%",
+          "Cold Absorb +10-15%",
+          "Cannot be Frozen"
+      ],
+      "ladder": true,
+      "tier": 2,
+      "patch": 2.6,
+      "wiki": "https://d2runewizard.com/runewords/Hearth"
+    },
+    "Temper": {
+      "level": 35,
+      "name": "Temper",
+      "runes": [
+          "shael",
+          "io",
+          "ral"
+      ],
+      "bases": [
+        "helm"
+      ],
+      "attributes": [
+          "+20% Faster Hit Recovery",
+          "+75-100% Enhanced Defense",
+          "+10 to Vitality",
+          "Increase Maximum Life 5%",
+          "Fire Resist +40-60%",
+          "Fire Absorb +10-15%"
+      ],
+      "ladder": true,
+      "tier": 2,
+      "patch": 2.6,
+      "wiki": "https://d2runewizard.com/runewords/Temper"
+    },
+    "Hustle": {
+      "level": 3,
+      "name": "Hustle",
+      "runes": [
+          "shael",
+          "ko",
+          "eld"
+      ],
+      "bases": [
+        "weapon",
+        "body armor"
+      ],
+      "attributes": [
+          "+10 to Dexterity",
+          "# Weapon",
+          "5% Chance to cast level 1 Burst of Speed on striking",
+          "Level 1 Fanaticism Aura",
+          "+30% Increased Attack Speed",
+          "+180-200% Enhanced Damage",
+          "+75% Damage to Undead",
+          "+50 to Attack Rating against Undead",
+          "# Armor",
+          "65% Faster Run/Walk",
+          "+40% Increased Attack Speed",
+          "+20% Faster Hit Recovery",
+          "+6 to Evade",
+          "+10 to Dexterity",
+          "50% Slower Stamina Drain",
+          "+All Resistances +10"
+      ],
+      "ladder": true,
+      "tier": 2,
+      "patch": 2.6,
+      "wiki": "https://d2runewizard.com/runewords/Hustle"
+    },
+    "Mosaic": {
+      "level": 53,
+      "name": "Mosaic",
+      "runes": [
+          "mal",
+          "gul",
+          "amn"
+      ],
+      "bases": [
+        "claw"
+      ],
+      "attributes": [
+          "+50% chance for finishing moves to not consume charges",
+          "When a finisher is executed in this way it now refreshes the expiration timer of the stack",
+          "+2 to Martial Arts (Assassin only)",
+          "+20% Attack Speed",
+          "+200-250% Enhanced Damage",
+          "+20% Bonus to Attack Rating",
+          "7% Life Steal",
+          "+8-15% to Cold Skill Damage",
+          "+8-15% to Lightning Skill Damage",
+          "+8-15% to Fire Skill Damage",
+          "Prevent Monster Heal"
+      ],
+      "ladder": true,
+      "tier": 3,
+      "patch": 2.6,
+      "wiki": "https://d2runewizard.com/runewords/Mosaic"
+    },
+    "Metamorphosis": {
+      "level": 67,
+      "name": "Metamorphosis",
+      "runes": [
+          "io",
+          "cham",
+          "fal"
+      ],
+      "bases": [
+        "helm"
+      ],
+      "attributes": [
+          "Werewolf strikes grant Mark for 180 seconds",
+          "Mark of the wolf:",
+          "+30% Bonus to Attack Rating",
+          "Increase Maximum Life 40%",
+          "Werebear strikes grant Mark for 180 seconds",
+          "Mark of the Bear:",
+          "+25% Attack Speed",
+          "Physical Damage Received Reduced by 20%",
+          "+5 to Shape Shifting Skills (Druid only)",
+          "+25% Chance of Crushing Blow",
+          "+50-80% Enhanced Defense",
+          "+10 to Strength",
+          "+10 to Vitality",
+          "All Resistances +10",
+          "Cannot be Frozen"
+      ],
+      "ladder": true,
+      "tier": 3,
+      "patch": 2.6,
+      "wiki": "https://d2runewizard.com/runewords/Metamorphosis"
     }
 };
 
@@ -2564,5 +2785,13 @@ export const quickRunewordMap: {[runes: string]: string} = {
     "vex,ohm,ist,dol":"Exile",
     "shael,eth":"Rhyme",
     "ko,ko,mal":"Sanctuary",
-    "eth,lum":"Splendor"
+    "eth,lum":"Splendor",
+    "shael,io,sol":"Bulwark",
+    "shael,io,tal":"Cure",
+    "shael,io,ort":"Ground",
+    "shael,io,thul":"Hearth",
+    "shael,io,ral":"Temper",
+    "shael,ko,eld":"Hustle",
+    "mal,gul,amn":"Mosaic",
+    "io,cham,fal":"Metamorphosis"
 };
