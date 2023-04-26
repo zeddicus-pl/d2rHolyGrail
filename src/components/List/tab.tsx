@@ -540,21 +540,6 @@ export function TabPanel(props: TabPanelProps) {
             </Grid>
           }
           </Box>
-          <div style={{ paddingLeft: 20 }}>
-            <Button
-              variant="text"
-              onClick={() => window.Main.openUrl(calculatorLink)}
-              style={{
-                display: "block",
-                textAlign: "left",
-                paddingLeft: 50,
-              }}
-            >
-              <Calculate style={{ position: 'absolute', left: 10, top: 12, fontSize: 32 }} />
-              <Trans>Open Runewords Calculator</Trans>
-              <small style={{ fontSize: 12, color: '#555', display: 'block' }}><Trans>The calculator will be automatically populated with your available runes.</Trans></small>
-            </Button>
-          </div>
         </>
       )}
       {value === index && !sets && !items && stats && (

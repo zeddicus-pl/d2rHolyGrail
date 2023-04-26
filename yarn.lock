@@ -1011,10 +1011,10 @@
     "ajv" "^6.12.0"
     "ajv-keywords" "^3.4.1"
 
-"@dschu012/d2s@^2.0.34":
-  "integrity" "sha512-OlbDYYNLJcMqwfMG4uR6i8OaHh7WgHwhCMfqlC4BYxISXiS5INBWkYLChy0+rqv4mbgXwkB/sIf13do3SOxb+g=="
-  "resolved" "https://registry.npmjs.org/@dschu012/d2s/-/d2s-2.0.34.tgz"
-  "version" "2.0.34"
+"@dschu012/d2s@^2.0.36":
+  "integrity" "sha512-k/WSnYBZ1+QPzFluSGFsxbcc55wgkVPCuZV0Fnudnn9JV4kSdWGjmv1eLBIU0eZoq/nzFM2MmAZky2lZwOlMCQ=="
+  "resolved" "https://registry.npmjs.org/@dschu012/d2s/-/d2s-2.0.36.tgz"
+  "version" "2.0.36"
 
 "@electron-forge/async-ora@6.0.0-beta.63":
   "integrity" "sha512-e1BbeUV20yWZWeRJ3LDLcloPPgHwTXV1wAJXpAdDbmTmcRyAGx9iVx2Qyh6t878c7zX36XXlqfCIOvODsgiuOQ=="

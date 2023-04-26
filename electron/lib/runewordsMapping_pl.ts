@@ -1275,5 +1275,218 @@ export const runewordsMappingPl: {[runewordName: string]: Partial<Runeword>} = {
             "+20% do szansy na zdobycie magicznych przedmiotów",
             "+3 do promienia światła"
         ],
+    },
+    "Bulwark": {
+      "level": 35,
+      "name": "Szaniec",
+      "runes": [
+          "shael",
+          "io",
+          "sol"
+      ],
+      "bases": [
+        "helm"
+      ],
+      "attributes": [
+          "+20% do szybkości odzyskiwania równowagi",
+          "+4–6% zdrowia wykradzionego za każde trafienie",
+          "+75–100% do obrony",
+          "+10 do żywotności",
+          "+5% do maksymalnej wartości punktów zdrowia",
+          "+30 do przywracania zdrowia",
+          "Zmniejsza otrzymywane obrażenia o 7",
+          "Otrzymywane obrażenia fizyczne są zmniejszone o 10–15%"
+      ],
+      "ladder": true,
+      "tier": 2,
+      "patch": 2.6,
+      "wiki": "https://d2runewizard.com/runewords/Bulwark"
+    },
+    "Cure": {
+      "level": 35,
+      "name": "Remedium",
+      "runes": [
+          "shael",
+          "io",
+          "tal"
+      ],
+      "bases": [
+        "helm"
+      ],
+      "attributes": [
+          "+20% do szybkości odzyskiwania równowagi",
+          "+75–100% do obrony",
+          "+10 do żywotności",
+          "+5% do maksymalnej wartości punktów zdrowia",
+          "+40–60% do odporności na trucizny",
+          "Skraca czas działania trucizny o 75%"
+      ],
+      "ladder": true,
+      "tier": 2,
+      "patch": 2.6,
+      "wiki": "https://d2runewizard.com/runewords/Cure"
+    },
+    "Ground": {
+      "level": 35,
+      "name": "Grunt",
+      "runes": [
+          "shael",
+          "io",
+          "ort"
+      ],
+      "bases": [
+        "helm"
+      ],
+      "attributes": [
+          "+20% do szybkości odzyskiwania równowagi",
+          "+75–100% do obrony",
+          "+10 do żywotności",
+          "+5% do maksymalnej wartości punktów zdrowia",
+          "+40–60% do odporności na błyskawice",
+          "+10–15% do absorpcji błyskawic"
+      ],
+      "ladder": true,
+      "tier": 2,
+      "patch": 2.6,
+      "wiki": "https://d2runewizard.com/runewords/Ground"
+    },
+    "Hearth": {
+      "level": 35,
+      "name": "Palenisko",
+      "runes": [
+          "shael",
+          "io",
+          "thul"
+      ],
+      "bases": [
+        "helm"
+      ],
+      "attributes": [
+        "+20% do szybkości odzyskiwania równowagi",
+        "+75–100% do obrony",
+        "+10 do żywotności",
+        "+5% do maksymalnej wartości punktów zdrowia",
+        "+40–60% do odporności na zimno",
+        "+10–15% do absorpcji zimna",
+        "Odporność na zamrożenie"
+      ],
+      "ladder": true,
+      "tier": 2,
+      "patch": 2.6,
+      "wiki": "https://d2runewizard.com/runewords/Hearth"
+    },
+    "Temper": {
+      "level": 35,
+      "name": "Charakter",
+      "runes": [
+          "shael",
+          "io",
+          "ral"
+      ],
+      "bases": [
+        "helm"
+      ],
+      "attributes": [
+          "+20% do szybkości odzyskiwania równowagi",
+          "+75–100% do obrony",
+          "+10 do żywotności",
+          "+5% do maksymalnej wartości punktów zdrowia",
+          "+40–60% do odporności na ogień",
+          "+10–15% do absorpcji ognia"
+      ],
+      "ladder": true,
+      "tier": 2,
+      "patch": 2.6,
+      "wiki": "https://d2runewizard.com/runewords/Temper"
+    },
+    "Hustle": {
+      "level": 3,
+      "name": "Zgiełk",
+      "runes": [
+          "shael",
+          "ko",
+          "eld"
+      ],
+      "bases": [
+        "weapon",
+        "body armor"
+      ],
+      "attributes": [
+          "# Broń",
+          "5% szansy na rzucenie 9-poziomowego zaklęcia Zwiększona Szybkość przy trafieniu",
+          "+30% do szybkości ataku",
+          "+130–150% do obrażeń",
+          "+75% do obrażeń zadawanych nieumarłym",
+          "+50 do skuteczności ataku względem nieumarłych",
+          "+10 do zręczności",
+          "# Pancerz",
+          "+50% szybszy bieg/chód",
+          "+20% do szybkości ataku",
+          "+20% do szybkości odzyskiwania równowagi",
+          "+10 do zręczności",
+          "Wytrzymałość maleje o 50% wolniej",
+      ],
+      "ladder": true,
+      "tier": 2,
+      "patch": 2.6,
+      "wiki": "https://d2runewizard.com/runewords/Hustle"
+    },
+    "Mosaic": {
+      "level": 53,
+      "name": "Mozaika",
+      "runes": [
+          "mal",
+          "gul",
+          "amn"
+      ],
+      "bases": [
+        "claw"
+      ],
+      "attributes": [
+          "+25% do szansy na niewykorzystanie ładunków przez kończące uderzenia",
+          "+2 do umiejętności Sztuk Walki (tylko zabójczyni)",
+          "+20% do szybkości ataku",
+          "+200–250% do obrażeń",
+          "+20% do premii do skuteczności ataku",
+          "+3–14 pkt. obrażeń od zimna",
+          "Uniemożliwia leczenie się potworów"
+      ],
+      "ladder": true,
+      "tier": 3,
+      "patch": 2.6,
+      "wiki": "https://d2runewizard.com/runewords/Mosaic"
+    },
+    "Metamorphosis": {
+      "level": 67,
+      "name": "Metamorfoza",
+      "runes": [
+          "io",
+          "cham",
+          "fal"
+      ],
+      "bases": [
+        "helm"
+      ],
+      "attributes": [
+          "Ataki wilkołaka zapewniają naznaczenie na 180 sek.",
+          "Znak Wilka:",
+          "+20% do premii do skuteczności ataku",
+          "+40% do maksymalnej wartości punktów zdrowia",
+          "Ataki niedźwiedziołaka zapewniają naznaczenie na 180 sek.",
+          "Znak Niedźwiedzia:",
+          "+25% do szybkości ataku",
+          "+25% do szansy na druzgocące uderzenie",
+          "Otrzymywane obrażenia fizyczne są zmniejszone o 20%",
+          "+5 do umiejętności Zmiany Kształtu (tylko druid)",
+          "+50–80% do obrony",
+          "+10 do siły",
+          "+10 do żywotności",
+          "+10 do wszystkich odporności",
+          "Odporność na zamrożenie"
+      ],
+      "ladder": true,
+      "tier": 3,
+      "patch": 2.6,
+      "wiki": "https://d2runewizard.com/runewords/Metamorphosis"
     }
 };

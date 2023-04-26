@@ -2614,7 +2614,6 @@ export const runewordsMapping: RunewordsMapping = {
         "body armor"
       ],
       "attributes": [
-          "+10 to Dexterity",
           "# Weapon",
           "5% Chance to cast level 1 Burst of Speed on striking",
           "Level 1 Fanaticism Aura",
@@ -2622,6 +2621,7 @@ export const runewordsMapping: RunewordsMapping = {
           "+180-200% Enhanced Damage",
           "+75% Damage to Undead",
           "+50 to Attack Rating against Undead",
+          "+10 to Dexterity",
           "# Armor",
           "65% Faster Run/Walk",
           "+40% Increased Attack Speed",

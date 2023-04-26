@@ -1,5 +1,9 @@
 LISTA ZMIAN:
 
+v.2.4.0
+ - Dodano nowe słowa runiczne
+ - Uaktualniono bibliotekę D2S - poprawiono odczytywanie nowego formatu sejvów
+
 v.2.3.1
  - Poprawka odczytywania skrzynek Plugy
 
