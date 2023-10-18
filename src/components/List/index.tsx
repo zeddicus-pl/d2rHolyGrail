@@ -140,7 +140,7 @@ export function List({ fileReaderResponse, appSettings, itemNotes }: ListProps) 
               [
                 <Tab label={t("Sets")} key="sets" />,
                 appSettings.grailRunes && <Tab label={t("Runes")}  key="runes" />,
-                appSettings.grailRunewords && <Tab label={t("Runeswords")}  key="runewords" />,
+                appSettings.grailRunewords && <Tab label={t("Runewords")}  key="runewords" />,
               ]
             }
           </Tabs> 
