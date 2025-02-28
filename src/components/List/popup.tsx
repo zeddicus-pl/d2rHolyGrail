@@ -6,7 +6,7 @@ import DialogContent from '@mui/material/DialogContent';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
-import { Button, Card, CardContent, Chip, DialogActions, Grid, TextField, Tooltip, Typography } from '@mui/material';
+import { Button, Chip, DialogActions, Grid, TextField, Tooltip, Typography } from '@mui/material';
 import { GameMode, ItemDetails, Settings, SilospenItem } from '../../@types/main.d';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -59,12 +59,16 @@ export default function Popup({
 
   const handleClickOpen = () => {
     window.Main.on('silospenResponse', (drops: SilospenItem[]) => {
+      if (!drops || !drops.sort) {
+        setOpen(false);
+        return;
+      }
       setDrop(
         <TableContainer>
           <Table aria-label="simple table">
             <TableBody>
               {drops
-                .sort((dropA, dropB) => (parseInt(dropA.chance) - parseInt(dropB.chance)))
+                .sort((dropA, dropB) => (parseInt(dropA.chance.replace(/\s/g, '')) - parseInt(dropB.chance.replace(/\s/g, ''))))
                 .map(({name, area, chance}: SilospenItem) => 
                   <TableRow key={name+area+chance} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                     <TableCell component="th" scope="row">{name}</TableCell>

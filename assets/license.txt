@@ -1,5 +1,8 @@
 CHANGELOG:
 
+v.2.4.1
+ - Fixes issue with fetching item droprate from Silospen website
+
 v.2.4.0
  - Added new runewords
  - Updated D2S library - improved reading new save format
