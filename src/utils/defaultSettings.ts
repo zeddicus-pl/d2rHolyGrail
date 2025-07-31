@@ -2,7 +2,8 @@ import { GameMode, GameVersion, GrailType, Settings } from "../@types/main.d";
 
 export const settingsKeys: {[name in keyof Settings]: name} = {
   saveDir: 'saveDir',
-  lang: 'lang',
+  saveFilters: 'saveFilters',
+    lang: 'lang',
   gameMode: 'gameMode',
   magicFind: 'magicFind',
   playersNumber: 'playersNumber',
@@ -16,6 +17,7 @@ export const settingsKeys: {[name in keyof Settings]: name} = {
 
 const defaultSettings: Settings = {
   [settingsKeys.saveDir]: '',
+  [settingsKeys.saveFilters]: '',
   [settingsKeys.lang]: 'en',
   [settingsKeys.gameMode]: GameMode.Both,
   [settingsKeys.magicFind]: 0,

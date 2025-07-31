@@ -80,6 +80,7 @@ export enum GameVersion {
 
 export type Settings = {
   saveDir: string,
+  saveFilters: string,
   lang: string,
   gameMode: GameMode,
   magicFind: Number,

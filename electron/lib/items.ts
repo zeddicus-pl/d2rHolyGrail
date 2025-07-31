@@ -193,6 +193,24 @@ class ItemsStore {
     return resolved.substring(0, 1) + resolved.substring(1).split(sep).join('/') + '/*.{d2s,sss,d2x,d2i}';
   }
 
+  filterFilePaths = (paths: string[]) => {
+    const settings = settingsStore.getSettings();
+    const filters = settings.saveFilters.split(' ').map(f => f.toLowerCase());
+
+    // if there aren't any filters, just return the paths
+    if (filters.length === 0) {
+      return paths;
+    }
+
+    const mustInclude = filters.filter(f => !f.startsWith('!'));
+    const mustNotInclude = filters.filter(f => f.startsWith('!'));
+
+    return paths.filter(path =>
+      mustInclude.some(f => basename(path).toLowerCase().includes(f)) &&
+      !mustNotInclude.some(f => basename(path).toLowerCase().includes(f))
+    );
+  }
+
   parseSaves = async (event: IpcMainEvent, path: string, userRequested: boolean, playSounds: boolean = false) => {
     const results: FileReaderResponse = {
       items: {},
@@ -200,7 +218,10 @@ class ItemsStore {
       stats: {},
       availableRunes: {}
     };
-    const files = readdirSync(path).filter(file => ['.d2s', '.sss', '.d2x', '.d2i'].indexOf(extname(file).toLowerCase()) !== -1);
+
+    const unfilteredFiles = readdirSync(path).filter(file => (['.d2s', '.sss', '.d2x', '.d2i'].indexOf(extname(file).toLowerCase()) !== -1));
+    // apply filters if any are configured in the settings
+    const files = this.filterFilePaths(unfilteredFiles);
 
     if (!eventToReply) {
       setEventToReply(event);
