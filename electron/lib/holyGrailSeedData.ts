@@ -58,6 +58,7 @@ export function getHolyGrailSeedData(settings: Settings | null, ethereal: boolea
         },
         "charms": {
           "all": {
+            ...original.uniques.other.charms.all,
             "Black Cleft": {},
             "Bone Break": {},
             "Cold Rupture": {},
