@@ -95,6 +95,12 @@ export default function SettingsPanel({ appSettings }: SettingsPanelProps) {
     window.Main.saveSetting(settingsKeys.grailRunewords, runewords);
   };
 
+  const handleFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const filter = event.target.value;
+    clearPrevUniqItemsFound();
+    window.Main.saveSetting(settingsKeys.saveFilters, filter);
+  };
+
   const handleSound = (event: React.ChangeEvent<HTMLInputElement>) => {
     const sound = event.target.checked;
     window.Main.saveSetting(settingsKeys.enableSounds, sound);
@@ -169,9 +175,7 @@ export default function SettingsPanel({ appSettings }: SettingsPanelProps) {
               defaultValue={appSettings.saveFilters}
               placeholder={t("(disabled)")}
               fullWidth={true}
-              onChange={(e) => {
-                window.Main.saveSetting('saveFilters', e.target.value);
-            }}></TextField>
+              onChange={handleFilter}></TextField>
           </ListItem>
           <Grid m={{ t: 2 }} p={3}>
             <Accordion>
