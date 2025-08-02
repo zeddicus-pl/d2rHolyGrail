@@ -54,6 +54,9 @@ export function App() {
     if (typeof settings.grailRunewords === 'undefined') {
       settings.grailRunewords = defaultSettings.grailRunewords;
     }
+    if (typeof settings.includeSocketed === 'undefined') {
+      settings.includeSocketed = defaultSettings.includeSocketed;
+    }
     if (typeof settings.gameVersion === 'undefined') {
       settings.gameVersion = defaultSettings.gameVersion;
     }

@@ -94,6 +94,12 @@ export default function SettingsPanel({ appSettings }: SettingsPanelProps) {
     window.Main.saveSetting(settingsKeys.grailRunewords, runewords);
   };
 
+  const handleSocketedItems = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const socketedItems = event.target.checked;
+    clearPrevUniqItemsFound();
+    window.Main.saveSetting(settingsKeys.includeSocketed, socketedItems);
+  };
+
   const handleSound = (event: React.ChangeEvent<HTMLInputElement>) => {
     const sound = event.target.checked;
     window.Main.saveSetting(settingsKeys.enableSounds, sound);
@@ -208,6 +214,11 @@ export default function SettingsPanel({ appSettings }: SettingsPanelProps) {
                 sx={{mt: 1}}
                 control={<Checkbox checked={appSettings.grailRunewords} onChange={handleRunewords} />}
                 label={i18n.t`Include Runewords`}
+              />
+              <FormControlLabel
+                sx={{mt: 1}}
+                control={<Checkbox checked={appSettings.includeSocketed} onChange={handleSocketedItems} />}
+                label={i18n.t`Include items in sockets`}
               />
               <FormControlLabel
                 sx={{mt: 1}}
