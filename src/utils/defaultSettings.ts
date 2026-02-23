@@ -13,6 +13,7 @@ export const settingsKeys: {[name in keyof Settings]: name} = {
   grailRunewords: 'grailRunewords',
   onlyMissing: 'onlyMissing',
   enableSounds: 'enableSounds',
+  includeSocketed: 'includeSocketed'
 }
 
 const defaultSettings: Settings = {
@@ -28,6 +29,7 @@ const defaultSettings: Settings = {
   [settingsKeys.grailRunewords]: false,
   [settingsKeys.onlyMissing]: false,
   [settingsKeys.enableSounds]: false,
+  [settingsKeys.includeSocketed]: true,
 }
 
 export default defaultSettings;

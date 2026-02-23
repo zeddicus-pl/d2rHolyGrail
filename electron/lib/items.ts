@@ -342,6 +342,7 @@ class ItemsStore {
     const items: d2s.types.IItem[] = [];
 
     const parseItems = (itemList: d2s.types.IItem[], isEmbed: boolean = false) => {
+      const settings = settingsStore.getSettings();
       itemList.forEach((item) => {
         if (item.unique_name || item.set_name || item.rare_name || item.rare_name2) {
           items.push(item);
@@ -352,7 +353,8 @@ class ItemsStore {
           }
           items.push(item);
         }
-        if (item.socketed_items && item.socketed_items.length) {
+        // search socketed items if they haven't been turned off in settings
+        if (settings.includeSocketed && item.socketed_items && item.socketed_items.length) {
           parseItems(item.socketed_items, true);
         }
         if (item.runeword_name) {
