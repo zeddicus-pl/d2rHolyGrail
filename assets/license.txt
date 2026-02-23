@@ -1,5 +1,8 @@
 CHANGELOG:
 
+v.2.4.2
+ - Added save file filters
+
 v.2.4.1
  - Fixes issue with fetching item droprate from Silospen website
 
