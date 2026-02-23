@@ -15,8 +15,9 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import { TransitionProps } from '@mui/material/transitions';
 import { Trans, useTranslation } from 'react-i18next';
 import { GameMode, GameVersion, GrailType, Settings } from '../../@types/main.d';
-import { Grid, Accordion, AccordionDetails, AccordionSummary, Divider, FormControl, MenuItem, Select, SelectChangeEvent, Checkbox, FormControlLabel } from '@mui/material';
+import { Grid, Accordion, AccordionDetails, AccordionSummary, Divider, FormControl, MenuItem, Select, SelectChangeEvent, Checkbox, FormControlLabel, TextField } from '@mui/material';
 import FolderIcon from '@mui/icons-material/Folder';
+import SearchIcon from '@mui/icons-material/Search';
 import GroupIcon from '@mui/icons-material/Group';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CalculateIcon from '@mui/icons-material/Calculate';
@@ -94,6 +95,12 @@ export default function SettingsPanel({ appSettings }: SettingsPanelProps) {
     window.Main.saveSetting(settingsKeys.grailRunewords, runewords);
   };
 
+  const handleFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const filter = event.target.value;
+    clearPrevUniqItemsFound();
+    window.Main.saveSetting(settingsKeys.saveFilters, filter);
+  };
+
   const handleSound = (event: React.ChangeEvent<HTMLInputElement>) => {
     const sound = event.target.checked;
     window.Main.saveSetting(settingsKeys.enableSounds, sound);
@@ -155,6 +162,36 @@ export default function SettingsPanel({ appSettings }: SettingsPanelProps) {
               onClick={handleOpenFolder}
             />
           </ListItem>
+          <Divider />
+          <ListItem>
+            <ListItemIcon>
+              <SearchIcon />
+            </ListItemIcon>
+            <ListItemText
+              primary={t("Saved games filter")}
+              secondary={t("Only check save files matching these words.")}
+            />
+            <TextField 
+              defaultValue={appSettings.saveFilters}
+              placeholder={t("(disabled)")}
+              fullWidth={true}
+              onChange={handleFilter}></TextField>
+          </ListItem>
+          <Grid m={{ t: 2 }} p={3}>
+            <Accordion>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+              >
+                <Typography>{t("Filter help")}</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography paragraph={true}>{t("Filters allow you to specify which save files you want to include as part of your grail. The filters are written as a space separated list of words which must appear in the save file name.")}</Typography>
+                <Typography paragraph={true}>{t("Remember to include the \"sharedstash\" file if you want shared stash items to be checked! For example, \"mule sharedstash\" will include all save files containing the words \"mule\" or \"sharedstash\", with case insensitive matching.")}</Typography>
+                <Typography paragraph={true}>{t("You can also exclude save files which contain a certain word, by prefixing it with an exclamation mark. For example, \"mule !oldmule\" will include all save files containing the word \"mule\", but exclude any containing \"oldmule\".")}</Typography>
+                <Typography paragraph={true}>{t("When the saved games filter is left empty, the filtering feature is disabled and all saved games are checked.")}</Typography>
+              </AccordionDetails>
+            </Accordion>
+          </Grid>
           <Divider />
           <ListItem button>
             <ListItemIcon>
@@ -238,25 +275,25 @@ export default function SettingsPanel({ appSettings }: SettingsPanelProps) {
         </List>
         <Divider />
         <ListItem button>
-            <ListItemIcon>
-              <GroupIcon />
-            </ListItemIcon>
-            <ListItemText
-              primary={t("Game version")}
-           />
-            <FormControl>
-              <Select
-                // @ts-ignore
-                value={appSettings.gameVersion}
-                // @ts-ignore
-                onChange={handleGameVersion}
-              >
-                <MenuItem value={GameVersion.Resurrected}>{t("Diablo 2 Resurrected")}</MenuItem>
-                <MenuItem value={GameVersion.Classic}>{t("Diablo 2 Lord of Destruction")}</MenuItem>
-              </Select>
-            </FormControl>
-          </ListItem>
-          <Divider />
+          <ListItemIcon>
+            <GroupIcon />
+          </ListItemIcon>
+          <ListItemText
+            primary={t("Game version")}
+          />
+          <FormControl>
+            <Select
+              // @ts-ignore
+              value={appSettings.gameVersion}
+              // @ts-ignore
+              onChange={handleGameVersion}
+            >
+              <MenuItem value={GameVersion.Resurrected}>{t("Diablo 2 Resurrected")}</MenuItem>
+              <MenuItem value={GameVersion.Classic}>{t("Diablo 2 Lord of Destruction")}</MenuItem>
+            </Select>
+          </FormControl>
+        </ListItem>
+        <Divider />
         <Grid m={{ t: 2 }} p={3}>
           <Accordion onChange={(event: SyntheticEvent, expanded: boolean) => {
             setIframeVisible(expanded);

@@ -39,6 +39,9 @@ export function App() {
     if (!settings.saveDir) {
       settings.saveDir = defaultSettings.saveDir;
     }
+    if (!settings.saveFilters) {
+      settings.saveFilters = defaultSettings.saveFilters;
+    }
     if (!settings.magicFind && settings.magicFind !== 0) {
       settings.magicFind = defaultSettings.magicFind;
     }
