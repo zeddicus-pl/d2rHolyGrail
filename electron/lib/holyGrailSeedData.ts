@@ -56,6 +56,17 @@ export function getHolyGrailSeedData(settings: Settings | null, ethereal: boolea
             "Rainbow Facet: Poison Death": {},
           }
         },
+        "charms": {
+          "all": {
+            ...original.uniques.other.charms.all,
+            "Black Cleft": {},
+            "Bone Break": {},
+            "Cold Rupture": {},
+            "Crack of the Heavens": {},
+            "Flame Rift": {},
+            "Rotting Fissure": {},
+          }
+        }
       }
     },
   }
