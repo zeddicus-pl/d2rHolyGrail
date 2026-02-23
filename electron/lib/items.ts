@@ -3,6 +3,7 @@ import * as d2s from '@dschu012/d2s';
 import * as d2stash from '@dschu012/d2s/lib/d2/stash';
 import { constants as constants96 } from '@dschu012/d2s/lib/data/versions/96_constant_data';
 import { constants as constants99 } from '@dschu012/d2s/lib/data/versions/99_constant_data';
+import { constants as constants105 } from '@dschu012/d2s/lib/data/versions/105_constant_data';
 import { existsSync, promises } from 'fs';
 import { basename, extname, join, resolve, sep } from 'path';
 import { IpcMainEvent } from 'electron/renderer';
@@ -47,6 +48,7 @@ class ItemsStore {
     try { d2s.getConstantData(0); } catch (e) { d2s.setConstantData(0, constants96); }
     try { d2s.getConstantData(1); } catch (e) { d2s.setConstantData(1, constants96); }
     try { d2s.getConstantData(2); } catch (e) { d2s.setConstantData(2, constants96); }
+    try { d2s.getConstantData(105); } catch (e) { d2s.setConstantData(105, constants105); }
   }
 
   getItems = () => {

@@ -16,7 +16,7 @@ import TableRow from '@mui/material/TableRow';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import { diablo2ioMapping } from '../../../electron/lib/diablo2ioMapping';
 import { Trans, useTranslation } from 'react-i18next';
-import DropCalcSettings from '../Settings/dropCalcSettings';
+import DropCalcSettings from '../Settings/DropCalcSettings';
 import { PopupTitle } from './styles';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({

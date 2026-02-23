@@ -6,6 +6,7 @@ module.exports = [
   {
     test: /\.(m?js|node)$/,
     parser: { amd: false },
+    exclude: /node_modules\/get-port/,
     use: {
       loader: '@marshallofsound/webpack-asset-relocator-loader',
       options: {

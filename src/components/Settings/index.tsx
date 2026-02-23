@@ -22,7 +22,7 @@ import GroupIcon from '@mui/icons-material/Group';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CalculateIcon from '@mui/icons-material/Calculate';
 import WineBarIcon from '@mui/icons-material/WineBar';
-import DropCalcSettings from './dropCalcSettings';
+import DropCalcSettings from './DropCalcSettings';
 import packageJson from '../../../package.json';
 import i18n from '../../i18n';
 import { settingsKeys } from '../../utils/defaultSettings';
