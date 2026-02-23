@@ -1,5 +1,10 @@
 LISTA ZMIAN:
 
+v.2.5.0
+ - Dodano wsparcie dla Reign of the Warlock - dodane przez viniciusrezende
+ - Dodano wsparcie dla Sunder Charms - dodane przez gsuberland
+ - Dodano opację filtrowania sejvów oraz uwzględniania/nie uwzględniania itemów w socketach - dodane przez gsuberland
+
 v.2.4.1
  - Naprawiono pobieranie danych z kalkulatora Silospen
 

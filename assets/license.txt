@@ -1,5 +1,10 @@
 CHANGELOG:
 
+v.2.5.0
+ - Added support for Reign of the Warlock - by viniciusrezende
+ - Added Sunder Charms to the list - by gsuberland
+ - Added options for filtering saves and to include/exclude items in sockets - by gsuberland
+
 v.2.4.2
  - Added save file filters
 

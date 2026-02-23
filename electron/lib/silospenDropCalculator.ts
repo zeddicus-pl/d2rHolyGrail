@@ -1,4 +1,5 @@
 import { join } from 'path';
+import { app } from 'electron';
 import { IpcMainEvent } from 'electron/renderer';
 // @ts-ignore
 import fetch, { Response } from 'node-fetch';
@@ -65,7 +66,7 @@ const parseSilospenServerResponse = (json: any): SilospenItem[] => {
 }
 
 export async function runSilospenServer() {
-  const jarPath = join(__dirname, './bin/DropCalc-1.0.jar');
+  const jarPath = join(app.isPackaged ? process.resourcesPath : __dirname, 'bin', 'DropCalc-1.0.jar');
   silospenPort = await getPort({port: portNumbers(3766, 3866)});
   try {
     const versionList = await versions();

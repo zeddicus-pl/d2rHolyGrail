@@ -1,7 +1,7 @@
 {
   "name": "d2rholygrail",
   "author": "Kamil Tunkiewicz <kamil.tunkiewicz(at)gmail.com>",
-  "version": "2.4.2",
+  "version": "2.5.0",
   "description": "Scan your Diablo 2 Resurrected saves to check your Holy Grail progress",
   "main": "./.webpack/main",
   "scripts": {
@@ -28,28 +28,27 @@
     "@types/request": "^2.48.8",
     "animate.css": "^4.1.1",
     "chokidar": "^3.5.3",
-    "circle-flags": "https://github.com/HatScripts/circle-flags#66333d058b553461223de5ec3b6e21ff846bcd5a",
+    "circle-flags": "https://github.com/HatScripts/circle-flags",
     "css-loader": "^6.6.0",
     "d2-holy-grail": "https://github.com/pyrosplat/d2-holy-grail.git#master",
     "electron-dl": "^3.3.1",
     "electron-json-storage": "^4.5.0",
-    "electron-store": "^10.1.0",
     "electron-window-state": "^5.0.3",
     "express": "^4.17.2",
-    "get-port": "6.1.2",
+    "get-port": "^6.1.2",
     "html2canvas": "^1.4.1",
     "i18next": "^21.6.11",
-    "material-react-toastify": "^10.0.5",
+    "material-react-toastify": "^1.0.1",
     "mousetrap": "^1.6.5",
     "njar": "^1.0.4",
     "node-fetch": "2",
     "node-loader": "^2.0.0",
-    "platform-folders": "^0.6.0",
-    "react": "^18",
+    "platform-folders": "github:zeddicus-pl/platform-folders#master",
+    "react": "17.0.2",
     "react-circle-flags": "^0.0.15",
     "react-circular-progressbar": "^2.0.4",
-    "react-dom": "^18",
-    "react-hot-loader": "4.13.1",
+    "react-dom": "17.0.2",
+    "react-hot-loader": "4.13.0",
     "react-i18next": "^11.15.4",
     "request": "^2.88.2",
     "socket.io": "^4.4.1",
@@ -61,50 +60,48 @@
     "ts-deepmerge": "^2.0.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.28.3",
-    "@babel/plugin-transform-runtime": "^7.28.3",
-    "@babel/preset-env": "^7.28.3",
-    "@babel/preset-react": "^7.27.1",
-    "@babel/preset-typescript": "^7.27.1",
-    "@electron-forge/cli": "^6",
+    "@babel/core": "7.17.4",
+    "@babel/plugin-transform-runtime": "7.17.0",
+    "@babel/preset-env": "7.16.11",
+    "@babel/preset-react": "7.16.7",
+    "@babel/preset-typescript": "7.16.7",
+    "@electron-forge/cli": "6.0.0-beta.63",
     "@electron-forge/maker-deb": "6.0.0-beta.63",
     "@electron-forge/maker-rpm": "6.0.0-beta.63",
     "@electron-forge/maker-squirrel": "6.0.0-beta.63",
     "@electron-forge/maker-zip": "6.0.0-beta.63",
-    "@electron-forge/plugin-webpack": "^6",
+    "@electron-forge/plugin-webpack": "6.0.0-beta.63",
     "@marshallofsound/webpack-asset-relocator-loader": "0.5.0",
     "@testing-library/jest-dom": "5.16.2",
     "@testing-library/react": "12.1.3",
     "@types/electron-devtools-installer": "2.2.1",
     "@types/jest": "27.4.0",
     "@types/mousetrap": "^1.6.9",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "@types/styled-components": "5.1.34",
+    "@types/react": "17.0.39",
+    "@types/react-dom": "17.0.11",
+    "@types/styled-components": "5.1.22",
     "@typescript-eslint/eslint-plugin": "5.12.0",
     "@typescript-eslint/parser": "5.12.0",
-    "babel-loader": "^10.0.0",
+    "babel-loader": "8.2.3",
     "copy-webpack-plugin": "^10.2.4",
     "cross-env": "7.0.3",
     "electron": "16.0.9",
     "electron-builder": "26.0.12",
     "eslint": "8.13.0",
     "eslint-config-prettier": "8.3.0",
-    "eslint-plugin-import": "2.32.0",
+    "eslint-plugin-import": "2.25.4",
     "eslint-plugin-node": "11.1.0",
     "eslint-plugin-prettier": "4.0.0",
     "eslint-plugin-promise": "6.0.0",
-    "eslint-plugin-react": "7.37.5",
+    "eslint-plugin-react": "7.28.0",
     "eslint-plugin-standard": "5.0.0",
     "file-loader": "^6.2.0",
     "jest": "27.5.1",
-    "madge": "^8.0.0",
     "npm-run-all": "4.1.5",
     "prettier": "2.5.1",
     "ts-jest": "27.1.3",
     "typescript": "4.5.5",
-    "wait-on": "6.0.1",
-    "webpack-cli": "^6.0.1"
+    "wait-on": "6.0.1"
   },
   "build": {
     "appId": "d2rHolyGrail",
@@ -131,43 +128,61 @@
     ],
     "directories": {
       "buildResources": "assets"
-    }
-  },
-  "config": {
-    "forge": "./forge.config.js"
-  },
-  "plugins": [
-    [
-      "@electron-forge/plugin-webpack",
+    },
+    "extraResources": [
       {
-        "mainConfig": "./webpack/main.webpack.js",
-        "renderer": {
-          "config": "./webpack/renderer.webpack.js",
-          "entryPoints": [
-            {
-              "html": "./public/index.html",
-              "js": "./src/index.tsx",
-              "name": "main_window",
-              "preload": {
-                "js": "./electron/bridge.ts"
-              }
-            },
-            {
-              "html": "./src/stream/index.html",
-              "js": "./src/stream/stream.tsx",
-              "name": "stream"
-            }
-          ]
-        }
+        "from": "bin/",
+        "to": "bin/",
+        "filter": [
+          "*.jar"
+        ]
       }
     ]
-  ],
-  "makers": [
-    {
-      "name": "@electron-forge/maker-zip",
-      "platforms": [
-        "darwin"
+  },
+  "config": {
+    "forge": {
+      "packagerConfig": {
+        "name": "HolyGrail",
+        "executableName": "HolyGrail",
+        "icon": "assets/icon",
+        "extraResource": [
+          "assets"
+        ]
+      },
+      "plugins": [
+        [
+          "@electron-forge/plugin-webpack",
+          {
+            "mainConfig": "./webpack/main.webpack.js",
+            "renderer": {
+              "config": "./webpack/renderer.webpack.js",
+              "entryPoints": [
+                {
+                  "html": "./public/index.html",
+                  "js": "./src/index.tsx",
+                  "name": "main_window",
+                  "preload": {
+                    "js": "./electron/bridge.ts"
+                  }
+                },
+                {
+                  "html": "./src/stream/index.html",
+                  "js": "./src/stream/stream.tsx",
+                  "name": "stream"
+                }
+              ]
+            }
+          }
+        ]
+      ],
+      "makers": [
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        }
       ]
     }
-  ]
+  }
 }
