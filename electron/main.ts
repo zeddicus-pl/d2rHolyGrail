@@ -68,10 +68,6 @@ function createWindow () {
   })
   mainWindowState.manage(mainWindow);
 
-console.log('TEST!!');
-console.log(MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY);
-console.log(MAIN_WINDOW_WEBPACK_ENTRY);
-
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY)
   if (process.env.ELECTRON_ENV === 'development') {
     mainWindow.webContents.openDevTools()

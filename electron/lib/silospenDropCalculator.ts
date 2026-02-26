@@ -66,6 +66,7 @@ const parseSilospenServerResponse = (json: any): SilospenItem[] => {
 }
 
 export async function runSilospenServer() {
+  console.log([app.isPackaged, process.resourcesPath, __dirname])
   const jarPath = join(app.isPackaged ? process.resourcesPath : __dirname, 'bin', 'DropCalc-1.0.jar');
   silospenPort = await getPort({port: portNumbers(3766, 3866)});
   try {
